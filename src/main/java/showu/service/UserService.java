@@ -10,6 +10,8 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : UserService 작성
+ * 배희창   2025.02.08    login() 구현
+ * 이홍비   2025.02.08    nickname 추가
  * ========================================================
  */
 
@@ -29,6 +31,7 @@ import showu.dto.UserDTO;
 import showu.entity.User;
 import showu.repository.UserRepository;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,18 +42,19 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public String signup(UserDTO userDTO) {
-        System.out.println("🔥 회원가입 로직 실행됨!");
+        System.out.println("🔥 회원 가입 로직 실행됨!");
 
         if (userRepository.existsByUserId(userDTO.getUserId())) {
             throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
         }
 
-        User user = User.of(userDTO.getUserId(), userDTO.getUserPw());
+        User user = User.of(userDTO.getUserId(), userDTO.getUserPw(), userDTO.getNickname());
 
         userRepository.save(user);
         System.out.println("✅ 유저 저장 완료!");
-        return "회원가입 성공!";
+        return "회원 가입 성공!";
     }
+
 
     public String login(LoginRequestDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
