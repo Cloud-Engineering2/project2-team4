@@ -9,11 +9,10 @@
  * ========================================================
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
- * 이홍비    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
+ * 배희창    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
  * 이홍비    2025.02.08    추가 작성 : of() 추가
  * ========================================================
  */
-
 
 
 package showu.entity;
@@ -34,12 +33,13 @@ import lombok.Setter;
 @Entity
 @Table(name = "categories")
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cid;
+    private Long cid; // 카테고리 고유 id
 
     @Column(nullable = false, length = 20)
-    private String cname;
+    private String cname; // 게시 글 유형명
 
     // 생성자
     private Category(String cname) {
