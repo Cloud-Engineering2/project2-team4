@@ -3,6 +3,7 @@ package showu.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -26,15 +27,16 @@ import showu.service.PostService;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/post")
 public class PostController {
 	private final PostService postService;
 	
-	@GetMapping("/api/post/test")
+	@GetMapping("/test")
 	public String test() {
 		return "post";
 	}
 	
-	@PostMapping("/api/post/testdata")
+	@PostMapping("/testdata")
 	public ResponseEntity<Post> createTestData() {
 		Post dummyPost = postService.createDummyPost();
 		return ResponseEntity.ok(dummyPost);

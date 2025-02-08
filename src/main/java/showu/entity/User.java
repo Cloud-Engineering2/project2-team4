@@ -23,10 +23,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import showu.entity.constant.UserRole;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
