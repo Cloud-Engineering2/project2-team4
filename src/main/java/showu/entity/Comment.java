@@ -20,6 +20,7 @@ package showu.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -41,26 +42,27 @@ import lombok.Setter;
 @Entity
 @Table(name = "comments")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cmid;
+    private Long cmid; // 댓글 고유 id
 
     @ManyToOne
     @JoinColumn(name = "pid", nullable = false)
-    private Post post;
+    private Post post; // 해당 게시 글
 
     @ManyToOne
     @JoinColumn(name = "uid", nullable = false)
-    private User user;
+    private User user; // 댓글 작성자
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private String content; // 내용
 
     @CreationTimestamp
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate; // 최초 작성 일자
 
     @UpdateTimestamp
-    private LocalDateTime modifiedDate;
+    private LocalDateTime modifiedDate; // 최종 수정 일자
 
 
     // 생성자
@@ -72,9 +74,25 @@ public class Comment {
         this.content = content;
     }
 
+    private Comment(Long id, Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+
+        // 초기화
+        this.cmid = id;
+        this.post = post;
+        this.user = user;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+    }
+
+
     // static factory method - Comment 객체 생성
     public static Comment of(Post post, User user, String content) {
         return new Comment(post, user, content);
+    }
+
+    public static Comment of(Long id, Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        return new Comment(id, post, user, content, createdDate, modifiedDate);
     }
 
 
