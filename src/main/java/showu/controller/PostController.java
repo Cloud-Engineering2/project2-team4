@@ -31,12 +31,12 @@ import showu.service.PostService;
 public class PostController {
 	private final PostService postService;
 	
-	@GetMapping("/api/post/test")
+	@GetMapping("/test")
 	public String test() {
 		return "post";
 	}
 	
-	@PostMapping("/api/post/testdata")
+	@PostMapping("/testdata")
 	public ResponseEntity<Post> createTestData() {
 		Post dummyPost = postService.createDummyPost();
 		return ResponseEntity.ok(dummyPost);
