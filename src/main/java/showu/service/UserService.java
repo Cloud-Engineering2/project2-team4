@@ -25,11 +25,7 @@ public class UserService {
             throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
         }
 
-        User user = User.builder()
-                .userId(userDTO.getUserId())
-                .userPw(passwordEncoder.encode(userDTO.getUserPw()))
-                .userRole(userDTO.getUserRole())
-                .build();
+        User user = User.of(userDTO.getUserId(), userDTO.getUserPw());
 
         userRepository.save(user);
         System.out.println("✅ 유저 저장 완료!");
