@@ -1,3 +1,20 @@
+/* Post.java
+ * showU Service - 자랑
+ * 게시 글 관련 entity
+ * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
+ * 최종 수정 날짜 : 2025.02.08
+ *
+ * ========================================================
+ * 프로그램 수정 / 보완 이력
+ * ========================================================
+ * 작업자       날짜       수정 / 보완 내용
+ * ========================================================
+ * 이홍비    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
+ * 배희창    2025.02.08    of() 추가
+ * ========================================================
+ */
+
+
 package showu.entity;
 
 import java.time.LocalDateTime;
@@ -55,5 +72,25 @@ public class Post {
 
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
+
+
+    // 생성자
+    public Post(User user, Category category, String title, String content, String link, String imageUrl) {
+
+        // 초기화
+        this.user = user;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.link = link;
+        this.imageUrl = imageUrl;
+        this.plike = 0;
+    }
+
+    // static factory method - Post 객체 생성
+    public static Post of(User user, Category category, String title, String content, String link, String imageUrl) {
+        return new Post(user, category, title, content, link, imageUrl);
+    }
+
 }
 
