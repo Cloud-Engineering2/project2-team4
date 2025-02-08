@@ -1,3 +1,21 @@
+/* Comment.java
+ * showU Service - 자랑
+ * 댓글 관련 entity
+ * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
+ * 최종 수정 날짜 : 2025.02.08
+ *
+ * ========================================================
+ * 프로그램 수정 / 보완 이력
+ * ========================================================
+ * 작업자       날짜       수정 / 보완 내용
+ * ========================================================
+ * 배희창    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
+ * 이홍비    2025.02.08    of() 추가
+ * ========================================================
+ */
+
+
+
 package showu.entity;
 
 import java.time.LocalDateTime;
@@ -43,4 +61,21 @@ public class Comment {
 
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
+
+
+    // 생성자
+    private Comment(Post post, User user, String content) {
+
+        // 초기화
+        this.post = post;
+        this.user = user;
+        this.content = content;
+    }
+
+    // static factory method - Comment 객체 생성
+    public static Comment of(Post post, User user, String content) {
+        return new Comment(post, user, content);
+    }
+
+
 }
