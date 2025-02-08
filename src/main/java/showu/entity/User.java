@@ -9,7 +9,7 @@
  * ========================================================
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
- * 이홍비    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
+ * 배희창    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
  * 이홍비    2025.02.08    of() 추가
  * ========================================================
  */
@@ -23,10 +23,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import showu.entity.constant.UserRole;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
