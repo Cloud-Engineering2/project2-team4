@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Main Page</h1>
+    <p id="responseText">Loading...</p>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            axios.get("/api/post/test")
+                .then(response => {
+                    document.getElementById("responseText").textContent = response.data;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("responseText").textContent = "Failed to load data";
+                });
+        });
+    </script>
+    
+</body>
+</html>
