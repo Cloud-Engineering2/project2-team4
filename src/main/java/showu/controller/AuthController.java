@@ -1,3 +1,17 @@
+/* AuthController.java
+ * showU Service - 자랑
+ * 로그인 api 처리 컨트롤러
+ * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
+ * 최종 수정 날짜 : 2025.02.08
+ *
+ * ========================================================
+ * 프로그램 수정 / 보완 이력
+ * ========================================================
+ * 작업자       날짜       수정 / 보완 내용
+ * ========================================================
+ * 배희창   2025.02.08    최초 작성 : AuthController 작성
+ * ========================================================
+ */
 package showu.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -7,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import showu.dto.LoginRequestDTO;
 import showu.dto.UserDTO;
 import showu.service.UserService;
 
@@ -22,4 +37,9 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 	
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+        String token = userService.login(loginRequest);
+        return ResponseEntity.ok().body(token);
+    }
 }
