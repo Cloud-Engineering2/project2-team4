@@ -10,6 +10,8 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : PageController 작성
+ * 배희창   2025.02.09    S3TestPage 작성
+ * 배희창   2025.02.09    POST 테스트 페이지 작성
  * ========================================================
  */
 
@@ -35,6 +37,20 @@ public class PageController {
 	@GetMapping("/signup")
 	public String getSignupPage() {
 		return "signup";
+	}
+	
+	@GetMapping("/posttest")
+	public String getTestPage() {
+		return "posttest";
+	}
+	
+	@GetMapping("/postget")
+	public String getPostTestPage() {
+		return "postget";
+	}
+	@GetMapping("/postdelete")
+	public String deletePostTestPage() {
+		return "postdelete";
 	}
 	
 }
