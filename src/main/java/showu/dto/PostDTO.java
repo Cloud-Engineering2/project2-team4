@@ -10,6 +10,7 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 이홍비    2025.02.08    최초 작성 : entity 기반 DTO 작성
+ * 배희창    2025.02.09    최초 작성 : NoArgsConstructor 추가
  * ========================================================
  */
 
@@ -17,6 +18,7 @@ package showu.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import showu.entity.Post;
 
@@ -25,6 +27,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Getter
+@NoArgsConstructor
 public class PostDTO {
     private Long id; // 게시 글 고유 id
     private UserDTO user; // 게시 글 작성자
@@ -66,6 +69,10 @@ public class PostDTO {
     // dto -> entity
     public Post toEntity() {
         return Post.of(user.toEntity(), category.toEntity(), title, content, link, imageUrl, likes, createdAt, modifiedAt);
+    }
+    
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

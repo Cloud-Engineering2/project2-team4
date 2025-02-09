@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+    <script>
+        async function fetchPosts() {
+            try {
+                let response = await fetch("/api/post");
+
+                if (!response.ok) {
+                    throw new Error("서버 오류: " + response.status);
+                }
+
+                let posts = await response.json();
+                console.log("📌 불러온 게시글:", posts);
+
+                let tableBody = document.getElementById("postTableBody");
+                tableBody.innerHTML = ""; // 기존 데이터 초기화
+
+                posts.forEach(post => {
+                    let row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${post.id || "-"}</td>
+                        <td>${post.user?.nickname || "익명"}</td>
+                        <td>${post.category?.name || "없음"}</td>
+                        <td>${post.title}</td>
+                        <td>${post.content}</td>
+                        <td>${post.link ? `<a href="${post.link}" target="_blank">${post.link}</a>` : "-"}</td>
+                        <td>${post.imageUrl ? `<img src="${post.imageUrl}" alt="이미지" width="50" height="50">` : "-"}</td>
+                        <td>${post.likes || 0}</td>
+                        <td>${post.createdAt || "-"}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error("❌ 게시글 불러오기 실패:", error);
+                alert("❌ 게시글을 불러오는데 실패했습니다!");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>게시글 목록</h2>
+    <button onclick="fetchPosts()">게시글 불러오기</button>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>작성자</th>
+                <th>카테고리</th>
+                <th>제목</th>
+                <th>내용</th>
+                <th>링크</th>
+                <th>이미지</th>
+                <th>좋아요</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody id="postTableBody">
+            <!-- JavaScript로 데이터 삽입 -->
+        </tbody>
+    </table>
+</body>
+</html>

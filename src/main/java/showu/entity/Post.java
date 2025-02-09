@@ -11,6 +11,7 @@
  * ========================================================
  * 배희창    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
  * 이홍비    2025.02.08    of() 추가
+ * 배희창    2025.02.09    comment부분 자동삭제 되게 설정
  * ========================================================
  */
 
@@ -18,10 +19,13 @@
 package showu.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +33,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -74,7 +79,9 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime modifiedDate; // 최종 수정 일자
 
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+    
     // 생성자
     public Post(User user, Category category, String title, String content, String link, String imageUrl) {
 
