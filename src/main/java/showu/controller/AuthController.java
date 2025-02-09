@@ -14,6 +14,7 @@
  */
 package showu.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import showu.dto.LoginRequestDTO;
 import showu.dto.UserDTO;
+import showu.entity.User;
 import showu.service.UserService;
 
 @RestController
@@ -30,16 +32,33 @@ import showu.service.UserService;
 @RequiredArgsConstructor
 public class AuthController {
 	private final UserService userService;
-	
+
 	@PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody UserDTO userDTO) {
-        String result = userService.signup(userDTO);
-        return ResponseEntity.ok(result);
-    }
-	
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
-        String token = userService.login(loginRequest);
-        return ResponseEntity.ok().body(token);
-    }
+	public ResponseEntity<String> signup(@RequestBody UserDTO userDTO) {
+
+		try {
+			User result = userService.signup(userDTO);
+			return new ResponseEntity<>("성공적으로 회원가입 되었습니다..", HttpStatus.OK);
+		} catch (Exception ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
+	@PostMapping("/deleteAccount")
+	public ResponseEntity<String> deleteaccount(@RequestBody UserDTO userDTO) {
+
+		try {
+			userService.deleteAccount(userDTO);
+			return new ResponseEntity<>("Success Delete Account", HttpStatus.OK);
+		} catch (Exception ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+		String token = userService.login(loginRequest);
+		return ResponseEntity.ok().body(token);
+	}
 }

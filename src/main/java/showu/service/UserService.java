@@ -23,13 +23,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import showu.security.JwtTokenProvider;
 import showu.dto.LoginRequestDTO;
 import showu.dto.UserDTO;
 import showu.entity.User;
 import showu.repository.UserRepository;
+import showu.security.JwtTokenProvider;
 
 
 @Service
@@ -41,20 +42,34 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String signup(UserDTO userDTO) {
+    public User signup(UserDTO userDTO) throws IllegalStateException {
         System.out.println("🔥 회원 가입 로직 실행됨!");
-
+        
         if (userRepository.existsByUserId(userDTO.getUserId())) {
             throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
         }
+        
+        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
 
-        User user = User.of(userDTO.getUserId(), userDTO.getUserPw(), userDTO.getNickname());
+        User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
 
         userRepository.save(user);
         System.out.println("✅ 유저 저장 완료!");
-        return "회원 가입 성공!";
+        return user;
     }
+    
+	public void deleteAccount(UserDTO userDTO) throws IllegalStateException {
 
+        // 중복 체크 로직 추가
+        if (!userRepository.existsByUserId(userDTO.getUserId())) {
+            throw new IllegalStateException("존재하지 않는 사용자 입니다.");
+        }
+
+        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
+        
+        User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
+        userRepository.delete(user);
+	}
 
     public String login(LoginRequestDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(

@@ -1,10 +1,196 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="/css/signup.css">
 </head>
+<style>
+	body {
+	    height: 100vh;
+	    padding: 0;
+	    margin: 0;
+	    display: flex; 
+	    flex-direction: column;
+	    justify-content: center; 
+	    align-items: center;
+	}
+	p {
+	    padding: 0;
+	    margin: 0;
+	}
+	table {
+	    width : 250px;
+	    border : 1px solid #e8e8e8;
+	    border-spacing : initial;
+	    border-radius: 5px;
+	}
+	table tr {
+		height: 35px;
+	}
+	table td {
+	    padding: 0 10px;
+	    box-sizing: border-box;
+	}
+	table tr:not(:last-child) td {
+	    border-bottom: 1px solid #e8e8e8;
+	}
+	input {
+	    width : 96%;
+	    border : none;
+	    outline: none;
+	    font-size: 11px;
+	}
+	
+	.w_per_50 {
+	    width: 50%;
+	}
+	.h_per_100 {
+	    height: 100%; 
+	}
+	.mt_10 {
+	    margin-top: 10px;
+	}
+	.mb_5 {
+	    margin-bottom: 5px;
+	}
+	.mr_5 {
+	    margin-right: 5px;
+	}    
+	.mb_8 {
+        margin-bottom: 8px;
+    }
+    .disabled {
+		display: none;
+	}
+    .alignCenter {
+		display: flex;
+		align-items: center;
+	}
+	
+	#goToLogin {
+	    font-size: 12px;
+	    color: #e8e8e8;
+	    position: absolute;
+	    right: 23px;
+	    top: 17px;
+	    cursor: pointer;
+	    border: none;
+		background: none;
+	}
+	#goToLogin:hover {
+	    color: #4635B1;
+	}
+	#serviceName{
+	    color: #4635B1;
+	}
+	#signUp {
+	    width : 250px;
+	    height: 30px;
+	    font-size: 11px;
+	    border : none;
+	    border-radius: 5px;
+	    cursor: pointer;
+	    background-color: #4635B1;
+	    color: white;
+	    text-align: center;
+    	line-height: 28px;
+	}
+	#signUp:hover {
+	    background-color: rgb(215, 210, 242);
+	    color : black;
+	}
+    #warning {
+		font-size: 6px;
+		color: red;
+	}
+</style>
+
 <body>
-	signup page
+	<form action="/login" method="get">
+		<button id="goToLogin">로그인</button>
+	</form>
+    <h2 id="serviceName">ShowU</h2>
+    <table class="mb_8">
+        <tr>
+            <td>
+                <input id="id" name="id" type="text" placeholder="Id" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="pw" name="pw" type="password" placeholder="Password" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="nickname" name="nickname" type="text" placeholder="Nickname" required>
+            </td>
+        </tr>
+    </table>
+    <div id="warning" class="mb_8 disabled">
+		<img src="../static/images/Icons.png"/>
+		이미 존재하는 사용자 정보입니다.
+	</div>
+    <div id="signUp">SignUp</div>
 </body>
+<script>
+	document.getElementById('signUp').addEventListener('click', function(event) {
+		var isAvailable = checkAvailableUserInfo().isAvailable;
+		var message = checkAvailableUserInfo().message;
+
+		if(isAvailable){
+		    event.preventDefault();
+		    
+		    fetch('/api/signup', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify({
+		            "userId": document.getElementById('id').value,
+		            "userPw": document.getElementById('pw').value,
+		            "nickname": document.getElementById('nickname').value
+		        })
+		    })
+		    .then(response => {
+		        if (response.ok) {
+		            window.location.href = '/login';
+		        } else {
+		            document.getElementById('warning').style.display = 'block';
+		            document.getElementById('warning').innerText = "이미 존재하는 사용자 정보입니다.";
+		        }
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		    });
+		} else {
+			document.getElementById('warning').style.display = 'block';
+			document.getElementById('warning').innerText = message;
+			document.getElementById('id').value = null;
+			document.getElementById('pw').value = null;
+			document.getElementById('nickname').value = null;
+		}
+
+	});
+	
+	function checkAvailableUserInfo (){
+		var isAvailable = true;
+		var message = "성공적으로 가입 가능합니다.";
+		
+		var id = document.getElementById('id').value;
+		var pw = document.getElementById('pw').value;
+		var nickname = document.getElementById('nickname').value;
+		
+		if((id.length > 4 && id.length > 20) || (pw.length > 4 && pw.length > 20)){
+			isAvailable = false;
+			message = "아이디와 패스워드의 길이는 20자 이하여야 가능합니다.";
+		}
+		
+		return {
+			isAvailable : isAvailable,
+			message : message
+		}
+	}
+</script>
 </html>
