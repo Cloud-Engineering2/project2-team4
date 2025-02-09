@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 로그인, 토근, path permit 관련 config
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.08
+ * 최종 수정 날짜 : 2025.02.10
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -10,7 +10,8 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : SecurityConfig 작성
- * 배희창   2025.02.09    test url permit 열어둠
+ * 배희창   2025.02.09    test url permit 열어 둠
+ * 이홍비   2025.02.10    token test - authenticated() 설정
  * ========================================================
  */
 
@@ -63,6 +64,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
                 .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
                 .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
+                .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
