@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+body {
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+}
+p {
+    padding: 0;
+    margin: 0;
+}
+table {
+    width : 250px;
+    border : 1px solid #e8e8e8;
+    border-spacing : initial;
+    border-radius: 5px;
+}
+table tr {
+	height: 35px;
+}
+table td {
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+table tr:not(:last-child) td {
+    border-bottom: 1px solid #e8e8e8;
+}
+input {
+    width : 96%;
+    border : none;
+    outline: none;
+    font-size: 11px;
+}
+
+.w_per_50 {
+    width: 50%;
+}
+.h_per_100 {
+    height: 100%; 
+}
+.mt_10 {
+    margin-top: 10px;
+}
+.mb_5 {
+    margin-bottom: 5px;
+}
+.mr_5 {
+    margin-right: 5px;
+}    
+.mb_8 {
+    margin-bottom: 8px;
+}
+
+#goToLogin {
+    font-size: 12px;
+    color: #e8e8e8;
+    position: absolute;
+    right: 23px;
+    top: 17px;
+    cursor: pointer;
+    border: none;
+	background: none;
+}
+#goToLogin:hover {
+    color: #4635B1;
+}
+#serviceName{
+    color: #4635B1;
+}
+#signUp {
+    width : 250px;
+    height: 30px;
+    font-size: 11px;
+    border : none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4635B1;
+    color: white;
+}
+#signUp:hover {
+    background-color: rgb(215, 210, 242);
+    color : black;
+}
+#warning {
+	font-size: 6px;
+	color: red;
+}

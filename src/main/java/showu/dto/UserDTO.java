@@ -18,11 +18,13 @@ package showu.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import showu.entity.User;
 import showu.entity.constant.UserRole;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
     private Long id; // 사용자 고유 id
     private String userId; // 사용자 로그인 id
