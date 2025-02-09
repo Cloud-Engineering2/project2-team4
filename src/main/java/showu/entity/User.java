@@ -12,7 +12,8 @@
  * 배희창    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
  * 이홍비    2025.02.08    of() 추가
  * 이홍비    2025.02.08    별명 필드 추가 (nickname)
- * 이홍비    2025.02.09    비밀번호 길이 + 별명 필드 유티크 설정
+ * 이홍비    2025.02.09    비밀번호 길이 + 별명 필드 유니크 설정
+ * 이홍비    2025.02.09    UserRole 설정 변경
  * ========================================================
  */
 
@@ -23,6 +24,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import showu.common.utils.UserRoleAttributeConverter;
 import showu.entity.constant.UserRole;
 
 @Getter
@@ -44,9 +46,9 @@ public class User {
     @Column(unique = true, nullable = false, length = 20)
     private String userNickname; // 별명
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole; // 역할
+    @Column(nullable = false, length = 20)
+    @Convert(converter = UserRoleAttributeConverter.class)
+    private UserRole userRole; // 역할 (권한)
 
 
     // 생성자

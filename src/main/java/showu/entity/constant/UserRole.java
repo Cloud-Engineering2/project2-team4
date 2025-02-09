@@ -10,16 +10,28 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 이홍비    2025.02.08    최초 작성 : 사용자 역할 열거형
+ * 이홍비    2025.02.09    값 부여 + 생산자 추가 + annotation 설정
  * ========================================================
  */
 
 package showu.entity.constant;
 
+import lombok.Getter;
+import lombok.ToString;
+
 import java.util.Arrays;
 
+@ToString
+@Getter
 public enum UserRole {
-    ADMIN, // 관리자
-    MEMBER; // 회원
+    ADMIN("ROLE_ADMIN"),
+    MEMBER("ROLE_MEMBER");
+
+    private String userRole;
+
+    UserRole(String userRole) {
+        this.userRole = userRole;
+    }
 
     public static UserRole getInstance(String userRole) { // userRole 의 값을 문자열로 찾는 함수
 
