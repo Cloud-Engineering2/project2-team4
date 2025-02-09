@@ -10,19 +10,25 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : PostService 작성
+ * 배희창   2025.02.09    게시물 전체 조회, 생성, 삭제 구현
  * ========================================================
  */
 
 package showu.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import showu.dto.PostDTO;
 import showu.entity.Category;
 import showu.entity.Post;
 import showu.entity.User;
 import showu.repository.CategoryRepository;
+import showu.repository.CommentRepository;
 import showu.repository.PostRepository;
 import showu.repository.UserRepository;
 
@@ -30,26 +36,63 @@ import showu.repository.UserRepository;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
-    
-    public Post createDummyPost() {
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Category category = categoryRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+	private final PostRepository postRepository;
+	private final UserRepository userRepository;
+	private final CategoryRepository categoryRepository;
+	private final CommentRepository commentRepository;
+	private final S3Service s3Service;
+	
+	public Post createDummyPost() {
+		User user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
+		Category category = categoryRepository.findById(1L)
+				.orElseThrow(() -> new RuntimeException("Category not found"));
 
-        Post post = new Post();
-        post.setUser(user);
-        post.setCategory(category);
-        post.setTitle("더미 제목");
-        post.setContent("이것은 더미 데이터입니다.");
-        post.setLink("https://example.com");
-        post.setImageUrl("https://example.com/image.jpg");
-        post.setPlike(0);
+		Post post = new Post();
+		post.setUser(user);
+		post.setCategory(category);
+		post.setTitle("더미 제목");
+		post.setContent("이것은 더미 데이터입니다.");
+		post.setLink("https://example.com");
+		post.setImageUrl("https://example.com/image.jpg");
+		post.setPlike(0);
 
-        return postRepository.save(post);
-    }
+		return postRepository.save(post);
+	}
+
+	@Transactional
+	public PostDTO createPost(PostDTO postDTO) {
+		// User와 Category 엔티티 조회
+		User user = userRepository.findById(postDTO.getUser().getId())
+				.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID입니다."));
+		Category category = categoryRepository.findById(postDTO.getCategory().getId())
+				.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID입니다."));
+
+		// Post 엔티티 생성 및 저장
+		Post post = Post.of(user, category, postDTO.getTitle(), postDTO.getContent(), postDTO.getLink(),
+				postDTO.getImageUrl() // S3 업로드 후 받은 URL 저장
+		);
+
+		post = postRepository.save(post);
+		return PostDTO.from(post);
+	}
+
+	// 모든 게시물 조회
+	public List<PostDTO> getAllPosts() {
+		List<Post> posts = postRepository.findAll();
+		return posts.stream().map(PostDTO::from).collect(Collectors.toList());
+	}
+
+	// 게시물 삭제
+	@Transactional
+	public void deletePost(Long postId) {
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다: " + postId));
+
+		// 📌 S3에서 파일 삭제
+		s3Service.deleteS3File(post.getImageUrl());
+
+		// 📌 DB에서 게시글 삭제
+		postRepository.delete(post);
+	}
 
 }
