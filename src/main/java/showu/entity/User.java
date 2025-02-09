@@ -12,6 +12,7 @@
  * 배희창    2025.02.08    최초 작성 : DB 설계 기반 entity 작성
  * 이홍비    2025.02.08    of() 추가
  * 이홍비    2025.02.08    별명 필드 추가 (nickname)
+ * 이홍비    2025.02.09    비밀번호 길이 + 별명 필드 유티크 설정
  * ========================================================
  */
 
@@ -37,10 +38,10 @@ public class User {
     @Column(unique = true, nullable = false, length = 20)
     private String userId; // 로그인 시 id
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 61)
     private String userPw; // 비밀번호
 
-    @Column(nullable = false, length = 20)
+    @Column(unique = true, nullable = false, length = 20)
     private String userNickname; // 별명
 
     @Column(nullable = false)
