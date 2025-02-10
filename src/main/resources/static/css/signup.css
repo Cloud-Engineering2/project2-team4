@@ -54,6 +54,9 @@ input {
 .mb_8 {
     margin-bottom: 8px;
 }
+.disabled {
+	display: none;
+}
 
 #goToLogin {
     font-size: 12px;
@@ -80,6 +83,8 @@ input {
     cursor: pointer;
     background-color: #4635B1;
     color: white;
+    text-align: center;
+	line-height: 28px;
 }
 #signUp:hover {
     background-color: rgb(215, 210, 242);
@@ -88,4 +93,7 @@ input {
 #warning {
 	font-size: 6px;
 	color: red;
+}
+#warningIcon {
+	margin-right: 5px;
 }

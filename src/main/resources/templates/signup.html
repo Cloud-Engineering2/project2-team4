@@ -63,10 +63,6 @@
     .disabled {
 		display: none;
 	}
-    .alignCenter {
-		display: flex;
-		align-items: center;
-	}
 	
 	#goToLogin {
 	    font-size: 12px;
@@ -104,6 +100,9 @@
 		font-size: 6px;
 		color: red;
 	}
+	#warningIcon {
+		margin-right: 5px;
+	}
 </style>
 
 <body>
@@ -129,7 +128,7 @@
         </tr>
     </table>
     <div id="warning" class="mb_8 disabled">
-		<img src="../static/images/Icons.png"/>
+		<img id="warningIcon" src="../static/images/Icons.png"/>
 		이미 존재하는 사용자 정보입니다.
 	</div>
     <div id="signUp">SignUp</div>
@@ -138,6 +137,7 @@
 	document.getElementById('signUp').addEventListener('click', function(event) {
 		var isAvailable = checkAvailableUserInfo().isAvailable;
 		var message = checkAvailableUserInfo().message;
+		var responseStatus = false;
 
 		if(isAvailable){
 		    event.preventDefault();
@@ -153,12 +153,19 @@
 		            "nickname": document.getElementById('nickname').value
 		        })
 		    })
-		    .then(response => {
-		        if (response.ok) {
+			.then(async response => {
+				const message = await response.text();
+				return {
+					status : response.ok,
+					message : message
+				}
+			})
+		    .then(data => {
+		        if (data.status) {
 		            window.location.href = '/login';
 		        } else {
 		            document.getElementById('warning').style.display = 'block';
-		            document.getElementById('warning').innerText = "이미 존재하는 사용자 정보입니다.";
+		            document.getElementById('warning').innerHTML = data.message;
 		        }
 		    })
 		    .catch(error => {
@@ -167,9 +174,6 @@
 		} else {
 			document.getElementById('warning').style.display = 'block';
 			document.getElementById('warning').innerText = message;
-//			document.getElementById('id').value = null;
-//			document.getElementById('pw').value = null;
-//			document.getElementById('nickname').value = null;
 		}
 
 	});
@@ -198,10 +202,10 @@
 		}
 		
 		if(!hasEmptyValue){
-			if((id.length < 4 || id.length > 20) || (pw.length < 4 || pw.length > 20)){
+			if((id.length < 4 || id.length > 20) || (pw.length < 4 || pw.length > 20) || (nickname.length > 20)){
 				isAvailable = false;
-				message = "아이디와 패스워드의 길이는 4자 이상 20자 이하여야 가능합니다.";
-			}	
+				message = "아이디, 패스워드는 4자 이상 20자 이하, 닉네임은 최대 20자 까지 가능합니다.";
+			}
 		}
 		
 		return {

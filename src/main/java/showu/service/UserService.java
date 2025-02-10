@@ -12,12 +12,10 @@
  * 배희창   2025.02.08    최초 작성 : UserService 작성
  * 배희창   2025.02.08    login() 구현
  * 이홍비   2025.02.08    nickname 추가
-<<<<<<< HEAD
  * 채혜송   2025.02.09    회원 가입 서비스 return 값 수정, 탈퇴 서비스 추가
  * 이홍비   2025.02.09    login() - 예외 등 처리
-=======
  * 배희창   2025.02.10    token에 uid값 들어가게 추가
->>>>>>> feat/post
+ * 채혜송   2025.02.10    signup 닉네임 중복 확인 로직 추가
  * ========================================================
  */
 
@@ -49,14 +47,17 @@ public class UserService {
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 
-	public User signup(UserDTO userDTO) throws IllegalStateException {
-		System.out.println("🔥 회원 가입 로직 실행됨!");
-
-		if (userRepository.existsByUserId(userDTO.getUserId())) {
-			throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
-		}
-
-		String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
+    public User signup(UserDTO userDTO) throws IllegalStateException {
+        System.out.println("🔥 회원 가입 로직 실행됨!");
+        
+        if (userRepository.existsByUserId(userDTO.getUserId())) {
+            throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
+        }
+        if (userRepository.existsByUserNickname(userDTO.getNickname())) {
+            throw new IllegalStateException("이미 사용 중인 닉네임 입니다.");
+        }
+        
+        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
 
 		User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
 
