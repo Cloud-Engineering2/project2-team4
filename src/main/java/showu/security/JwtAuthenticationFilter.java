@@ -60,6 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        logger.info("📌 Authorization 헤더: " + bearerToken); // ✅ 추가 로그
         return (bearerToken != null && bearerToken.startsWith("Bearer ")) ? bearerToken.substring(7) : null;
     }
 }

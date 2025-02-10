@@ -94,5 +94,11 @@ public class PostService {
 		// 📌 DB에서 게시글 삭제
 		postRepository.delete(post);
 	}
-
+	
+	// 게시물 단일 조회
+    public PostDTO getPostById(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
+        return PostDTO.from(post);
+    }
 }

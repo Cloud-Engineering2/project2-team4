@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 로그인, 회원 가입 처리용 유저 서비스.
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.09
+ * 최종 수정 날짜 : 2025.02.10
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -14,6 +14,8 @@
  * 이홍비   2025.02.08    nickname 추가
  * 채혜송   2025.02.09    회원 가입 서비스 return 값 수정, 탈퇴 서비스 추가
  * 이홍비   2025.02.09    login() - 예외 등 처리
+ * 배희창   2025.02.10    token에 uid값 들어가게 추가
+ * 채혜송   2025.02.10    signup 닉네임 중복 확인 로직 추가
  * ========================================================
  */
 
@@ -24,6 +26,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,15 +38,14 @@ import showu.entity.User;
 import showu.repository.UserRepository;
 import showu.security.JwtTokenProvider;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final JwtTokenProvider jwtTokenProvider;
 
     public User signup(UserDTO userDTO) throws IllegalStateException {
         System.out.println("🔥 회원 가입 로직 실행됨!");
@@ -51,44 +53,53 @@ public class UserService {
         if (userRepository.existsByUserId(userDTO.getUserId())) {
             throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
         }
-        
-        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
-
-        User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
-
-        userRepository.save(user);
-        System.out.println("✅ 유저 저장 완료!");
-        return user;
-    }
-    
-	public void deleteAccount(UserDTO userDTO) throws IllegalStateException {
-
-        // 중복 체크 로직 추가
-        if (!userRepository.existsByUserId(userDTO.getUserId())) {
-            throw new IllegalStateException("존재하지 않는 사용자 입니다.");
+        if (userRepository.existsByUserNickname(userDTO.getNickname())) {
+            throw new IllegalStateException("이미 사용 중인 닉네임 입니다.");
         }
-
-        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
         
-        User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
-        userRepository.delete(user);
+        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
+
+		User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
+
+		userRepository.save(user);
+		System.out.println("✅ 유저 저장 완료!");
+		return user;
 	}
 
-    public String login(LoginRequestDTO loginRequest) {
+
+	public void deleteAccount(UserDTO userDTO) throws IllegalStateException {
+
+		// 중복 체크 로직 추가
+		if (!userRepository.existsByUserId(userDTO.getUserId())) {
+			throw new IllegalStateException("존재하지 않는 사용자 입니다.");
+		}
+
+		String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
+
+		User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
+		userRepository.delete(user);
+	}
+
+	public String login(LoginRequestDTO loginRequest) {
 
         try {
-            System.out.println("🔥 로그인 도전! : " + loginRequest.getUserId());
+            System.out.println("🔥 로그인 도전! - Service : " + loginRequest.getUserId());
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getUserPw())
             );
-            System.out.println("✅ 인증 성공!");
+            System.out.println("✅ 인증 성공! - Service : ");
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return jwtTokenProvider.createToken(userDetails.getUsername());
-        } catch (BadCredentialsException e) {
-                System.err.println("❌ 인증 실패 ㅠㅠ : " + e.getMessage());
 
+            User user = userRepository.findByUserId(userDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userDetails.getUsername()));
+
+            return jwtTokenProvider.createToken(user.getUid()); // ✅ uid로 토큰 생성
+
+        } catch (BadCredentialsException e) {
+                System.err.println("❌ 인증 실패 ㅠㅠ - Service : " + e.getMessage());
                 throw new BadCredentialsException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
-    }
+	}
+
 }

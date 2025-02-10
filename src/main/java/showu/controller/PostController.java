@@ -89,5 +89,9 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.ok("게시글 삭제 완료");
     }
-
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
+    	PostDTO post = postService.getPostById(postId);
+        return ResponseEntity.ok(post);
+    }
 }
