@@ -11,6 +11,7 @@
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : PostService 작성
  * 배희창   2025.02.09    게시물 전체 조회, 생성, 삭제 구현
+ * 배희창   2025.02.10    게시물 수정 구현
  * ========================================================
  */
 
@@ -101,4 +102,33 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         return PostDTO.from(post);
     }
+    
+    @Transactional
+    public PostDTO updatePost(Long postId, PostDTO postDTO) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        // User와 Category 정보 확인
+        User user = userRepository.findById(postDTO.getUser().getId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID입니다."));
+        Category category = categoryRepository.findById(postDTO.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID입니다."));
+
+        // 기존 데이터 업데이트
+        post.setUser(user);
+        post.setCategory(category);
+        post.setTitle(postDTO.getTitle());
+        post.setContent(postDTO.getContent());
+        post.setLink(postDTO.getLink());
+
+        // 새 파일이 있을 경우에만 업데이트 (없으면 기존 이미지 유지)
+        if (postDTO.getImageUrl() != null) {
+            post.setImageUrl(postDTO.getImageUrl());
+        }
+
+        post = postRepository.save(post);
+        return PostDTO.from(post);
+    }
+    
+    
 }
