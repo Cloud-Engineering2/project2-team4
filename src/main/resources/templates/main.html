@@ -9,18 +9,7 @@
 <body>
     <h1>Main Page</h1>
     <p id="responseText">Loading...</p>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            axios.get("/api/post/test")
-                .then(response => {
-                    document.getElementById("responseText").textContent = response.data;
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    document.getElementById("responseText").textContent = "Failed to load data";
-                });
-        });
-    </script>
+
     
 </body>
 </html>

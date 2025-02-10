@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,9 +90,14 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.ok("게시글 삭제 완료");
     }
+    
+    // 단일 게시물 조회
     @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
     	PostDTO post = postService.getPostById(postId);
         return ResponseEntity.ok(post);
     }
+    
+//    @PutMapping("{postId}")
+    
 }
