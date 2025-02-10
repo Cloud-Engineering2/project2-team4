@@ -12,6 +12,7 @@
  * 배희창   2025.02.08    최초 작성 : UserService 작성
  * 배희창   2025.02.08    login() 구현
  * 이홍비   2025.02.08    nickname 추가
+ * 배희창   2025.02.10    token에 uid값 들어가게 추가
  * ========================================================
  */
 
@@ -21,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,51 +34,56 @@ import showu.entity.User;
 import showu.repository.UserRepository;
 import showu.security.JwtTokenProvider;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final JwtTokenProvider jwtTokenProvider;
 
-    public User signup(UserDTO userDTO) throws IllegalStateException {
-        System.out.println("🔥 회원 가입 로직 실행됨!");
-        
-        if (userRepository.existsByUserId(userDTO.getUserId())) {
-            throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
-        }
-        
-        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
+	public User signup(UserDTO userDTO) throws IllegalStateException {
+		System.out.println("🔥 회원 가입 로직 실행됨!");
 
-        User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
+		if (userRepository.existsByUserId(userDTO.getUserId())) {
+			throw new IllegalStateException("이미 존재하는 사용자 ID입니다.");
+		}
 
-        userRepository.save(user);
-        System.out.println("✅ 유저 저장 완료!");
-        return user;
-    }
-    
-	public void deleteAccount(UserDTO userDTO) throws IllegalStateException {
+		String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
 
-        // 중복 체크 로직 추가
-        if (!userRepository.existsByUserId(userDTO.getUserId())) {
-            throw new IllegalStateException("존재하지 않는 사용자 입니다.");
-        }
+		User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
 
-        String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
-        
-        User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
-        userRepository.delete(user);
+		userRepository.save(user);
+		System.out.println("✅ 유저 저장 완료!");
+		return user;
 	}
 
-    public String login(LoginRequestDTO loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getUserPw())
-        );
+	public void deleteAccount(UserDTO userDTO) throws IllegalStateException {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtTokenProvider.createToken(userDetails.getUsername());
-    }
+		// 중복 체크 로직 추가
+		if (!userRepository.existsByUserId(userDTO.getUserId())) {
+			throw new IllegalStateException("존재하지 않는 사용자 입니다.");
+		}
+
+		String encodePassword = passwordEncoder.encode(userDTO.getUserPw());
+
+		User user = User.of(userDTO.getUserId(), encodePassword, userDTO.getNickname());
+		userRepository.delete(user);
+	}
+
+	public String login(LoginRequestDTO loginRequest) {
+
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getUserPw()));
+
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+
+		User user = userRepository.findByUserId(userDetails.getUsername())
+				.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userDetails.getUsername()));
+
+		return jwtTokenProvider.createToken(user.getUid()); // ✅ uid로 토큰 생성
+
+	}
 }
