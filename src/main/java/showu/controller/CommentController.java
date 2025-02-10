@@ -16,23 +16,65 @@
 package showu.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import showu.dto.CommentDTO;
+import showu.dto.UserDTO;
+import showu.dto.request.CommentRequest;
+import showu.dto.response.CommentResponse;
 import showu.entity.Comment;
+import showu.entity.constant.UserRole;
 import showu.service.CommentService;
 
+import java.time.LocalDateTime;
+
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/testdata")
-    public ResponseEntity<Comment> createTestComment() {
-        Comment dummyComment = commentService.createDummyComment();
-        return ResponseEntity.ok(dummyComment);
+    @PostMapping
+    public ResponseEntity<CommentResponse> registerComment(@RequestBody CommentRequest commentRequest) {
+
+        // 로그인 가정
+        UserDTO userDTO = UserDTO.of(2L,
+                "admin",
+                "admin",
+                "admin@showu.store",
+                UserRole.ADMIN);
+
+
+        CommentDTO commentDTO = commentService.registerComment(commentRequest.toDto(userDTO));
+
+        return ResponseEntity.ok(CommentResponse.from(commentDTO));
+    }
+
+
+    @PutMapping("/{cmid}")
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long cmid, @RequestBody CommentRequest commentRequest) {
+        // 로그인 가정
+        UserDTO userDTO = UserDTO.of(2L,
+                "admin",
+                "admin",
+                "admin@showu.store",
+                UserRole.ADMIN);
+
+        CommentDTO commentDTO = commentService.updateComment(cmid, commentRequest.toDto(userDTO));
+        return ResponseEntity.ok(CommentResponse.from(commentDTO));
+    }
+
+    @DeleteMapping("/{cmid}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long cmid) {
+        // 로그인 가정
+        UserDTO userDTO = UserDTO.of(2L,
+                "admin",
+                "admin",
+                "admin@showu.store",
+                UserRole.ADMIN);
+
+        commentService.deleteComment(cmid, userDTO.getId());
+        return ResponseEntity.ok("comment deleted successfully");
     }
 }
