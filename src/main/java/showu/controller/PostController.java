@@ -11,6 +11,7 @@
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : PostController 작성
  * 배희창   2025.02.09    게시물 전체 조회, 생성, 삭제 구현
+ * 배희창   2025.02.10    게시물 수정 구현
  * ========================================================
  */
 
@@ -98,6 +99,25 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
     
-//    @PutMapping("{postId}")
+    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PostDTO> updatePost(
+            @PathVariable Long postId,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart("post") PostDTO postDTO) {
+
+        System.out.println("📌 받은 PostDTO 데이터: " + postDTO);
+        System.out.println("📌 받은 파일: " + (file != null ? file.getOriginalFilename() : "파일 없음"));
+
+        // 파일이 있으면 업로드 후 URL 설정
+        if (file != null && !file.isEmpty()) {
+            String imageUrl = s3Service.uploadS3File(file);
+            postDTO.setImageUrl(imageUrl);
+        }
+
+        PostDTO updatedPost = postService.updatePost(postId, postDTO);
+        System.out.println("📌 수정된 PostDTO 데이터: " + updatedPost);
+
+        return ResponseEntity.ok(updatedPost);
+    }
     
 }
