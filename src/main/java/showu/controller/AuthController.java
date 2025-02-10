@@ -12,15 +12,22 @@
  * 배희창   2025.02.08    최초 작성 : AuthController 작성
  * 채혜송   2025.02.09    회원 가입 수정 및 탈퇴 API 추가
  * 배희창   2025.02.09    login() - 토큰 로컬 스토리지 저장 추가
+ * 채혜송   2025.02.09    회원가입 수정 및 탈퇴 API 추가
+ * 배희창   2025.02.10    login 부분 401 에러처리 수정
+ * 채혜송   2025.02.10    회원가입 return 수정
  * 이홍비   2025.02.10    login() - try-catch 제거 // logout() 구현
  * ========================================================
  */
 package showu.controller;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,9 +55,9 @@ public class AuthController {
 
 		try {
 			User result = userService.signup(userDTO);
-			return new ResponseEntity<>("성공적으로 회원가입 되었습니다..", HttpStatus.OK);
+			return ResponseEntity.ok().body("Success Sign Up");
 		} catch (Exception ex) {
-			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 
 	}
@@ -60,11 +67,12 @@ public class AuthController {
 
 		try {
 			userService.deleteAccount(userDTO);
-			return new ResponseEntity<>("Success Delete Account", HttpStatus.OK);
+			return ResponseEntity.ok().body("Success Delete Account");
 		} catch (Exception ex) {
-			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}
+
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
@@ -102,4 +110,6 @@ public class AuthController {
 		}
 
 	}
+
+
 }

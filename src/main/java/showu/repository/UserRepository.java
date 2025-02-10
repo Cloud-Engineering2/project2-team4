@@ -10,6 +10,7 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : UserRepository 작성
+ * 채혜송   2025.02.10    existsByUserNickname 추가
  * ========================================================
  */
 
@@ -26,4 +27,5 @@ import showu.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByUserId(String userId);
 	Optional<User> findByUserId(String userId);
+	boolean existsByUserNickname(String nickname);
 }

@@ -12,6 +12,8 @@
  * 배희창   2025.02.08    최초 작성 : SecurityConfig 작성
  * 배희창   2025.02.09    test url permit 열어 둠
  * 이홍비   2025.02.10    token test - authenticated() 설정
+ * 배희창   2025.02.09    test url permit 열어둠
+ * 배희창   2025.02.10    id pw 불일치시 401 반환
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * ========================================================
  */
@@ -69,8 +71,13 @@ public class SecurityConfig {
                     .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
                     .anyRequest().authenticated()
             )
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling(e -> e.authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드
+                    response.setContentType("application/json; charset=UTF-8");
+                }))
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 }
+
