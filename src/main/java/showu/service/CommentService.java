@@ -18,6 +18,7 @@ package showu.service;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import showu.dto.CommentDTO;
 import showu.entity.Comment;
 import showu.entity.Post;
 import showu.entity.User;
@@ -44,6 +45,25 @@ public class CommentService {
         comment.setContent("이것은 더미 댓글입니다.");
 
         return commentRepository.save(comment);
+    }
+
+    public Comment registerComment(CommentDTO commentDTO) {
+        User user = userRepository.getReferenceById(commentDTO.getUserDTO().getId());
+
+        Post post = postRepository.getReferenceById(commentDTO.getPid());
+
+        Comment comment = commentDTO.toEntity(post, user);
+
+        return commentRepository.save(comment);
+    }
+
+    public Comment getAllComments() {
+    }
+
+    public Comment updateComment() {
+    }
+
+    public Comment deleteComment() {
     }
 }
 

@@ -74,10 +74,9 @@ public class Comment {
         this.content = content;
     }
 
-    private Comment(Long id, Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    private Comment(Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
 
         // 초기화
-        this.cmid = id;
         this.post = post;
         this.user = user;
         this.content = content;
@@ -91,8 +90,8 @@ public class Comment {
         return new Comment(post, user, content);
     }
 
-    public static Comment of(Long id, Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-        return new Comment(id, post, user, content, createdDate, modifiedDate);
+    public static Comment of(Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        return new Comment(post, user, content, createdDate, modifiedDate);
     }
 
 

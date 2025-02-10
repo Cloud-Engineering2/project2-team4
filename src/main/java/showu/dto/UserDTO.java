@@ -40,7 +40,7 @@ public class UserDTO {
     }
 
     // static factory method - UserDTO 객체 생성
-    public static UserDTO of(String id, String userId, String pw, String nickname, UserRole userRole) {
+    public static UserDTO of(Long id, String userId, String pw, String nickname, UserRole userRole) {
         return UserDTO.of(id, userId, pw, nickname, userRole);
     }
 
