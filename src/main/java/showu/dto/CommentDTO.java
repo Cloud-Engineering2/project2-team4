@@ -18,6 +18,7 @@ package showu.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import showu.entity.Comment;
 import showu.entity.Post;
 import showu.entity.User;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class CommentDTO {
     private Long id; // 댓글 고유 id
     private Long pid; // 해당 게시 글
@@ -36,13 +38,14 @@ public class CommentDTO {
     private LocalDateTime modifiedAt; // 최종 수정 날짜
 
     // static factory method - CommentDTO 객체 생성
-    public static CommentDTO of(Long pid, UserDTO user, String content) {
-        return CommentDTO.of(pid, user, content);
+    public static CommentDTO of(Long id, Long pid, UserDTO user, String content, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        return new CommentDTO(id, pid, user, content, createdAt, modifiedAt);
     }
 
-    public static CommentDTO of(Long id, Long pid, UserDTO user, String content, LocalDateTime createdAt) {
-        return CommentDTO.of(id, pid, user, content, createdAt);
+    public static CommentDTO of(Long pid, UserDTO user, String content) {
+        return CommentDTO.of(null, pid, user, content, null, null);
     }
+
 
     // entity -> dto
     public static CommentDTO from(Comment comment) {
@@ -57,7 +60,7 @@ public class CommentDTO {
     }
 
     // dto -> entity
-    public Comment toEntity(Post post, User user) {
+    public Comment toEntity(Post post, User user, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         return Comment.of(post, user, content, createdAt, modifiedAt);
     }
 

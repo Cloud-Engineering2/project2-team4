@@ -22,5 +22,6 @@ import showu.entity.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+    void deleteByCmidAndUser_Uid(Long cmid, Long uid);
 }
 
