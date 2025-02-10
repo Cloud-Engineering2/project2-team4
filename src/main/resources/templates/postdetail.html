@@ -17,7 +17,7 @@
             </div>
             <div class="comment-section">
                 <div class="username-and-button-section">
-                    <h2>유저 이름</h2>
+                    <h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
                     <div class="edit-and-delete-button">
                         <button class="edit-button" onclick="">EDIT</button>
                         <button class="delete-button" onclick="">DELETE</button>
@@ -25,17 +25,20 @@
                 </div>
 
                 <h3>제목</h3>
-                <div class="title">
+                <div class="title" th:text="${post?.createdBy}">
                     사진 제목
                 </div>
+
                 <h3>내용</h3>
-                <div class="content">
+                <div class="content" th:text="${post?.content}">
                     사진 내용
                 </div>
+
                 <h3>댓글</h3>
                 <div class="comments" id="comments">
-                    <div class="comment">사용자1: 멋진 사진이네요!</div>
-                    <div class="comment">사용자2: 정말 아름다워요 😍</div>
+                    <div class="comment" th:each="comment : ${comments}">
+                        <p th:text="|${comment.createdBy}: ${comment.content}|">댓글1: 멋진 사진이네요!</p>
+                    </div>
                 </div>
                 <div class="add-comment">
                     <input type="text" id="commentInput" placeholder="댓글 추가...">

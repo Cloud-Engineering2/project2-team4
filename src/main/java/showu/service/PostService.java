@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import showu.dto.PostDTO;
+import showu.dto.PostWithCommentsDTO;
 import showu.entity.Category;
 import showu.entity.Post;
 import showu.entity.User;
@@ -129,6 +130,12 @@ public class PostService {
         post = postRepository.save(post);
         return PostDTO.from(post);
     }
-    
-    
+
+
+	@Transactional
+	public PostWithCommentsDTO getPostWithComments(Long pid) {
+		return postRepository.findById(pid)
+				.map(PostWithCommentsDTO::from)
+				.orElseThrow();
+	}
 }
