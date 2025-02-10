@@ -7,7 +7,38 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
     <script th:inline="javascript">
+		
+		function getUserIdFromToken() {
+	        let token = localStorage.getItem("token");
+	        if (!token) return null;
+	
+	        try {
+	            let payload = JSON.parse(atob(token.split('.')[1])); // Base64 디코딩
+	            console.log("📌 디코딩된 JWT Payload:", payload); // 디버깅용 로그
+	            return payload.uid || null; // ✅ "uid" 값 가져오기
+	        } catch (error) {
+	            console.error("토큰 디코딩 실패:", error);
+	            return null;
+	        }
+	    }
+	    
+		// 카테고리 수정 함수
 		function editCategory(cid) {
+			
+			// 📌 토큰 가져오기
+	        let token = localStorage.getItem("token");
+	        if (!token) {
+	            alert("❌ 로그인 후 이용하세요!");
+	            return;
+	        }
+	
+	        // 📌 토큰에서 uid 추출
+	        let userId = getUserIdFromToken();
+	        if (!userId) {
+	            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+	            return;
+	        }
+			// 기존 카테고리명
             const currentName = document.querySelector(`#category-name-${cid}`).textContent;
 		    // 수정할 카테고리명 입력 받기
 		    const newName = prompt("새 카테고리명을 입력하세요:", currentName);
@@ -24,7 +55,12 @@
 		    }
 		
 		    // PUT 요청으로 데이터 전송
-		    axios.put(`/api/admin/category/${cid}`, `cname=${newName}`)
+		    axios.put(`/api/admin/category/${cid}`, `cname=${newName}`, {
+		            headers: {
+		                "Authorization": `Bearer ${token}`,  // Authorization 헤더에 JWT 토큰 추가
+		                'Content-Type': 'application/x-www-form-urlencoded'
+		            }
+		        })
 		        .then(function(response) {
 		            alert("카테고리가 수정되었습니다.");
 		            location.reload(); // 수정 후 새로고침
@@ -35,12 +71,33 @@
 		        });
         }
 
-        // 삭제 함수
+        // 카테고리 삭제 함수
         function deleteCategory(cid) {
+			// 📌 토큰 가져오기
+	        let token = localStorage.getItem("token");
+	        if (!token) {
+	            alert("❌ 로그인 후 이용하세요!");
+	            return;
+	        }
+	
+	        // 📌 토큰에서 uid 추출
+	        let userId = getUserIdFromToken();
+	        if (!userId) {
+	            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+	            return;
+	        }
+			
+			
             if (!confirm("정말 삭제하시겠습니까?")) {
                 return;
             }
-            axios.delete(`/api/admin/category/${cid}`)
+            
+            // DELETE 요청으로 데이터 전송
+            axios.delete(`/api/admin/category/${cid}`, {
+	            headers: {
+	                "Authorization": `Bearer ${token}`  // Authorization 헤더에 JWT 토큰 추가
+	            }
+	        })
             .then(function(response) {
                 alert("카테고리가 삭제되었습니다.");
                 location.reload(); // 새로고침
@@ -53,6 +110,21 @@
 
         // 카테고리 추가 함수
         function addCategory() {
+			
+			// 📌 토큰 가져오기
+	        let token = localStorage.getItem("token");
+	        if (!token) {
+	            alert("❌ 로그인 후 이용하세요!");
+	            return;
+	        }
+	
+	        // 📌 토큰에서 uid 추출
+	        let userId = getUserIdFromToken();
+	        if (!userId) {
+	            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+	            return;
+	        }
+			
             const newCategory = prompt("새 카테고리명을 입력하세요:");
 
 		    if (!newCategory || newCategory.trim() === "") {
@@ -61,7 +133,12 @@
 		    }
 		
 		    // POST 요청으로 데이터 전송
-		    axios.post("/api/admin/category", `cname=${newCategory}`)
+		    axios.post("/api/admin/category", `cname=${newCategory}`, {
+		            headers: {
+		                "Authorization": `Bearer ${token}`,  // Authorization 헤더에 JWT 토큰 추가
+		                'Content-Type': 'application/x-www-form-urlencoded'
+		            }
+		        })
 		        .then(function(response) {
 		            alert("새 카테고리가 추가되었습니다.");
 		            location.reload(); // 새로고침
