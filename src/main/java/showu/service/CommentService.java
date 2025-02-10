@@ -16,6 +16,7 @@
 
 package showu.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class CommentService {
         return CommentDTO.from(updatedComment);
     }
 
+    @Transactional
     public void deleteComment(Long cmid, Long uid) {
         commentRepository.deleteByCmidAndUser_Uid(cmid,uid);
     }

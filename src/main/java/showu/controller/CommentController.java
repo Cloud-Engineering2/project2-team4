@@ -66,7 +66,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{cmid}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long cmid, Long uid) {
+    public ResponseEntity<String> deleteComment(@PathVariable Long cmid) {
         // 로그인 가정
         UserDTO userDTO = UserDTO.of(2L,
                 "admin",
