@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 로그인 api 처리 컨트롤러
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.08
+ * 최종 수정 날짜 : 2025.02.10
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -10,20 +10,24 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : AuthController 작성
+ * 채혜송   2025.02.09    회원 가입 수정 및 탈퇴 API 추가
+ * 배희창   2025.02.09    login() - 토큰 로컬 스토리지 저장 추가
  * 채혜송   2025.02.09    회원가입 수정 및 탈퇴 API 추가
  * 배희창   2025.02.10    login 부분 401 에러처리 수정
  * 채혜송   2025.02.10    회원가입 return 수정
+ * 이홍비   2025.02.10    login() - try-catch 제거 // logout() 구현
  * ========================================================
  */
 package showu.controller;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +38,11 @@ import showu.dto.LoginRequestDTO;
 import showu.dto.UserDTO;
 import showu.entity.User;
 import showu.service.UserService;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -64,28 +73,43 @@ public class AuthController {
 		}
 	}
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
-        try {
-            String token = userService.login(loginRequest);
 
-            // 성공 시 JSON 형식으로 토큰 반환
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
 
-        } catch (UsernameNotFoundException | BadCredentialsException e) {
-            // 아이디 또는 비밀번호가 틀린 경우 401 응답 + JSON 메시지 반환
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "아이디 또는 비밀번호가 잘못되었습니다. ctr");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-        } catch (Exception e) {
-            // 기타 서버 오류 500 응답
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "서버 오류가 발생했습니다.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
+		System.out.println("🔥 로그인 도전! - Controller : " + loginRequest.getUserId() + ", " + loginRequest.getUserPw());
+
+		String token = userService.login(loginRequest);
+
+		System.out.println("✅ 로그인 성공! - Controller : " + token);
+
+		// 토큰 주입
+		Map<String, String> response = new HashMap<>();
+		response.put("token", token);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(HttpServletRequest request) {
+
+		System.out.println("🔥 로그아웃 도전! - Controller");
+
+		String token = request.getHeader("Authorization"); // 토큰 get
+		if (token != null && !token.isEmpty()) {
+			// 토큰 존재 o
+			System.out.println("🚪 로그아웃 성공! - Controller : " + token);
+
+			return ResponseEntity.ok(Collections.singletonMap("message", "로그아웃 되었습니다."));
+		} else {
+			// 토큰 못 받음
+			System.out.println("❌ 로그아웃 실패! - Controller : " + token);
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("message", "토큰이 제공되지 않았습니다."));
+		}
+
+	}
 
 
 }

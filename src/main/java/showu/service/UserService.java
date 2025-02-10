@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 로그인, 회원 가입 처리용 유저 서비스.
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.09
+ * 최종 수정 날짜 : 2025.02.10
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -82,17 +82,24 @@ public class UserService {
 
 	public String login(LoginRequestDTO loginRequest) {
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getUserPw()));
+        try {
+            System.out.println("🔥 로그인 도전! - Service : " + loginRequest.getUserId());
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getUserPw())
+            );
+            System.out.println("✅ 인증 성공! - Service : ");
 
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
+            User user = userRepository.findByUserId(userDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userDetails.getUsername()));
 
-		User user = userRepository.findByUserId(userDetails.getUsername())
-				.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userDetails.getUsername()));
+            return jwtTokenProvider.createToken(user.getUid()); // ✅ uid로 토큰 생성
 
-		return jwtTokenProvider.createToken(user.getUid()); // ✅ uid로 토큰 생성
-
+        } catch (BadCredentialsException e) {
+                System.err.println("❌ 인증 실패 ㅠㅠ - Service : " + e.getMessage());
+                throw new BadCredentialsException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
 	}
 
 }
