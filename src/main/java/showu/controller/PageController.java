@@ -49,12 +49,16 @@ public class PageController {
 		return "postget";
 	}
 	@GetMapping("/postdelete")
-	public String deletePostTestPage() {
+	public String getPostDeletePage() {
 		return "postdelete";
 	}
-	@GetMapping("postone")
+	@GetMapping("/postone")
 	public String getPostOnePage() {
 		return "postone";
+	}
+	@GetMapping("/postput")
+	public String getPostPutPage() {
+		return "postput";
 	}
 	
 }
