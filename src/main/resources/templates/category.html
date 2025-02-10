@@ -5,8 +5,8 @@
 	<meta charset="UTF-8">
 	<title>Category</title>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<link rel="stylesheet" href="/static/css/main.css">
-	<link rel="stylesheet" href="/static/css/category.css">
+
+	<link rel="stylesheet" type="text/css" href="/css/category.css">
 	<script th:inline="javascript">
 		
 		function getUserIdFromToken() {
@@ -128,7 +128,7 @@
 			
             const newCategory = prompt("새 카테고리명을 입력하세요:");
 
-		    if (!newCategory || newCategory.trim() === "") {
+		    if (newCategory.trim() === "") {
 		        alert("카테고리명은 필수입니다.");
 		        return;
 		    }
@@ -159,6 +159,8 @@
             <thead>
                 <tr>
                     <th class="category col-2"><a>Category name</a></th>
+                    <th class="category col-2"><a>수정</a></th>
+                    <th class="category col-2"><a>삭제</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -176,73 +178,8 @@
             </tbody>
         </table>
         <div class="add-category-btn">
-            <button onclick="addCategory()">카테고리 추가</button>
+            <button onclick="addCategory()">카테고리 생성</button>
         </div>
     </div>
-   
-	<style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f9f9f9;
-        }
-        .title {
-            font-size: 32px;
-            font-weight: bold;
-            color: #5A2EC7;
-            margin-bottom: 30px;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 500px;
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        th {
-            background-color: #ececec;
-            font-weight: bold;
-        }
-        button {
-            background: #5A2EC7;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        button:hover {
-            background: #4A24A6;
-        }
-        .add-category {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            width: 100%;
-        }
-        td button {
-            width: 100%;
-        }
-    </style>
 </body>
 </html>

@@ -36,7 +36,7 @@ h2 {
 }
 
 .category {
-	font-family: "Gothic A1", serif;
+ 	font-family: "Gothic A1", sans-serif;
 	font-weight: 700;
 	font-style: normal;
 	color: #4635B1;
@@ -89,11 +89,28 @@ button:hover {
     background: #4A24A6;
 }
 
-/* "카테고리 추가" 버튼 정렬 */
-.add-category {
+/* 카테고리 추가 버튼 감싸는 div 정렬 */
+.add-category-btn {
     display: flex;
-    justify-content: center;
+    justify-content: center;  /* 가운데 정렬 */
     align-items: center;
-    margin-top: 20px;
-    width: 100%;
+    width: 100%;  /* 부모 요소를 꽉 채움 */
+    margin-top: 20px; /* 테이블과 간격 */
+}
+
+/* 카테고리 추가 버튼 스타일 */
+.add-category-btn button {
+    background: #5A2EC7;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: auto;  /* 버튼 크기를 내용에 맞춤 */
+    text-align: center;
+}
+
+.add-category-btn button:hover {
+    background: #4A24A6;
 }
