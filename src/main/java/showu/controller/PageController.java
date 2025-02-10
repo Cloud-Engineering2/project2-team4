@@ -52,5 +52,9 @@ public class PageController {
 	public String deletePostTestPage() {
 		return "postdelete";
 	}
+	@GetMapping("postone")
+	public String getPostOnePage() {
+		return "postone";
+	}
 	
 }

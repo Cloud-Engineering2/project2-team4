@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 조회</title>
+    <script>
+        function getPostById() {
+            let postId = document.getElementById("postIdInput").value;
+            if (!postId) {
+                alert("게시물 ID를 입력하세요!");
+                return;
+            }
+
+            fetch(`/api/post/${postId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("게시물을 찾을 수 없습니다.");
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("postResult").innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => alert(error.message));
+        }
+    </script>
+</head>
+<body>
+    <h1>게시물 조회</h1>
+    <input type="text" id="postIdInput" placeholder="게시물 ID 입력">
+    <button onclick="getPostById()">조회</button>
+    
+    <pre id="postResult"></pre>
+</body>
+</html>
