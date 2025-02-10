@@ -31,17 +31,17 @@ public class UserDTO {
     private String userId; // 사용자 로그인 id
     private String userPw; // 비밀번호
     private String nickname; // 별명
-    private UserRole userRole = UserRole.MEMBER; // default = MEMBER
+    private UserRole userRole; // default = MEMBER
 
 
     // static factory method - UserDTO 객체 생성
     public static UserDTO of(String userId, String pw, String nickname) {
-        return UserDTO.of(userId, pw, nickname);
+        return UserDTO.of(null, userId, pw, nickname, UserRole.MEMBER);
     }
 
     // static factory method - UserDTO 객체 생성
-    public static UserDTO of(String id, String userId, String pw, String nickname, UserRole userRole) {
-        return UserDTO.of(id, userId, pw, nickname, userRole);
+    public static UserDTO of(Long id, String userId, String pw, String nickname, UserRole userRole) {
+        return new UserDTO(id, userId, pw, nickname, userRole);
     }
 
     // entity -> dto

@@ -20,7 +20,7 @@ package showu.entity;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -32,10 +32,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -74,10 +72,9 @@ public class Comment {
         this.content = content;
     }
 
-    private Comment(Long id, Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    private Comment(Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
 
         // 초기화
-        this.cmid = id;
         this.post = post;
         this.user = user;
         this.content = content;
@@ -91,9 +88,15 @@ public class Comment {
         return new Comment(post, user, content);
     }
 
-    public static Comment of(Long id, Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-        return new Comment(id, post, user, content, createdDate, modifiedDate);
+    public static Comment of(Post post, User user, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        return new Comment(post, user, content, createdDate, modifiedDate);
     }
 
 
+    public void updateContentAndModifiedDate(String content, LocalDateTime modifiedDate) {
+        System.out.println(content);
+        System.out.println(modifiedDate);
+        this.content = content;
+        this.modifiedDate = modifiedDate;
+    }
 }
