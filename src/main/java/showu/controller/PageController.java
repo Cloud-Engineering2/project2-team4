@@ -56,6 +56,15 @@ public class PageController {
 	public String getPostOnePage() {
 		return "postone";
 	}
+	@GetMapping("/postdetail")
+	public String getPostDetailPage() {
+		return "postdetail";
+	}
+
+	@GetMapping("/tmp")
+	public String getTmpPage() {
+		return "postdetail";
+	}
 	@GetMapping("/postput")
 	public String getPostPutPage() {
 		return "postput";
