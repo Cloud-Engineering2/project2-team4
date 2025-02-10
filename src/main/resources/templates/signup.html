@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
     <link rel="stylesheet" type="text/css" href="/css/signup.css">
 </head>
 
@@ -29,10 +30,12 @@
         </tr>
     </table>
     <div id="warning" class="mb_8 disabled">
-		<img id="warningIcon" src="../static/images/Icons.png"/>
 		이미 존재하는 사용자 정보입니다.
 	</div>
     <div id="signUp">SignUp</div>
+
+    <div th:replace="~{fragments/footer}"></div>
+
 </body>
 <script>
 	document.getElementById('signUp').addEventListener('click', function(event) {
