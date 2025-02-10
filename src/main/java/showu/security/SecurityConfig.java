@@ -15,6 +15,7 @@
  * 배희창   2025.02.09    test url permit 열어둠
  * 배희창   2025.02.10    id pw 불일치시 401 반환
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
+ * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
  * ========================================================
  */
 
@@ -64,7 +65,7 @@ public class SecurityConfig {
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico",  "/postput").permitAll() // 정적 자원 허용
+                    .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico",  "/postput").permitAll() // 정적 자원 허용
                     .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
                     .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
                     // .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요

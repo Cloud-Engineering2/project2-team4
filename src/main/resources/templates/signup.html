@@ -76,8 +76,8 @@
 		        console.error('Error:', error);
 		    });
 		} else {
-			document.getElementById('warning').style.display = 'block';
-			document.getElementById('warning').innerText = message;
+			document.getElementById('warning').style.display = 'flex';
+			document.getElementById('warning').innerHTML = '<img id="warningIcon" src="/icons/Warning.png"/>' + message;
 		}
 
 	});
