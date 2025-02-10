@@ -4,17 +4,47 @@
     <meta charset="UTF-8">
     <title>파일 업로드 테스트</title>
     <script>
+    function getUserIdFromToken() {
+        let token = localStorage.getItem("token");
+        if (!token) return null;
+
+        try {
+            let payload = JSON.parse(atob(token.split('.')[1])); // Base64 디코딩
+            console.log("📌 디코딩된 JWT Payload:", payload); // 디버깅용 로그
+            return payload.uid || null; // ✅ "uid" 값 가져오기
+        } catch (error) {
+            console.error("토큰 디코딩 실패:", error);
+            return null;
+        }
+    }
+
     async function uploadFile() {
         let formData = new FormData();
+
+        // 📌 토큰 가져오기
+        let token = localStorage.getItem("token");
+        if (!token) {
+            alert("❌ 로그인 후 이용하세요!");
+            return;
+        }
+
+        // 📌 토큰에서 uid 추출
+        let userId = getUserIdFromToken();
+        if (!userId) {
+            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+            return;
+        }
 
         // 입력 필드 가져오기
         let fileInput = document.getElementById("file");
         let titleInput = document.getElementById("title");
         let contentInput = document.getElementById("content");
+        let linkInput = document.getElementById("link");
 
         let file = fileInput.files[0];
         let title = titleInput.value.trim();
         let content = contentInput.value.trim();
+        let link = linkInput.value.trim();
 
         // 필수값 체크
         if (!file) {
@@ -32,13 +62,13 @@
             return;
         }
 
-        // JSON 데이터 생성
+        // ✅ JSON 데이터 생성 (토큰에서 가져온 uid를 user.id로 설정)
         let postData = {
-            user: { id: 1 },
+            user: { id: userId },  // ✅ 로그인한 사용자의 UID 반영
             category: { id: 1 },
             title: title,
             content: content,
-            link: document.getElementById("link").value.trim()
+            link: link
         };
 
         // FormData에 추가
@@ -50,6 +80,9 @@
 
             let response = await fetch("/api/post", {
                 method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
                 body: formData
             });
 

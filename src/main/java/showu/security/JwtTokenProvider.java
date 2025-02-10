@@ -10,6 +10,8 @@
  * 작업자       날짜       수정 / 보완 내용
  * ========================================================
  * 배희창   2025.02.08    최초 작성 : JtwTokenProvider 작성
+ * 배희창   2025.02.10    token uid값으로 생성하게 수정
+ * 배희창   2025.02.10    userIdFromToken부분 uid값으로 검증하게 에러처리 완료
  * ========================================================
  */
 
@@ -34,9 +36,9 @@ public class JwtTokenProvider {
     private final String secretKey = "your-secret-key-your-secret-key"; // 🔹 256비트 이상 추천
     private final long validityInMilliseconds = 3600000; // 1시간
 
-    public String createToken(String userId) {
+    public String createToken(Long uid) {
         return JWT.create()
-                .withSubject(userId)
+                .withClaim("uid", uid) 
                 .withExpiresAt(new Date(System.currentTimeMillis() + validityInMilliseconds))
                 .sign(Algorithm.HMAC256(secretKey));
     }
@@ -52,7 +54,7 @@ public class JwtTokenProvider {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secretKey))
                     .build()
                     .verify(token);
-            return decodedJWT.getSubject();
+            return String.valueOf(decodedJWT.getClaim("uid").asLong()); 
         } catch (JWTVerificationException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
             return null;
@@ -65,6 +67,7 @@ public class JwtTokenProvider {
             return true;
         } catch (JWTVerificationException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
+            System.out.println(secretKey);
             return false;
         }
     }

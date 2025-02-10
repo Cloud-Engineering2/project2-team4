@@ -167,9 +167,9 @@
 		} else {
 			document.getElementById('warning').style.display = 'block';
 			document.getElementById('warning').innerText = message;
-			document.getElementById('id').value = null;
-			document.getElementById('pw').value = null;
-			document.getElementById('nickname').value = null;
+//			document.getElementById('id').value = null;
+//			document.getElementById('pw').value = null;
+//			document.getElementById('nickname').value = null;
 		}
 
 	});
@@ -177,14 +177,31 @@
 	function checkAvailableUserInfo (){
 		var isAvailable = true;
 		var message = "성공적으로 가입 가능합니다.";
+		var hasEmptyValue = false;
 		
 		var id = document.getElementById('id').value;
 		var pw = document.getElementById('pw').value;
 		var nickname = document.getElementById('nickname').value;
 		
-		if((id.length > 4 && id.length > 20) || (pw.length > 4 && pw.length > 20)){
+		if(id == null || id == ''){
 			isAvailable = false;
-			message = "아이디와 패스워드의 길이는 20자 이하여야 가능합니다.";
+			hasEmptyValue = true;
+			message = "아이디를 입력해주세요.";
+		} else if(pw == null || pw == ''){
+			isAvailable = false;
+			hasEmptyValue = true;
+			message = "패스워드를 입력해주세요.";
+		} else if(nickname == null || nickname == ''){
+			isAvailable = false;
+			hasEmptyValue = true;
+			message = "닉네임을 입력해주세요.";
+		}
+		
+		if(!hasEmptyValue){
+			if((id.length < 4 || id.length > 20) || (pw.length < 4 || pw.length > 20)){
+				isAvailable = false;
+				message = "아이디와 패스워드의 길이는 4자 이상 20자 이하여야 가능합니다.";
+			}	
 		}
 		
 		return {
