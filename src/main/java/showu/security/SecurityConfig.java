@@ -36,8 +36,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -66,20 +64,14 @@ public class SecurityConfig {
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll() // 정적 자원 허용
-                    .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
+                    .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico",  "/postput").permitAll() // 정적 자원 허용
+                    .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
                     .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
                     // .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
                     .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
                     .requestMatchers("/api/admin/**").hasRole("ADMIN") // 카테고리 CRUD 테스트용 - 작동여부 모르겠습니다
                     .anyRequest().authenticated()
-            )
-                .exceptionHandling(e -> e.authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드
-                    response.setContentType("application/json; charset=UTF-8");
-                }))
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
+            ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
