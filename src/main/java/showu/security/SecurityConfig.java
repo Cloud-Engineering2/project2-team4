@@ -12,6 +12,7 @@
  * 배희창   2025.02.08    최초 작성 : SecurityConfig 작성
  * 배희창   2025.02.09    test url permit 열어 둠
  * 이홍비   2025.02.10    token test - authenticated() 설정
+ * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * ========================================================
  */
 
@@ -61,11 +62,12 @@ public class SecurityConfig {
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
-                .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
-                .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
-                .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
-                .anyRequest().authenticated()
+                    .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll() // 정적 자원 허용
+                    .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
+                    .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
+                    // .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
+                    .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
+                    .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
