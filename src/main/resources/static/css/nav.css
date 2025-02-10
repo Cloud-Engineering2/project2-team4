@@ -1,0 +1,45 @@
+
+.nav {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid #aaa;
+    padding: 10px 0px 10px 0px;
+}
+.menu-box {
+    display: flex;
+    align-items: center;
+    .menu-button {
+        border: 1px solid black;
+        margin: 0px 10px 0px 10px;
+    }
+}
+/* #4635B1 */
+.login-box {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .l-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 33px;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: #4635B1;
+        color: #fff;
+        border-radius: 20px;
+        margin-right: 10px;
+        box-shadow: 0px 0px 4px 1px rgb(0, 0, 0, 0.1);
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

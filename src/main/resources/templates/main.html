@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
-    <h1>Main Page</h1>
-    <p id="responseText">Loading...</p>
-
+    <div th:replace="~{fragments/nav}"></div>
     
+    <h1>메인 페이지 내용</h1>
 </body>
 </html>
