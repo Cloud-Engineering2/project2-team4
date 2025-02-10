@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation</title>
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+</head>
+<body>
+    <div class="nav" th:fragment="nav">
+        <img src="/images/logo.png" alt="Logo"/>
+        <div class="login-box">
+            <div class="l-button" onclick="">LOGIN</div>
+            <div class="l-button">SIGNUP</div>
+        </div>   
+    </div>
+</body>
+</html>

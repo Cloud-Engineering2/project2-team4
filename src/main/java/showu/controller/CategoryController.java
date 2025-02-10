@@ -11,6 +11,7 @@
 * 전익주    2025.02.08    Category Controller 생성
 * 전익주    2025.02.08    Category 조회, 추가, 수정, 삭제 기능 구현
 * 전익주    2025.02.09    CategoryDto 기반으로 메서드 수정
+* 전익주    2025.02.10    RestController에서 Controller로 변경
 * ========================================================
 */ 
 
@@ -18,13 +19,16 @@ package showu.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
 import showu.dto.CategoryDTO;
@@ -32,35 +36,42 @@ import showu.service.CategoryService;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
-@RestController
+@Controller
 public class CategoryController {
 	private final CategoryService categoryService;
 	
 	// 모든 카테고리 조회
 	@GetMapping("/category")
-	public List<CategoryDTO> getCategories() {
+	public String getCategories(ModelMap map) {
 		List<CategoryDTO> categories = categoryService.getAllCategory();
-		return categories;
+		map.addAttribute("categories", categories);
+		return "category";
 	}
 	
 	// 카테고리 추가
 	@PostMapping("/category")
-	public CategoryDTO addCategory(String cname) {
+	public String addCategory(@RequestParam("cname") String cname, ModelMap map) {
 		CategoryDTO category = categoryService.addCategory(cname);
-		return category;
+		List<CategoryDTO> categories = categoryService.getAllCategory();
+		map.addAttribute("categories", categories);
+		return "category";
 	}
 	
 	// 카테고리 수정
 	@PutMapping("/category/{cid}")
-	public CategoryDTO editCategory(@PathVariable("cid") Long cid, String cname) {
+	public String editCategory(@PathVariable("cid") Long cid, @RequestParam("cname") String cname, ModelMap map) {
 		CategoryDTO category = categoryService.editCategory(cid, cname);
-		return category;
+		List<CategoryDTO> categories = categoryService.getAllCategory();
+		map.addAttribute("categories", categories);
+		return "category";
 	}
 	
 	// 카테고리 삭제
 	@DeleteMapping("/category/{cid}")
-	public String delelteCategory(@PathVariable("cid") Long cid) {
-		categoryService.delelteCategory(cid);
-		return "Category deleted successfully";
+	public String deleteCategory(@PathVariable("cid") Long cid, ModelMap map) {
+	    categoryService.delelteCategory(cid);
+	    List<CategoryDTO> categories = categoryService.getAllCategory();
+	    map.addAttribute("categories", categories);
+	    return "category";
 	}
 }

@@ -15,6 +15,8 @@
  * 배희창   2025.02.09    test url permit 열어둠
  * 배희창   2025.02.10    id pw 불일치시 401 반환
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
+ * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
+ * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail
  * ========================================================
  */
 
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -65,9 +68,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico",  "/postput").permitAll() // 정적 자원 허용
-                        .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail", "/postone", "/tmp").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
+                        .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
-                        // .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
+                        .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
                         .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
                         .anyRequest().authenticated()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
@@ -75,4 +78,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-

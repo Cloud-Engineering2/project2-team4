@@ -34,7 +34,6 @@ public class CategoryService {
 	
 	// 모든 카테고리 조회
 	public List<CategoryDTO> getAllCategory() {
-		System.out.println(categoryRepository.findAll());
 		return categoryRepository.findAll().stream().map(CategoryDTO::from).toList();
 	}
 	
@@ -46,13 +45,16 @@ public class CategoryService {
 	// 카테고리 수정
 	@Transactional
 	public CategoryDTO editCategory(Long cid, String cname) {
-		Category category = categoryRepository.findById(cid).orElseThrow();
+		Category category = categoryRepository.findById(cid)
+				.orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다: " + cid));
 		category.setCname(cname);
 		return CategoryDTO.from(category);
 	}
 	
 	// 카테고리 삭제
 	public void delelteCategory(Long cid) {
+		Category category = categoryRepository.findById(cid)
+				.orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다: " + cid));
 		categoryRepository.deleteById(cid);
 	}
 }
