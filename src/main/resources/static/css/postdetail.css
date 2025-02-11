@@ -13,13 +13,14 @@ h1.logo {
     justify-content: center;
     align-items: center;
     min-height: 100vh; /* 화면 높이를 꽉 채우도록 */
-    /*padding-top: 80px; !* 헤더 높이만큼 마진 *!*/
+    max-width: 100vw;
     background-color: whitesmoke;
 }
 
 .content-wrapper {
     display: flex;
     justify-content: center;
+    background-color: #FFFBCA ;
     /*align-items: center;*/
     width: 800px;
     height: 600px;
