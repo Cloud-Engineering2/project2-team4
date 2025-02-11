@@ -23,11 +23,12 @@ public class PostWithCommentsDTO {
     private Set<CommentDTO> commentDTOs;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private CategoryDTO categoryDTO;  // 📌 추가됨
 
-    public static PostWithCommentsDTO of(Long id, String title, String content, String imageURL, String link, UserDTO userDTO,
-                                         Set<CommentDTO> commentDTOs, LocalDateTime createdDate,
-                                         LocalDateTime modifiedDate) {
-        return new PostWithCommentsDTO(id, title, content, imageURL, link, userDTO, commentDTOs, createdDate, modifiedDate);
+    public static PostWithCommentsDTO of(Long id, String title, String content, String imageURL, String link, 
+                                         UserDTO userDTO, Set<CommentDTO> commentDTOs, LocalDateTime createdDate, 
+                                         LocalDateTime modifiedDate, CategoryDTO categoryDTO) { // 📌 categoryDTO 추가됨
+        return new PostWithCommentsDTO(id, title, content, imageURL, link, userDTO, commentDTOs, createdDate, modifiedDate, categoryDTO);
     }
 
     public static PostWithCommentsDTO from(Post post) {
@@ -42,8 +43,8 @@ public class PostWithCommentsDTO {
                         .map(CommentDTO::from)
                         .collect(Collectors.toCollection(LinkedHashSet::new)),
                 post.getCreatedDate(),
-                post.getModifiedDate());
+                post.getModifiedDate(),
+                post.getCategory() != null ? CategoryDTO.from(post.getCategory()) : null // 📌 Category 추가됨
+        );
     }
-
 }
-

@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>파일 업로드</title>
-    <link rel="stylesheet" type="text/css" href="/css/postupload.css">
-    <script>
+<meta charset="UTF-8">
+<title>파일 업로드</title>
+<link rel="stylesheet" type="text/css" href="/css/postupload.css">
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    loadCategories();
+
+    // 드롭다운 버튼 클릭 시 열기
+    document.getElementById("selectedCategory").addEventListener("click", function() {
+        document.querySelector(".dropdown-content").classList.toggle("show");
+    });
+
+    // 드롭다운 바깥 클릭 시 닫기
+    window.addEventListener("click", function(event) {
+        if (!event.target.matches(".dropbtn")) {
+            document.querySelector(".dropdown-content").classList.remove("show");
+        }
+    });
+});
+
     function getUserIdFromToken() {
         let token = localStorage.getItem("token");
         if (!token) return null;
@@ -21,6 +37,13 @@
 
     async function uploadFile() {
         let formData = new FormData();
+        let selectedCategory = document.getElementById("selectedCategory");
+        let categoryId = selectedCategory.dataset.id; // 선택한 카테고리 ID 가져오기
+
+        if (!categoryId) {
+            alert("📌 카테고리를 선택하세요!");
+            return;
+        }
 
         // 📌 토큰 가져오기
         let token = localStorage.getItem("token");
@@ -63,10 +86,10 @@
             return;
         }
 
-        // ✅ JSON 데이터 생성 (토큰에서 가져온 uid를 user.id로 설정)
+        // 📌 업로드할 데이터
         let postData = {
-            user: { id: userId },  // ✅ 로그인한 사용자의 UID 반영
-            category: { id: 3 },
+            user: { id: userId },
+            category: { id: categoryId },
             title: title,
             content: content,
             link: link
@@ -97,7 +120,7 @@
             try {
                 let jsonData = JSON.parse(responseText);
                 alert("✅ 업로드 성공! 게시글 ID: " + jsonData.id);
-                window.location.href = "/board";
+                window.location.href = "/gallery";
             } catch (error) {
                 console.error("📌 JSON 파싱 실패:", error);
                 alert("⚠ 서버 응답이 JSON 형식이 아닙니다. 응답 내용을 확인하세요.");
@@ -110,31 +133,64 @@
         }
     }
 
+    
+    async function loadCategories() {
+        try {
+            const response = await fetch("/api/admin/categories");
+            const categories = await response.json();
+
+            const categoryMenu = document.getElementById("categoryMenu");
+            const selectedCategory = document.getElementById("selectedCategory");
+
+            categoryMenu.innerHTML = ""; // 기존 옵션 초기화
+
+            categories.forEach(category => {
+                const item = document.createElement("div");
+                item.textContent = category.name;
+                item.dataset.id = category.id;
+                item.classList.add("dropdown-item"); // 스타일 적용
+
+                item.addEventListener("click", function() {
+                    selectedCategory.textContent = category.name; // 버튼 텍스트 변경
+                    selectedCategory.dataset.id = category.id; // 선택한 ID 저장
+                    categoryMenu.classList.remove("show"); // 드롭다운 닫기
+                });
+
+                categoryMenu.appendChild(item);
+            });
+        } catch (error) {
+            console.error("❌ 카테고리 불러오기 실패:", error);
+        }
+    }
+    
     </script>
 </head>
 <body>
 	<div th:replace="~{fragments/nav}"></div>
 	<div></div>
-    <div class="container">
-        <h2>자랑하기</h2>
+	<div class="container">
+		<h2>자랑하기</h2>
 
-        <div class="form-group"> 
-            <label for="title">제목:</label>
-            <input type="text" id="title"><br>
+		<div class="form-group">
+			<label for="title">제목:</label> <input type="text" id="title"><br>
 
-            <label for="content">내용:</label>
-            <textarea id="content"></textarea><br>
+			<label for="category">카테고리:</label>
+			<div class="dropdown">
+				<button class="dropbtn" id="selectedCategory">카테고리 선택</button>
+				<div class="dropdown-content" id="categoryMenu"></div>
+			</div>
 
-            <label for="link">링크:</label>
-            <input type="text" id="link"><br>
 
-            <label for="file">파일 업로드:</label>
-            <input type="file" id="file"><br>
+			<label for="content">내용:</label>
+			<textarea id="content"></textarea>
+			<br> <label for="link">링크:</label> <input type="text" id="link"><br>
 
-            <button onclick="uploadFile()">전송</button>
-        </div>
-    </div>
-    <div th:replace="~{fragments/footer}"></div>
-    <div th:replace="~{fragments/back}"></div>
+			<label for="file">파일 업로드:</label> <input type="file" id="file"><br>
+
+			<button onclick="uploadFile()">전송</button>
+		</div>
+	</div>
+	<div th:replace="~{fragments/footer}"></div>
+	<div th:replace="~{fragments/back}"></div>
 </body>
 </html>

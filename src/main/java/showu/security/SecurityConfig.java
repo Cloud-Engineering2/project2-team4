@@ -21,6 +21,8 @@
  * 배희창   2025.02.11    like 경로 허용
  * 배희창   2025.02.11    posttest -> postupload 변경
  * 배희창   2025.02.11    postput -> postmodify 변경
+ * 배희창   2025.02.11    board -> gallery 변경
+ * 배희창   2025.02.12    기타 불필요 테스트 경로 삭제
  * ========================================================
  */
 
@@ -77,7 +79,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/post/like/**").permitAll() // 좋아요 경로만 허용
                         .requestMatchers(HttpMethod.PATCH, "/api/post/like/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/login", "/signup", "/postupload", "/postget", "/postdelete", "/postmodify", "/postdetail", "/board").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/postupload", "/postdelete", "/postmodify", "/postdetail", "/gallery").permitAll()
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
                         .requestMatchers("/test").authenticated()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")

@@ -27,26 +27,26 @@ public class PostWithCommentsResponse {
     private String createdBy;
     private LocalDateTime createdAt;
     private Set<CommentResponse> commentResponse;
-
-    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String imageURL, String link, String createdBy, LocalDateTime createdDate, Set<CommentResponse> commentResponse) {
-        return new PostWithCommentsResponse(pid, uid, title, content, imageURL, link, createdBy, createdDate, commentResponse);
+    private CategoryResponse category;
+    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String imageURL, String link, String createdBy, LocalDateTime createdAt, Set<CommentResponse> commentResponse, CategoryResponse category) {
+        return new PostWithCommentsResponse(pid, uid, title, content, imageURL, link, createdBy, createdAt, commentResponse, category);
     }
 
     public static PostWithCommentsResponse from(PostWithCommentsDTO postWithCommentsDTO) {
-
         return PostWithCommentsResponse.of(
-                postWithCommentsDTO.getId(),
-                postWithCommentsDTO.getUserDTO().getId(),
-                postWithCommentsDTO.getTitle(),
-                postWithCommentsDTO.getContent(),
-                postWithCommentsDTO.getImageURL(),
-                postWithCommentsDTO.getLink(),
-                postWithCommentsDTO.getUserDTO().getUserId(),
-                postWithCommentsDTO.getCreatedAt(),
-                getCommentResponses(postWithCommentsDTO.getCommentDTOs())
-
+            postWithCommentsDTO.getId(),
+            postWithCommentsDTO.getUserDTO().getId(),
+            postWithCommentsDTO.getTitle(),
+            postWithCommentsDTO.getContent(),
+            postWithCommentsDTO.getImageURL(),
+            postWithCommentsDTO.getLink(),
+            postWithCommentsDTO.getUserDTO().getUserId(),
+            postWithCommentsDTO.getCreatedAt(),
+            getCommentResponses(postWithCommentsDTO.getCommentDTOs()),
+            postWithCommentsDTO.getCategoryDTO() != null ? CategoryResponse.from(postWithCommentsDTO.getCategoryDTO()) : null // 📌 추가
         );
     }
+
 
     private static Set<CommentResponse> getCommentResponses(Set<CommentDTO> commentDTOs) {
         // PostCommentDto 반복 -> Response 변경 -> 중복 제거??

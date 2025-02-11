@@ -13,14 +13,12 @@
             // 📌 토큰 가져오기
             token = localStorage.getItem("token");
             if (!token) {
-                alert("❌ 로그인 후 이용하세요!");
                 return;
             }
 
             // 📌 토큰에서 uid 추출
             userId = getUserIdFromToken(token);
             if (!userId) {
-                alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
                 return;
             }
         }
@@ -69,7 +67,7 @@
                         console.log("✅ 삭제 성공 응답:", data);
                         alert("📌 게시글이 삭제되었습니다.");
                         
-                        window.location.href = "/board";
+                        window.location.href = "/gallery";
                     })
                     .catch(error => {
                         console.error("❌ 게시글 삭제 실패:", error);

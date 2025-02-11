@@ -15,6 +15,7 @@
  * 채혜송   2025.02.11    Board 페이지 추가
  * 배희창   2025.02.11    posttest -> postupload 변경
  * 배희창   2025.02.11    postput -> postmodify 변경
+ * 배희창   2025.02.12    board -> gallery 변경
  * ========================================================
  */
 
@@ -86,7 +87,7 @@ public class PageController {
 		return "postmodify";
 	}
 	
-	@GetMapping("/board")
+	@GetMapping("/gallery")
 	public String getBoard(Model model, HttpServletRequest request) {
 		
 		List<PostDTO> posts = postService.getAllPosts();	
@@ -96,7 +97,7 @@ public class PageController {
 		model.addAttribute("topFive", posts);
 		model.addAttribute("categories", categories);
 		
-		return "board";
+		return "gallery";
 	}
 	
 }
