@@ -4,93 +4,172 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 목록</title>
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <link rel="stylesheet" type="text/css" href="/css/board.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/board.css">
     <script>
-        function HeartClickEvent(e) {
-            var src = e.target.src;
-            if (src.includes('/Heart.png')) {
-                e.target.src = "/icons/RedHeart.png";
-                // likes + 1
-            } else {
-                e.target.src = "/icons/Heart.png";
-                // likes - 1 하기
+        async function SearchClickEvent(category) {
+            // const posts = await GetFilterPosts(category);
+            const posts = [
+                {
+                    id: 1,
+                    imageUrl: '/icons/RedHeart.png',
+                    title: 'Sample Post Title',
+                    user: { nickname: 'JohnDoe' },
+                    likes: 147
+                }
+            ];
+
+            if (posts) {
+                const mainBox = document.getElementById('postMainBox');
+                mainBox.innerHTML = '';  // 기존 게시글 제거
+                posts.forEach(post => {
+                    const el = createPostElement(post);
+                    mainBox.appendChild(el);
+                });
             }
+        }
+
+        async function GetFilterPosts(category) {
+            const response = await fetch(`/api/post/like/${category}`, { method: 'PATCH' });
+            return await response.json();
+        }
+
+        function createPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('post');
+            postDiv.onclick = (e) => PostClickEvent(e, post.id);
+
+            const form = document.createElement('form');
+            form.setAttribute('action', `/api/post/${post.id}`);
+            form.setAttribute('method', 'get');
+
+            const button = document.createElement('button');
+            button.setAttribute('type', 'submit');
+            button.classList.add('goToDetail');
+            button.textContent = 'goToDetail';
+
+            const imgDiv = document.createElement('div');
+            imgDiv.classList.add('img');
+
+            const img = document.createElement('img');
+            img.setAttribute('src', post.imageUrl);
+            img.style.width = '100%';
+            img.style.height = '100%';
+            imgDiv.appendChild(img);
+
+            const flexDiv = document.createElement('div');
+            flexDiv.classList.add('flex', 'spaceBetween');
+
+            const textDiv = document.createElement('div');
+            const titleP = document.createElement('p');
+            titleP.textContent = post.title;
+            titleP.classList.add('title');
+            const writerP = document.createElement('p');
+            writerP.textContent = post.user.nickname;
+            writerP.classList.add('nickname');
+            textDiv.appendChild(titleP);
+            textDiv.appendChild(writerP);
+
+            const heartDiv = document.createElement('div');
+            heartDiv.classList.add('flex');
+
+            const heartImg = document.createElement('img');
+            heartImg.setAttribute('src', '/icons/RedHeart.png');
+            heartImg.setAttribute('data-pid', post.id);
+            heartImg.classList.add('btnHeart');
+            heartImg.onclick = (e) => HeartClickEvent(e);
+
+            const likesP = document.createElement('p');
+            likesP.classList.add('likes');
+            likesP.textContent = post.likes;
+
+            heartDiv.appendChild(heartImg);
+            heartDiv.appendChild(likesP);
+
+            flexDiv.appendChild(textDiv);
+            flexDiv.appendChild(heartDiv);
+
+            form.appendChild(button);
+            form.appendChild(imgDiv);
+            form.appendChild(flexDiv);
+
+            postDiv.appendChild(form);
+
+            return postDiv;
+        }
+
+        function PostClickEvent(e, postId) {
+			if(e.target.className != 'btnHeart'){
+				window.location.href = `/api/post/${postId}`;	
+			}
+        }
+
+        async function HeartClickEvent(e) {
+            const heartImg = e.target;
+            const likeElement = heartImg.nextElementSibling;
+            const pid = heartImg.dataset.pid;
+
+            const post = await UpdateLikes(pid);
+            likeElement.textContent = post.likes;
+        }
+
+        async function UpdateLikes(pid) {
+            const response = await fetch(`/api/post/like/${pid}`, { method: 'PATCH' });
+            return await response.json();
         }
     </script>
 </head>
 <body>
-    <div id="wrapBox">
-        <div id="top">
-            <h2 id="logo">showU</h2>
-            <div id="btnGroup">
-<!--                <form action="/login" method="get">
-                    <button type="submit" id="btnLogin" class="button">Login</button>
-                </form>
-                <form action="/signup" method="get">
-                    <button type="submit" id="btnSignup" class="button">Signup</button>
-                </form>-->
-                <form action="/logout" method="get">
-                    <button type="submit" id="btnLogout" class="button">Logout</button>
-                </form>
-            </div>
-        </div>
+    <div th:replace="~{fragments/nav}"></div>
 
+    <div id="wrapBox">
         <!-- 카테고리 필터와 검색 입력 -->
         <div id="filterBox" class="flex mb20">
-            <select>
-                <option th:each="category : ${categories}" 
-                        th:value="${category.id}" 
-                        th:text="${category.name}"> <!-- 카테고리 값 및 이름 -->
-                </option>
+            <select onchange="SearchClickEvent(this.value)">
+                <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
             </select>
             <input id="filterInput" type="text" placeholder="검색" />
+            <img id="btnSearch" src="/icons/Search.png" onclick="SearchClickEvent(document.querySelector('select').value)" />
         </div>
 
         <!-- 주간 상위 5개 게시글 -->
         <div id="weeklyBox" class="mb20">
             <p id="weeklyBoxTitle">Weekly Top 5</p>
             <div id="weeklyList" class="flex center">
-				<!-- 백엔드에서 top5만 받아오게 해서 뿌리기 -->
-                <div th:each="post : ${topFive}" class="post">
-                    <div class="img">
-                        <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
-                    </div>
-                    <div class="flex spaceBetween">
-                        <div>
-                            <p th:text="${post.title}">title</p>
-                            <p th:text="${post.user.nickname}">writer</p>
-                        </div>
-                        <div class="flex">
-                            <img class="btnHeart" src="/icons/Heart.png" 
-                                 onclick="HeartClickEvent(event)" />
-                            <p th:text="${post.likes}">147</p>
-                        </div>
-                    </div>
-                </div>
+				<div th:each="post : ${topFive}" class="post" th:onclick="|PostClickEvent(event, ${post.id})|">
+	                <div class="img">
+	                    <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
+	                </div>
+	                <div class="flex spaceBetween">
+	                    <div>
+	                        <p th:text="${post.title}" class="title">title</p>
+	                        <p th:text="${post.user.nickname}" class="nickname">writer</p>
+	                    </div>
+	                    <div class="flex">
+	                        <img th:data-pid="${post.id}" class="btnHeart" src="/icons/RedHeart.png" onclick="HeartClickEvent(event)" />
+	                        <p class="likes" th:text="${post.likes}">likes</p>
+	                    </div>
+	                </div>
+	            </div>
             </div>
         </div>
 
         <!-- 게시글 목록 -->
         <div id="postMainBox" class="mb20">
-            <div th:each="post : ${posts}" class="post">
-		        <!-- 상세 페이지 이동 : /post/{pid} -->
-                <form th:action="@{/post/{id}(id=${post.id})}" method="get">
-                    <div class="img">
-                        <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
+            <div th:each="post : ${posts}" class="post" th:onclick="|PostClickEvent(event, ${post.id})|">
+                <div class="img">
+                    <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
+                </div>
+                <div class="flex spaceBetween">
+                    <div>
+                        <p th:text="${post.title}" class="title">title</p>
+                        <p th:text="${post.user.nickname}" class="nickname">writer</p>
                     </div>
-                    <div class="flex spaceBetween">
-                        <div>
-                            <p th:text="${post.title}">title</p>
-                            <p th:text="${post.user.nickname}">writer</p>
-                        </div>
-                        <div class="flex">
-                            <img class="btnHeart" src="/icons/Heart.png" 
-                                 onclick="HeartClickEvent(event)" />
-                            <p th:text="${post.likes}">likes</p>
-                        </div>
+                    <div class="flex">
+                        <img th:data-pid="${post.id}" class="btnHeart" src="/icons/RedHeart.png" onclick="HeartClickEvent(event)" />
+                        <p class="likes" th:text="${post.likes}">likes</p>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -98,6 +177,8 @@
         <form action="/posttest" method="get" style="justify-self: center;">
             <button type="submit" id="btnPost" class="greenButton">POST</button>
         </form>
+
+        <div th:replace="~{fragments/footer}"></div>
     </div>
 </body>
 </html>

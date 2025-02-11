@@ -1,9 +1,5 @@
 @charset "UTF-8";
 
-body{
-    display: flex;
-    justify-content: center;
-}
 p {
     margin: 0;
 }
@@ -50,24 +46,13 @@ p {
     opacity: 0.7;
 }
 
+.nav {
+	position: relative !important;
+	margin-bottom: 20px;
+}
 #wrapBox{
     width: 70%;
-    align-content: center;
-}
-#top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-#logo {
-    color: #4635B1;
-    font-size: 30px;
-}
-#btnGroup{
-    display: flex;
-}
-#btnLogin {
-    margin-right: 10px;
+    justify-self: center;
 }
 
 #filterBox select {
@@ -91,6 +76,14 @@ p {
     padding: 0px 10px;
     box-sizing: border-box;
 }
+#btnSearch{
+    height: 26px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+#btnSearch:hover{
+    opacity:0.7;
+}
 
 #weeklyBox {
     background-color: #FFFBCA;
@@ -101,34 +94,49 @@ p {
     font-size: 21px;
 }
 #weeklyList {
-    overflow-x: scroll;
+    overflow-x: auto;
     padding: 0px 16px;
     box-sizing: border-box;
 }
 
 #postMainBox{
-    width: 70%;
+    width: 76%;
     max-height: 430px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     justify-self: center;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .post {
     margin: 10px;
     cursor: pointer;
+    border: 2px solid #f3f1f1;
+    padding: 10px;
+    border-radius: 8px;
+    justify-items: center;
 }
 .post:hover {
     opacity: 0.7
 }
 .post .img{
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     background: white;
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+.post .title, .post .nickname {
+	width: 78px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .btnHeart {
 	width: 23px;
     margin-right: 5px;
     cursor: pointer;
+}
+.goToDetail {
+	opacity : 0;
 }
