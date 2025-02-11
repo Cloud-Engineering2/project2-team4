@@ -12,7 +12,7 @@
  * 배희창   2025.02.08    최초 작성 : JtwTokenProvider 작성
  * 배희창   2025.02.10    token uid값으로 생성하게 수정
  * 배희창   2025.02.10    userIdFromToken부분 uid값으로 검증하게 에러처리 완료
- * 채혜송   2025.02.11    httpRequest에서 token 가져오도록 getToken 추가
+ * 채혜송   2025.02.11    httpRequest에서 token 가져오도록 추가 (getToken) 
  * ========================================================
  */
 
