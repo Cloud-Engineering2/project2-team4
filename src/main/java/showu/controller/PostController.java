@@ -13,12 +13,15 @@
  * 배희창   2025.02.09    게시물 전체 조회, 생성, 삭제 구현
  * 배희창   2025.02.10    게시물 수정 구현
  * 김예린   2025.02.11    게시물 댓글과 함께 조회 구현
+ * 배희창   2025.02.11    좋아요 구현
  * ========================================================
  */
 
 package showu.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,17 +48,15 @@ public class PostController {
 	private final PostService postService;
 	private final S3Service s3Service;
 
-    @ResponseBody
-	@GetMapping("/test")
-	public String test() {
-		return "post";
-	}
+	@PatchMapping("/like/{postId}")
+	public ResponseEntity<Map<String, Object>> likePost(@PathVariable Long postId) {
+	    int updatedLikes = postService.incrementLikes(postId);
 
-    @ResponseBody
-	@PostMapping("/testdata")
-	public ResponseEntity<Post> createTestData() {
-		Post dummyPost = postService.createDummyPost();
-		return ResponseEntity.ok(dummyPost);
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("message", "좋아요가 증가되었습니다.");
+	    response.put("likes", updatedLikes);
+
+	    return ResponseEntity.ok(response);
 	}
 	
 	// 게시물 업로드
