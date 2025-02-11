@@ -18,6 +18,7 @@ package showu.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import showu.dto.CommentDTO;
 import showu.dto.UserDTO;
@@ -66,15 +67,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{cmid}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long cmid) {
-        // 로그인 가정
-        UserDTO userDTO = UserDTO.of(2L,
-                "admin",
-                "admin",
-                "admin@showu.store",
-                UserRole.ADMIN);
-
-        commentService.deleteComment(cmid, userDTO.getId());
+    public ResponseEntity<String> deleteComment(@PathVariable Long cmid, @RequestBody UserDTO userDto) {
+        commentService.deleteComment(cmid, userDto.getId());
         return ResponseEntity.ok("comment deleted successfully");
     }
 }
