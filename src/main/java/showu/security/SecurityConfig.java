@@ -22,8 +22,8 @@
 
 package showu.security;
 
-import lombok.RequiredArgsConstructor;
 import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -38,6 +38,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -72,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll()
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
                         .requestMatchers("/test").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        //.requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
             return http.build();
