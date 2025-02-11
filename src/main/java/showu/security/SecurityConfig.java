@@ -19,6 +19,8 @@
  * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail (test)
  * 전익주   2025.02.11    /api/admin/** ADMIN 권한 필요하게 수정
  * 배희창   2025.02.11    like 경로 허용
+ * 배희창   2025.02.11    posttest -> postupload 변경
+ * 배희창   2025.02.11    postput -> postmodify 변경
  * ========================================================
  */
 
@@ -74,8 +76,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
                         .requestMatchers(HttpMethod.POST, "/api/post/like/**").permitAll() // 좋아요 경로만 허용
                         .requestMatchers(HttpMethod.PATCH, "/api/post/like/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
-                        .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail", "/board").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/postupload", "/postget", "/postdelete", "/postmodify", "/postdetail", "/board").permitAll()
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
                         .requestMatchers("/test").authenticated()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")

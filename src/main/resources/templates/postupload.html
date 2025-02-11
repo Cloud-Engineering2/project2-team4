@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>파일 업로드 테스트</title>
+    <title>파일 업로드</title>
+    <link rel="stylesheet" type="text/css" href="/css/postupload.css">
     <script>
     function getUserIdFromToken() {
         let token = localStorage.getItem("token");
@@ -96,6 +97,7 @@
             try {
                 let jsonData = JSON.parse(responseText);
                 alert("✅ 업로드 성공! 게시글 ID: " + jsonData.id);
+                window.location.href = "/board";
             } catch (error) {
                 console.error("📌 JSON 파싱 실패:", error);
                 alert("⚠ 서버 응답이 JSON 형식이 아닙니다. 응답 내용을 확인하세요.");
@@ -103,27 +105,36 @@
 
         } catch (error) {
             console.error("❌ 업로드 실패:", error);
-            alert("❌ 업로드 실패! " + error.message);
+            alert("❌ 업로드 실패! 로그인하세요!" + error.message);
+            window.location.href = "/login";
         }
     }
 
     </script>
 </head>
 <body>
-    <h2>파일 업로드 테스트</h2>
-    
-    <label for="title">제목:</label>
-    <input type="text" id="title"><br>
+	<div th:replace="~{fragments/nav}"></div>
+	<div></div>
+    <div class="container">
+        <h2>자랑하기</h2>
 
-    <label for="content">내용:</label>
-    <textarea id="content"></textarea><br>
+        <div class="form-group"> 
+            <label for="title">제목:</label>
+            <input type="text" id="title"><br>
 
-    <label for="link">링크:</label>
-    <input type="text" id="link"><br>
+            <label for="content">내용:</label>
+            <textarea id="content"></textarea><br>
 
-    <label for="file">파일 업로드:</label>
-    <input type="file" id="file"><br>
+            <label for="link">링크:</label>
+            <input type="text" id="link"><br>
 
-    <button onclick="uploadFile()">전송</button>
+            <label for="file">파일 업로드:</label>
+            <input type="file" id="file"><br>
+
+            <button onclick="uploadFile()">전송</button>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer}"></div>
+    <div th:replace="~{fragments/back}"></div>
 </body>
 </html>

@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 정적페이지 처리 컨트롤러
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.08
+ * 최종 수정 날짜 : 2025.02.11
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -13,6 +13,8 @@
  * 배희창   2025.02.09    S3TestPage 작성
  * 배희창   2025.02.09    POST 테스트 페이지 작성
  * 채혜송   2025.02.11    Board 페이지 추가
+ * 배희창   2025.02.11    posttest -> postupload 변경
+ * 배희창   2025.02.11    postput -> postmodify 변경
  * ========================================================
  */
 
@@ -53,9 +55,9 @@ public class PageController {
 		return "signup";
 	}
 	
-	@GetMapping("/posttest")
+	@GetMapping("/postupload")
 	public String getTestPage() {
-		return "posttest";
+		return "postupload";
 	}
 	
 	@GetMapping("/postget")
@@ -79,9 +81,9 @@ public class PageController {
 	public String getTmpPage() {
 		return "postdetail";
 	}
-	@GetMapping("/postput")
+	@GetMapping("/postmodify")
 	public String getPostPutPage() {
-		return "postput";
+		return "postmodify";
 	}
 	
 	@GetMapping("/board")
