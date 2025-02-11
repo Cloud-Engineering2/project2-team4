@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<title>Category</title>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-    <script th:inline="javascript">
+	<meta charset="UTF-8">
+	<title>Category</title>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/css/category.css">
+	<script th:inline="javascript">
 		
 		function getUserIdFromToken() {
 	        let token = localStorage.getItem("token");
@@ -127,7 +128,7 @@
 			
             const newCategory = prompt("새 카테고리명을 입력하세요:");
 
-		    if (!newCategory || newCategory.trim() === "") {
+		    if (newCategory.trim() === "") {
 		        alert("카테고리명은 필수입니다.");
 		        return;
 		    }
@@ -152,12 +153,14 @@
 
 </head>
 <body>
-	카테고리 목록
+	<h2 class="category">Category</h2>
     <div class="row">
         <table class="table" id="category-table">
             <thead>
                 <tr>
-                    <th class="category col-2"><a>카테고리명</a></th>
+                    <th class="category col-2"><a>Category name</a></th>
+                    <th class="category col-2"><a>수정</a></th>
+                    <th class="category col-2"><a>삭제</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -175,54 +178,8 @@
             </tbody>
         </table>
         <div class="add-category-btn">
-            <button onclick="addCategory()">새 카테고리 추가</button>
+            <button onclick="addCategory()">카테고리 생성</button>
         </div>
     </div>
-   
-	<style>
-        /* .table-container의 크기를 테이블 내용에 맞게 설정 */
-        .table-container {
-            width: 100%;  /* 테이블 너비를 전체 화면 너비에 맞추거나 필요에 따라 조정 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;  /* 가운데 정렬 */
-        }
-
-        table {
-            width: 100%;  /* 테이블 너비가 부모의 100%에 맞춰짐 */
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-
-        /* 추가 버튼의 위치를 테이블 바로 아래에 가운데 정렬 */
-        .add-category-btn {
-            margin-top: 20px;
-            text-align: center;  /* 버튼을 가운데 정렬 */
-        }
-
-        .add-category-btn button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        .add-category-btn button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </body>
 </html>

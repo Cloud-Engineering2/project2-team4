@@ -22,8 +22,8 @@
 
 package showu.security;
 
-import lombok.RequiredArgsConstructor;
 import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -38,6 +38,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -63,18 +65,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        .csrf(csrf -> csrf.disable())
-        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
-                .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
-                .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail", "/board").permitAll()
-                .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
-                .requestMatchers("/test").authenticated()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-        ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-    return http.build();
+	        .csrf(csrf -> csrf.disable())
+	        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	        .authorizeHttpRequests(auth -> auth
+	                .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
+	                .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
+	                .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail", "/board").permitAll()
+	                .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
+	                .requestMatchers("/test").authenticated()
+	                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+	                .anyRequest().authenticated()
+	        ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+	    return http.build();
     }
 }
