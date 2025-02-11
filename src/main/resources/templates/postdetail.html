@@ -24,8 +24,61 @@
                 return;
             }
         }
+        
         checkToken();
+        
+        function editPost(postId, postUserId) {
+            if (!userId) {
+                alert("❌ 로그인 후 이용하세요!");
+                return;
+            }
 
+            console.log(`🔍 로그인한 userId: ${userId}, 게시글 userId: ${postUserId}`);
+
+            if (userId == postUserId) {
+                window.location.href = `/api/post/modify/${postId}`;
+            } else {
+                alert("❌ 본인이 작성한 게시글만 수정할 수 있습니다!");
+            }
+        }
+        
+        function deletePost(postId, postUserId) {
+            if (!userId) {
+                alert("❌ 로그인 후 이용하세요!");
+                return;
+            }
+
+            console.log(`🔍 로그인한 userId: ${userId}, 게시글 userId: ${postUserId}`);
+
+            if (userId == postUserId) {
+                if (confirm("⚠️ 정말 삭제하시겠습니까?")) {
+                    const token = localStorage.getItem("token");
+
+                    fetch(`/api/post/${postId}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        console.log("✅ 응답 상태 코드:", response.status);
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log("✅ 삭제 성공 응답:", data);
+                        alert("📌 게시글이 삭제되었습니다.");
+                        
+                        window.location.href = "/board";
+                    })
+                    .catch(error => {
+                        console.error("❌ 게시글 삭제 실패:", error);
+                    });
+                }
+            } else {
+                alert("❌ 본인이 작성한 게시글만 삭제할 수 있습니다!");
+            }
+        }
 
     </script>
 </head>
@@ -42,8 +95,8 @@
             <div class="username-and-button-section">
                 <h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
                 <div class="edit-and-delete-button">
-                    <button  class="edit-button button" onclick="">EDIT</button>
-                    <button  class="delete-button button" onclick="">DELETE</button>
+                    <button class="edit-button button" th:onclick="|editPost(${post?.pid}, ${post?.uid})|">EDIT</button>
+                    <button class="delete-button button" th:onclick="|deletePost(${post?.pid}, ${post?.uid})|">DELETE</button>
                 </div>
             </div>
 

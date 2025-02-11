@@ -14,6 +14,7 @@
  * 배희창   2025.02.10    게시물 수정 구현
  * 김예린   2025.02.11    게시물 댓글과 함께 조회 구현
  * 배희창   2025.02.11    좋아요 구현
+ * 배희창   2025.02.11    post modify 작성
  * ========================================================
  */
 
@@ -96,14 +97,7 @@ public class PostController {
         return ResponseEntity.ok("게시글 삭제 완료");
     }
     
-    // 단일 게시물 조회
-    @ResponseBody
-//    @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
-    	PostDTO post = postService.getPostById(postId);
-        return ResponseEntity.ok(post);
-    }
-
+    // 게시물 업데이트
     @ResponseBody
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDTO> updatePost(
@@ -141,6 +135,20 @@ public class PostController {
         map.addAttribute("comments", post.getCommentResponse());
 
         return "/postdetail";
+    }
+    
+    @GetMapping("/modify/{postId}")
+    public String getPostForEdit(
+            @PathVariable Long postId,
+            HttpServletRequest request,
+            ModelMap map
+    ) {
+
+    	PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(postId));
+    	
+        map.addAttribute("post", post);
+        
+        return "/postmodify";
     }
     
 }
