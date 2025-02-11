@@ -93,7 +93,9 @@ input {
 #warning {
 	font-size: 6px;
 	color: red;
+	align-items: center;
 }
 #warningIcon {
 	margin-right: 5px;
+	height: 10px;
 }

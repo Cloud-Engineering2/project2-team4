@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+
+h1.logo {
+    color: #4635B1;
+    font-size: 30px; /* 적당한 크기로 조절 */
+    font-weight: bold;
+    margin-left: 20px; /* 왼쪽 여백 추가 */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 화면 높이를 꽉 채우도록 */
+    /*padding-top: 80px; !* 헤더 높이만큼 마진 *!*/
+    background-color: #FFFBCA;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    /*align-items: center;*/
+    width: 800px;
+    height: 600px;
+}
+
+.image-section {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+}
+
+.image-section img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.username-and-button-section{
+    display: flex;
+    justify-content: space-between; /* 좌우 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    background-color: black; /* 배경색 */
+    border-bottom: 1px solid #dbdbdb; /* 하단 테두리 */
+}
+
+
+.edit-button {
+    background-color: #AEEA94;
+    color: #4635B1;
+    padding: 8px 12px;
+    border-radius: 10px;
+
+}
+
+.delete-button {
+    background-color: #AEEA94;
+    color: #E50C42;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+
+.edit-button:hover {
+    background-color: #73a163;
+}
+.delete-button:hover {
+    background-color: #73a163;
+}
+
+
+
+.comment-section {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: black;
+    color: white;
+}
+
+.comment-section h3 {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+
+
+.comments {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 400px;
+    border-bottom: 1px solid #dbdbdb;
+    padding-bottom: 10px;
+    color: white;
+}
+
+.comment p{
+    margin: 0;
+    padding-bottom: 3px;
+}
+
+.add-comment {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.add-comment input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+}
+
+.add-comment button {
+    padding: 8px 12px;
+    border: none;
+    background-color: black;
+    color: #AEEA94;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-comment button:hover {
+    color: white;
+}

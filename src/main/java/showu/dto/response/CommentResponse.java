@@ -13,23 +13,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentResponse {
     private Long cmid;
-    private Long pid;
-    private Long uid;
     private String content;
+    private String createdBy;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
 
-    public static CommentResponse of(Long cmid, Long pid, Long uid, String content, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        return new CommentResponse(cmid, pid, uid, content, createdAt, modifiedAt);
+    public static CommentResponse of(Long cmid, String createdBy, String content, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        return new CommentResponse(cmid, createdBy, content, createdAt, modifiedAt);
     }
 
     public static CommentResponse from(CommentDTO commentDTO) {
         return CommentResponse.of(
                 commentDTO.getId(),
-                commentDTO.getPid(),
-                commentDTO.getUserDTO().getId(),
                 commentDTO.getContent(),
+                commentDTO.getUserDTO().getUserId(),
                 commentDTO.getCreatedAt(),
                 commentDTO.getModifiedAt()
         );
