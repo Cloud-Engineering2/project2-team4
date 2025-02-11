@@ -49,7 +49,7 @@
 </head>
 
 <body>
-<th:block th:replace="~{/layout/header :: headerLayout}"></th:block>
+<th:block th:replace="~{/fragments/nav}"></th:block>
 
 <div class="container">
     <div class="content-wrapper">
@@ -75,6 +75,11 @@
                 사진 내용
             </div>
 
+            <h3>링크</h3>
+            <div class="link" th:text="${post?.link}">
+                참조 링크
+            </div>
+
             <h3>댓글</h3>
             <div class="comments" id="comments">
                 <div th:class="|comment comment${comment.cmid}|" th:each="comment : ${comments}">
@@ -96,6 +101,9 @@
         </div>
     </div>
 </div>
+
+<th:block th:replace="~{/fragments/footer :: footerLayout}"></th:block>
+
 
 <script th:inline="javascript">
 	document.addEventListener('DOMContentLoaded', function() {
