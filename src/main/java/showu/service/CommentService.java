@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import showu.dto.CommentDTO;
 import showu.dto.UserDTO;
 import showu.dto.request.CommentRequest;
+import showu.dto.request.CommentUpdateRequest;
 import showu.entity.Comment;
 import showu.entity.Post;
 import showu.entity.User;
@@ -54,16 +55,15 @@ public class CommentService {
 
 
 
-    public CommentDTO updateComment(Long cmid, CommentDTO commentDTO) {
-        Long userId = commentDTO.getUserDTO().getId();
+    public CommentDTO updateComment(Long cmid, CommentUpdateRequest commentUpdateRequest) {
+        Long userId = commentUpdateRequest.getUid();
         User user = userRepository.getReferenceById(userId);
-        Post post = postRepository.getReferenceById(commentDTO.getPid());
-        if (!userId.equals(post.getUser().getUid())) {
-            throw new NoSuchElementException("해당 글을 작성한 유저가 아닙니다.");
-        }
         Comment comment = commentRepository.getReferenceById(cmid);
+        if (!userId.equals(comment.getUser().getUid())) {
+            throw new NoSuchElementException("해당 댓글을 작성한 유저가 아닙니다.");
+        }
 
-        comment.updateContentAndModifiedDate(commentDTO.getContent(),LocalDateTime.now());
+        comment.updateContentAndModifiedDate(commentUpdateRequest.getContent(),LocalDateTime.now());
         Comment updatedComment = commentRepository.save(comment);
 
         return CommentDTO.from(updatedComment);
