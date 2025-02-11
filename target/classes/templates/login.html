@@ -25,6 +25,9 @@
 					.then(response => {
 						console.log("✅ 로그인 성공! 토큰 :", response.data.token);
 						localStorage.setItem("token", response.data.token);
+						localStorage.setItem("nickname", response.data.nickname);
+						localStorage.setItem("role", response.data.role);
+
 						window.location.href = "/"; // 로그인 성공 후 홈으로 이동
 					})
 					.catch(error => {
