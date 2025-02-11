@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 목록</title>
     <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <link rel="stylesheet" type="text/css" href="/css/init.css">
     <link rel="stylesheet" type="text/css" href="/css/board.css">
     <script>
         function HeartClickEvent(e) {
@@ -99,5 +100,6 @@
             <button type="submit" id="btnPost" class="greenButton">POST</button>
         </form>
     </div>
+    <div th:replace="~{fragments/back}"></div>
 </body>
 </html>
