@@ -117,7 +117,7 @@
 
             <h3>댓글</h3>
             <div class="comments" id="comments">
-                <div th:class="|comment comment${comment.cmid}|" th:each="comment : ${comments}">
+                <div th:class="|comment comment${comment.cmid}|" th:each="comment : ${comments}" th:data-uid="${comment.uid}">
                     <p th:text="|${comment.createdBy}: ${comment.content}|">댓글1: 멋진 사진이네요!</p>
                     <div class="commentButtonBox">
 	                    <button  class="edit-button commentButton" onclick="EditComment(event)" th:data-cmid="${comment.cmid}">EDIT</button>
@@ -146,6 +146,20 @@
 	    if(uid != userId){
 			document.getElementsByClassName('edit-and-delete-button')[0].style.display = 'none';
 		}
+
+        let commentElements = document.querySelectorAll('.comment'); // 모든 댓글 요소 선택
+
+        commentElements.forEach(function(commentDiv) {
+            let commentUid = commentDiv.getAttribute('data-uid'); // 각 댓글의 UID 값을 가져옴
+
+            // comment.uid와 userId가 일치하지 않으면 버튼 숨기기
+            if (commentUid != userId) {
+                let buttonBox = commentDiv.querySelector('.commentButtonBox');
+                if (buttonBox) {
+                    buttonBox.style.display = 'none'; // 버튼 박스를 숨김
+                }
+            }
+        });
 
         // ✅ userId가 없을 경우 댓글 작성 버튼 비활성화
         if (!userId) {
