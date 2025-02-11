@@ -25,17 +25,17 @@ import java.util.List;
 
 @Configuration
 public class CorsConfig {
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
+	@Bean
+	public CorsFilter corsFilter() {
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowCredentials(true); // 쿠키 허용
-        config.setAllowedOrigins(List.of("http://localhost:8080")); // 프론트엔드 도메인 추가
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+	    config.setAllowCredentials(true);
+	    config.setAllowedOriginPatterns(List.of("*")); // 모든 도메인 허용
+	    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+	    config.setAllowedHeaders(List.of("*"));
 
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+	    source.registerCorsConfiguration("/**", config);
+	    return new CorsFilter(source);
+	}
 }

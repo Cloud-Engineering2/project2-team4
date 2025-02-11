@@ -1,5 +1,7 @@
-
 .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: fit-content;
     display: flex;
@@ -7,7 +9,9 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1.5px solid #aaa;
-    padding: 10px 0px 10px 0px;
+    padding: 10px 0px;
+    background-color: white;
+    z-index: 1000;
 }
 .menu-box {
     display: flex;

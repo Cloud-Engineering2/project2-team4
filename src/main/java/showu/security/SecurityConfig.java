@@ -17,6 +17,7 @@
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
  * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail (test)
+ * 배희창   2025.02.11    like 경로 허용
  * ========================================================
  */
 
@@ -68,6 +69,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
+                        .requestMatchers(HttpMethod.POST, "/api/post/like/**").permitAll() // 좋아요 경로만 허용
+                        .requestMatchers(HttpMethod.PATCH, "/api/post/like/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
                         .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll()
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
