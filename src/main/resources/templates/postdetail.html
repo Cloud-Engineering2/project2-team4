@@ -234,6 +234,7 @@
 	    const editButton = document.createElement('button');
 	    editButton.classList.add('edit-button', 'commentButton');
 	    editButton.textContent = 'EDIT';
+        editButton.setAttribute('data-cmid', comment.cmid);
 	    editButton.onclick = (event) => EditComment(event);  // 수정 이벤트 연결
 	
 	    // 6. DELETE 버튼 생성
