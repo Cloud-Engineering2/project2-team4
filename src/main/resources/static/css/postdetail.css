@@ -14,7 +14,7 @@ h1.logo {
     align-items: center;
     min-height: 100vh; /* 화면 높이를 꽉 채우도록 */
     /*padding-top: 80px; !* 헤더 높이만큼 마진 *!*/
-    background-color: #FFFBCA;
+    background-color: whitesmoke;
 }
 
 .content-wrapper {
@@ -53,6 +53,7 @@ h1.logo {
     color: #4635B1;
     padding: 8px 12px;
     border-radius: 10px;
+    cursor: pointer;
 
 }
 
@@ -61,6 +62,7 @@ h1.logo {
     color: #E50C42;
     padding: 8px 12px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .edit-button:hover {
@@ -114,6 +116,7 @@ h1.logo {
     padding: 8px;
     border: 1px solid #dbdbdb;
     border-radius: 4px;
+    justify-content: space-between;
 }
 
 .add-comment button {

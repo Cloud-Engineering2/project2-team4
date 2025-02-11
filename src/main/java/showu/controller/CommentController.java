@@ -39,14 +39,14 @@ public class CommentController {
     public ResponseEntity<CommentResponse> registerComment(@RequestBody CommentRequest commentRequest) {
 
         // 로그인 가정
-        UserDTO userDTO = UserDTO.of(2L,
-                "admin",
-                "admin",
-                "admin@showu.store",
-                UserRole.ADMIN);
+//        UserDTO userDTO = UserDTO.of(2L,
+//                "admin",
+//                "admin",
+//                "admin@showu.store",
+//                UserRole.ADMIN);
 
 
-        CommentDTO commentDTO = commentService.registerComment(commentRequest.toDto(userDTO));
+        CommentDTO commentDTO = commentService.registerComment(commentRequest);
 
         return ResponseEntity.ok(CommentResponse.from(commentDTO));
     }

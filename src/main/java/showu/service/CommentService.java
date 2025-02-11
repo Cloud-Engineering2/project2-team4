@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import showu.dto.CommentDTO;
+import showu.dto.UserDTO;
+import showu.dto.request.CommentRequest;
 import showu.entity.Comment;
 import showu.entity.Post;
 import showu.entity.User;
@@ -38,11 +40,12 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public CommentDTO registerComment(CommentDTO commentDTO) {
-        User user = userRepository.getReferenceById(commentDTO.getUserDTO().getId());
+    public CommentDTO registerComment(CommentRequest commentRequest) {
+        User user = userRepository.getReferenceById(commentRequest.getUid());
 
-        Post post = postRepository.getReferenceById(commentDTO.getPid());
+        Post post = postRepository.getReferenceById(commentRequest.getPid());
 
+        CommentDTO commentDTO = commentRequest.toDto(UserDTO.from(user));
         Comment comment = commentDTO.toEntity(post, user, LocalDateTime.now(), LocalDateTime.now());
         Comment registeredComment = commentRepository.save(comment);
 

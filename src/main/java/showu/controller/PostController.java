@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -128,11 +129,15 @@ public class PostController {
     @GetMapping("/{postId}")
     public String getPostWithComments(
             @PathVariable Long postId,
+            HttpServletRequest request,
             ModelMap map
     ) {
 
         PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(postId));
+//        Long userId = (Long) request.getAttribute("userId");
+
         map.addAttribute("post", post);
+//        map.addAttribute("uid", userId);
         map.addAttribute("comments", post.getCommentResponse());
 
         return "/postdetail";

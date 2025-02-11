@@ -11,10 +11,11 @@ import showu.dto.UserDTO;
 @AllArgsConstructor
 public class CommentRequest {
     private Long pid;
+    private Long uid;
     private String content;
 
-    public static CommentRequest of(Long pid, String content) {
-        return new CommentRequest(pid,content);
+    public static CommentRequest of(Long pid, Long uid, String content) {
+        return new CommentRequest(pid,uid,content);
     }
 
     public CommentDTO toDto(UserDTO userDto) {
