@@ -26,24 +26,6 @@
         }
         checkToken();
 
-		function DeleteComment (e){
-			const cmid = e.target.dataset.cmid;
-
-	        fetch(`/api/comments/${cmid}`, {
-	            method: "DELETE",
-	            headers: {
-	                "Authorization": `Bearer ${token}`,
-	                "Content-Type": "application/json"
-	            },
-	            body: JSON.stringify({ id: userId })
-	        })
-            .then(response => console.log(response.json()));
-            
-            document.querySelector(`comment${cmid}`).remove();
-		}
-		function EditComment (e){
-			
-		}
 
     </script>
 </head>
@@ -85,7 +67,7 @@
                 <div th:class="|comment comment${comment.cmid}|" th:each="comment : ${comments}">
                     <p th:text="|${comment.createdBy}: ${comment.content}|">댓글1: 멋진 사진이네요!</p>
                     <div class="commentButtonBox">
-	                    <button  class="edit-button commentButton" onclick="EditComment(event)">EDIT</button>
+	                    <button  class="edit-button commentButton" onclick="EditComment(event)" th:data-cmid="${comment.cmid}">EDIT</button>
 	                    <button  class="delete-button commentButton" onclick="DeleteComment(event)" th:data-cmid="${comment.cmid}">DELETE</button>
 	                </div>
                 </div>
@@ -165,7 +147,7 @@
 	    const editButton = document.createElement('button');
 	    editButton.classList.add('edit-button', 'commentButton');
 	    editButton.textContent = 'EDIT';
-	    editButton.onclick = () => editComment(comment.cmid);  // 수정 이벤트 연결
+	    editButton.onclick = (event) => EditComment(event);  // 수정 이벤트 연결
 	
 	    // 6. DELETE 버튼 생성
 	    const deleteButton = document.createElement('button');
@@ -184,6 +166,107 @@
 	    // 9. 최종적으로 댓글 섹션에 댓글 추가
 	    commentSection.appendChild(commentDiv);
 	}
+
+    function DeleteComment (e){
+        const cmid = e.target.dataset.cmid;
+
+        fetch(`/api/comments/${cmid}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: userId })
+        })
+            .then(response => console.log(response.json()));
+
+        document.querySelector(`.comment${cmid}`).remove();
+    }
+
+
+    function EditComment(e) {
+        // 클릭된 버튼에서 cmid 추출
+        const cmid = e.target.dataset.cmid;
+
+        // cmid가 제대로 추출되었는지 확인
+        console.log("cmid:", cmid);
+
+        // cmid가 undefined일 경우 오류 처리
+        if (!cmid) {
+            console.error("❌ cmid 값이 없습니다.");
+            return;
+        }
+
+        // data-cmid 속성을 이용해 해당 댓글 div 요소 찾기
+        const commentDiv = e.target.closest(".comment"); // 현재 댓글 요소 찾기
+
+        // 기존 댓글 내용과 버튼들 숨기기
+        const commentText = commentDiv.querySelector("p");
+        const originalContent = commentText.textContent.split(": ")[1];
+        const editButton = commentDiv.querySelector(".edit-button");
+        const deleteButton = commentDiv.querySelector(".delete-button");
+
+        commentText.style.display = "none";
+        editButton.style.display = "none";
+        deleteButton.style.display = "none";
+
+        // 댓글 수정 입력 필드와 SAVE 버튼 만들기
+        const inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.value = originalContent;  // 기존 댓글 내용 기본값으로 설정
+        inputField.classList.add("comment-edit-input");
+
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "SAVE";
+        saveButton.classList.add("save-button");
+        saveButton.onclick = function () {
+            SaveEditedComment(cmid, commentDiv, inputField.value, editButton, deleteButton);
+        };
+
+        // 수정할 입력 필드와 버튼을 댓글 div에 추가
+        commentDiv.appendChild(inputField);
+        commentDiv.appendChild(saveButton);
+    }
+
+
+    function SaveEditedComment(cmid, commentDiv, newContent, editButton, deleteButton) {
+
+        fetch(`/api/comments/${cmid}`, {
+            method: "PUT", // 수정 요청
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                {
+                    uid: userId,
+                    content: newContent
+                })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("✅ 댓글 수정 성공:", data);
+
+                // 입력 필드와 버튼 제거
+                commentDiv.querySelector(".comment-edit-input").remove();
+                commentDiv.querySelector(".save-button").remove();
+
+                // 수정된 댓글 내용 업데이트 후 표시
+                const commentText = commentDiv.querySelector("p");
+                commentText.textContent = `${data.createdBy}: ${data.content}`;
+                commentText.style.display = "block";
+
+                // editButton과 deleteButton 다시 보이게
+                editButton.style.display = "inline-block";
+                deleteButton.style.display = "inline-block";
+            })
+            .catch(error => {
+                console.error("❌ 댓글 수정 실패:", error);
+            });
+    }
+
+
+
 
 </script>
 

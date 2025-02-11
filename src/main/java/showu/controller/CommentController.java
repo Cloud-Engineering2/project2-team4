@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import showu.dto.CommentDTO;
 import showu.dto.UserDTO;
 import showu.dto.request.CommentRequest;
+import showu.dto.request.CommentUpdateRequest;
 import showu.dto.response.CommentResponse;
 import showu.entity.Comment;
 import showu.entity.constant.UserRole;
@@ -39,30 +40,15 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponse> registerComment(@RequestBody CommentRequest commentRequest) {
 
-        // 로그인 가정
-//        UserDTO userDTO = UserDTO.of(2L,
-//                "admin",
-//                "admin",
-//                "admin@showu.store",
-//                UserRole.ADMIN);
-
-
         CommentDTO commentDTO = commentService.registerComment(commentRequest);
-
         return ResponseEntity.ok(CommentResponse.from(commentDTO));
     }
 
 
     @PutMapping("/{cmid}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long cmid, @RequestBody CommentRequest commentRequest) {
-        // 로그인 가정
-        UserDTO userDTO = UserDTO.of(2L,
-                "admin",
-                "admin",
-                "admin@showu.store",
-                UserRole.ADMIN);
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long cmid, @RequestBody CommentUpdateRequest commentUpdateRequest) {
 
-        CommentDTO commentDTO = commentService.updateComment(cmid, commentRequest.toDto(userDTO));
+        CommentDTO commentDTO = commentService.updateComment(cmid, commentUpdateRequest);
         return ResponseEntity.ok(CommentResponse.from(commentDTO));
     }
 
