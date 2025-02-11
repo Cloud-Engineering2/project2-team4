@@ -84,7 +84,7 @@ h1.logo {
     color: white;
 }
 .comment {
-	display: flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
 }
@@ -94,6 +94,18 @@ h1.logo {
     padding: 6px;
     border-radius: 10px;
     cursor: pointer;
+    border: none;
+}
+
+.cancel-button {
+    background: black;
+    color: #E50C42;
+    border: none;
+}
+
+.save-button {
+    background: black;
+    color: #AEEA94;
     border: none;
 }
 .commentButton:hover {
