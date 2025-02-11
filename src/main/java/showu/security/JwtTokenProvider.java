@@ -12,6 +12,7 @@
  * 배희창   2025.02.08    최초 작성 : JtwTokenProvider 작성
  * 배희창   2025.02.10    token uid값으로 생성하게 수정
  * 배희창   2025.02.10    userIdFromToken부분 uid값으로 검증하게 에러처리 완료
+ * 채혜송   2025.02.11    httpRequest에서 token 가져오도록 getToken 추가
  * ========================================================
  */
 
@@ -21,6 +22,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,4 +75,21 @@ public class JwtTokenProvider {
             return false;
         }
     }
+    
+	public String getToken (HttpServletRequest request) {
+	    // 쿠키에서 token 값 가져오기
+	    String token = null;
+	    Cookie[] cookies = request.getCookies();  // 모든 쿠키 가져오기
+
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("token".equals(cookie.getName())) {  // 쿠키 이름이 'token'인지 확인
+	                token = cookie.getValue();  // token 값 가져오기
+	                break;
+	            }
+	        }
+	    }
+
+	    return token;
+	}
 }
