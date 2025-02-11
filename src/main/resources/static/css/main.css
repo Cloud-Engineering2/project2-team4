@@ -82,3 +82,116 @@ body {
 	color: #4635B1;
 }
 
+.main-box {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ct-box {
+    width: 100%;
+    max-width: 1400px;
+    height: fit-content;
+    background: #fff;
+    flex-direction: column;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 30px;
+    border-bottom: 1.5px solid #ddd;
+}
+.ct-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-right: auto;
+    padding-left: 20px;
+    color: #555;
+}
+
+.pt-box {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px; /* 간격 추가 */
+    place-items: center; /* 그리드 안의 요소를 중앙 정렬 */
+    width: 100%; /* 부모 요소 너비를 유지 */
+    max-width: 1400px; /* 최대 너비 설정 */
+}
+
+.post-item {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    /* box-shadow: 0px 0px 4px 1px rgb(0, 0, 0, 0.1); */
+    border: 2px solid #ddd;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: fit-content;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px;
+    transition: all 0.2s;
+    &:hover {
+        border: 2px solid  blueviolet;
+    }
+}
+
+.post-item img {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+}
+
+.post-icon-box {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    .like {
+        width: 17px;
+        height: 17px;
+        transition: all 0.2s;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+    .like-text {
+        font-weight: bold;
+        padding-bottom: 1px;
+        margin-left: 2px;
+    }
+    .btn {
+        cursor: pointer;
+        width: 80px;
+        height: 30px;
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+        justify-content: center;
+        background-color: blueviolet;
+        box-shadow: 0px 0px 4px 1px rgb(0, 0, 0, 0.1);
+        transition: all 0.2s;
+        color: #fff;
+        font-weight: bold;
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+}
+.outer {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

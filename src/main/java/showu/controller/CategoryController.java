@@ -12,6 +12,7 @@
 * 전익주    2025.02.08    Category 조회, 추가, 수정, 삭제 기능 구현
 * 전익주    2025.02.09    CategoryDto 기반으로 메서드 수정
 * 전익주    2025.02.10    RestController에서 Controller로 변경
+* 배희창    2025.02.11    /categories 부분 추가
 * ========================================================
 */ 
 
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import showu.dto.CategoryDTO;
@@ -46,6 +48,13 @@ public class CategoryController {
 		List<CategoryDTO> categories = categoryService.getAllCategory();
 		map.addAttribute("categories", categories);
 		return "category";
+	}
+	
+	// json category 받기용 추가
+	@GetMapping("/categories")
+	@ResponseBody
+	public List<CategoryDTO> getCategories() {
+	    return categoryService.getAllCategory();
 	}
 	
 	// 카테고리 추가

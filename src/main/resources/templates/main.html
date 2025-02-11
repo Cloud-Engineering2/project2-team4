@@ -9,6 +9,97 @@
 </head>
 <body>
     <div th:replace="~{fragments/nav}"></div>
-	
+	<div class="outer">
+		<div id="main-box"></div>
+	</div>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const mainBox = document.getElementById("main-box");
+
+        try {
+            const categoriesRes = await fetch("/api/admin/categories");
+            const categories = await categoriesRes.json();
+
+            const postsRes = await fetch("/api/post");
+            let posts = await postsRes.json();
+
+            // ✅ 좋아요 순으로 내림차순 정렬
+            posts.sort((a, b) => b.likes - a.likes);
+
+            categories.forEach(category => {
+                const ctBox = document.createElement("div");
+                ctBox.classList.add("ct-box");
+
+                const title = document.createElement("p");
+                title.classList.add("ct-title");
+                title.textContent = category.name;
+
+                const ptBox = document.createElement("div");
+                ptBox.classList.add("pt-box");
+
+                const categoryPosts = posts.filter(post => post.category.id === category.id);
+
+                categoryPosts.forEach(post => {
+                    const postItem = document.createElement("div");
+                    postItem.classList.add("post-item");
+
+                    const img = document.createElement("img");
+                    img.src = post.imageUrl;
+                    img.alt = "Post Image";
+
+                    const iconBox = document.createElement("div");
+                    iconBox.classList.add("post-icon-box");
+
+                    const likeIcon = document.createElement("img");
+                    likeIcon.classList.add("icon", "like");
+                    likeIcon.src = "/icons/like.png";
+                    likeIcon.alt = "like";
+                    likeIcon.dataset.postId = post.id;
+
+                    const likeText = document.createElement("span");
+                    likeText.classList.add("like-text");
+                    likeText.textContent = post.likes;
+
+                    const btn = document.createElement("div");
+                    btn.classList.add("btn");
+                    btn.textContent = "Detail";
+                    btn.addEventListener("click", () => {
+                        window.location.href = `/api/post/${post.id}`;
+                    });
+
+                    // ✅ 좋아요 버튼 클릭 이벤트
+                    likeIcon.addEventListener("click", async () => {
+                        const postId = likeIcon.dataset.postId;
+                        try {
+                            const res = await fetch(`/api/post/like/${postId}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" }
+                            });
+
+                            if (!res.ok) {
+                                throw new Error("서버 오류");
+                            }
+
+                            const data = await res.json();
+                            likeText.textContent = data.likes; // ✅ 좋아요 개수 업데이트
+                        } catch (error) {
+                            console.error("Error updating likes:", error);
+                        }
+                    });
+
+                    iconBox.append(likeIcon, likeText, btn);
+                    postItem.append(img, iconBox);
+                    ptBox.appendChild(postItem);
+                });
+
+                ctBox.append(title, ptBox);
+                mainBox.appendChild(ctBox);
+            });
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+</script>
+<div th:replace="~{fragments/footer}"></div>
 </body>
 </html>

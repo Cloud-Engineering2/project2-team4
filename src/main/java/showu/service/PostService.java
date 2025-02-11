@@ -12,16 +12,19 @@
  * 배희창   2025.02.08    최초 작성 : PostService 작성
  * 배희창   2025.02.09    게시물 전체 조회, 생성, 삭제 구현
  * 배희창   2025.02.10    게시물 수정 구현
+ * 배희창   2025.02.11    좋아요 구현
  * ========================================================
  */
 
 package showu.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import showu.dto.PostDTO;
@@ -137,5 +140,16 @@ public class PostService {
 		return postRepository.findById(pid)
 				.map(PostWithCommentsDTO::from)
 				.orElseThrow();
+	}
+	
+	public int incrementLikes(Long pid) {
+	    Optional<Post> postOptional = postRepository.findById(pid);
+	    if (postOptional.isPresent()) {
+	        Post post = postOptional.get();
+	        post.setPlike(post.getPlike() + 1);
+	        postRepository.save(post);
+	        return post.getPlike();  // ✅ 변경된 좋아요 개수 반환
+	    }
+	    throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다.");
 	}
 }
