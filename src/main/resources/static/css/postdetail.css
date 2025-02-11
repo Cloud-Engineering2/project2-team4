@@ -47,32 +47,17 @@ h1.logo {
     border-bottom: 1px solid #dbdbdb; /* 하단 테두리 */
 }
 
-
-.edit-button {
-    background-color: #AEEA94;
-    color: #4635B1;
+.button {
+    background-color: #4635B1;
+    color: white;
     padding: 8px 12px;
     border-radius: 10px;
     cursor: pointer;
-
+    border: none;
 }
-
-.delete-button {
-    background-color: #AEEA94;
-    color: #E50C42;
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
+.button:hover {
+    opacity: 0.7;
 }
-
-.edit-button:hover {
-    background-color: #73a163;
-}
-.delete-button:hover {
-    background-color: #73a163;
-}
-
-
 
 .comment-section {
     width: 40%;
@@ -89,8 +74,6 @@ h1.logo {
     padding-bottom: 5px;
 }
 
-
-
 .comments {
     flex-grow: 1;
     overflow-y: auto;
@@ -99,35 +82,35 @@ h1.logo {
     padding-bottom: 10px;
     color: white;
 }
-
+.comment {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.commentButton {
+    background: none;
+    color: #4635B1;
+    padding: 6px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+}
+.commentButton:hover {
+    color: white;
+}
 .comment p{
     margin: 0;
     padding-bottom: 3px;
 }
-
 .add-comment {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
-
 .add-comment input {
     flex-grow: 1;
     padding: 8px;
     border: 1px solid #dbdbdb;
     border-radius: 4px;
     justify-content: space-between;
-}
-
-.add-comment button {
-    padding: 8px 12px;
-    border: none;
-    background-color: black;
-    color: #AEEA94;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.add-comment button:hover {
-    color: white;
 }
