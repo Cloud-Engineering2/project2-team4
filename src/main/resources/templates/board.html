@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 목록</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/board.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <link rel="stylesheet" type="text/css" href="/css/init.css">
+    <link rel="stylesheet" type="text/css" href="/css/board.css">
     <script>
         async function SearchClickEvent(category) {
             // const posts = await GetFilterPosts(category);
@@ -181,5 +182,6 @@
 
         <div th:replace="~{fragments/footer}"></div>
     </div>
+    <div th:replace="~{fragments/back}"></div>
 </body>
 </html>
