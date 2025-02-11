@@ -5,62 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram Post View</title>
     <link rel="stylesheet" type="text/css" href="/css/postdetail.css">
+    <script src="/js/auth.js"></script>
+    <script>
+        let token = null;
+        let userId = null;
+        function checkToken() {
+            // 📌 토큰 가져오기
+            token = localStorage.getItem("token");
+            if (!token) {
+                alert("❌ 로그인 후 이용하세요!");
+                return;
+            }
+
+            // 📌 토큰에서 uid 추출
+            userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+                return;
+            }
+        }
+
+        checkToken();
+
+
+    </script>
 </head>
 
 <body>
-    <th:block th:replace="~{/layout/header :: headerLayout}"></th:block>
+<th:block th:replace="~{/layout/header :: headerLayout}"></th:block>
 
-    <div class="container">
-        <div class="content-wrapper">
-            <div class="image-section">
-                <img src="https://us.123rf.com/450wm/martialred/martialred1507/martialred150700661/42613290-landscape-photo-image-flat-icon-for-apps-and-websites.jpg?ver=6" alt="Post Image">
+<div class="container">
+    <div class="content-wrapper">
+        <div class="image-section">
+            <img src="https://us.123rf.com/450wm/martialred/martialred1507/martialred150700661/42613290-landscape-photo-image-flat-icon-for-apps-and-websites.jpg?ver=6" alt="Post Image">
+        </div>
+        <div class="comment-section">
+            <div class="username-and-button-section">
+                <h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
+                <div th:if="${userId} == ${post.uid}" class="edit-and-delete-button">
+                    <button  class="edit-button" onclick="">EDIT</button>
+                    <button  class="delete-button" onclick="">DELETE</button>
+                </div>
             </div>
-            <div class="comment-section">
-                <div class="username-and-button-section">
-                    <h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
-                    <div class="edit-and-delete-button">
-                        <button class="edit-button" onclick="">EDIT</button>
-                        <button class="delete-button" onclick="">DELETE</button>
-                    </div>
-                </div>
 
-                <h3>제목</h3>
-                <div class="title" th:text="${post?.createdBy}">
-                    사진 제목
-                </div>
+            <h3>제목</h3>
+            <div class="title" th:text="${post?.createdBy}">
+                사진 제목
+            </div>
 
-                <h3>내용</h3>
-                <div class="content" th:text="${post?.content}">
-                    사진 내용
-                </div>
+            <h3>내용</h3>
+            <div class="content" th:text="${post?.content}">
+                사진 내용
+            </div>
 
-                <h3>댓글</h3>
-                <div class="comments" id="comments">
-                    <div class="comment" th:each="comment : ${comments}">
-                        <p th:text="|${comment.createdBy}: ${comment.content}|">댓글1: 멋진 사진이네요!</p>
-                    </div>
+            <h3>댓글</h3>
+            <div class="comments" id="comments">
+                <div class="comment" th:each="comment : ${comments}">
+                    <p th:text="|${comment.createdBy}: ${comment.content}|">댓글1: 멋진 사진이네요!</p>
                 </div>
-                <div class="add-comment">
-                    <input type="text" id="commentInput" placeholder="댓글 추가...">
-                    <button onclick="addComment()">게시</button>
-                </div>
+            </div>
+
+            <!-- ✅ postId를 가져오기 위한 hidden input 추가 -->
+            <input type="hidden" id="pid" th:value="${post?.pid}">
+
+            <div class="add-comment">
+                <input type="text" id="commentInput" name="content" placeholder="댓글 추가...">
+                <button id="submitComment">게시</button>
             </div>
         </div>
     </div>
-</body>
+</div>
+
 <script>
-    function addComment() {
-        const commentInput = document.getElementById('commentInput');
-        const commentText = commentInput.value.trim();
-        if (commentText) {
-            const comments = document.getElementById('comments');
-            const newComment = document.createElement('div');
-            newComment.classList.add('comment');
-            newComment.textContent = `사용자: ${commentText}`;
-            comments.appendChild(newComment);
-            commentInput.value = '';
-        }
-    }
+    document.getElementById("submitComment").addEventListener("click", function(event) {
+        event.preventDefault(); // 기본 동작 방지
+
+        let postId = document.getElementById("pid").value;
+        let commentInput = document.getElementById("commentInput");
+        let commentText = commentInput.value.trim();
+
+        if (!commentText) return; // 빈 댓글 방지
+
+        // ✅ JSON 형식으로 POST 요청
+        fetch("/api/comments", {
+            method: "POST",
+
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ pid: postId, uid: userId, content: commentText })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("✅ 댓글 추가 성공:", data);
+
+                // ✅ 새로운 댓글을 동적으로 추가
+                let commentsDiv = document.getElementById("comments");
+                let newComment = document.createElement("div");
+                newComment.classList.add("comment");
+                newComment.innerHTML = `<p>${data.createdBy}: ${data.content}</p>`;
+                commentsDiv.appendChild(newComment);
+
+                commentInput.value = ""; // 입력 필드 초기화
+            })
+            .catch(error => {
+                console.error("❌ 댓글 추가 실패:", error);
+            });
+    });
 </script>
+
 </body>
 </html>

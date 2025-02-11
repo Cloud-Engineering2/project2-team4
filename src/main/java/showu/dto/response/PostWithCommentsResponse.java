@@ -19,19 +19,22 @@ import showu.dto.PostWithCommentsDTO;
 @AllArgsConstructor
 public class PostWithCommentsResponse {
     private Long pid;
+    private Long uid;
     private String title;
     private String content;
     private String createdBy;
     private LocalDateTime createdAt;
     private Set<CommentResponse> commentResponse;
 
-    public static PostWithCommentsResponse of(Long pid, String title, String content, String createdBy, LocalDateTime createdDate, Set<CommentResponse> commentResponse) {
-        return new PostWithCommentsResponse(pid, title, content, createdBy, createdDate, commentResponse);
+    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String createdBy, LocalDateTime createdDate, Set<CommentResponse> commentResponse) {
+        return new PostWithCommentsResponse(pid, uid, title, content, createdBy, createdDate, commentResponse);
     }
 
     public static PostWithCommentsResponse from(PostWithCommentsDTO postWithCommentsDTO) {
 
-        return new PostWithCommentsResponse(postWithCommentsDTO.getId(),
+        return new PostWithCommentsResponse(
+                postWithCommentsDTO.getId(),
+                postWithCommentsDTO.getUserDTO().getId(),
                 postWithCommentsDTO.getTitle(),
                 postWithCommentsDTO.getContent(),
                 postWithCommentsDTO.getUserDTO().getUserId(),
