@@ -17,15 +17,16 @@ public class PostWithCommentsDTO {
     private Long id;
     private String title;
     private String content;
+    private String imageURL;
     private UserDTO userDTO;
     private Set<CommentDTO> commentDTOs;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static PostWithCommentsDTO of(Long id, String title, String content, UserDTO userDTO,
+    public static PostWithCommentsDTO of(Long id, String title, String content, String imageURL, UserDTO userDTO,
                                          Set<CommentDTO> commentDTOs, LocalDateTime createdDate,
                                          LocalDateTime modifiedDate) {
-        return new PostWithCommentsDTO(id, title, content, userDTO, commentDTOs, createdDate, modifiedDate);
+        return new PostWithCommentsDTO(id, title, content, imageURL, userDTO, commentDTOs, createdDate, modifiedDate);
     }
 
     public static PostWithCommentsDTO from(Post post) {
@@ -33,6 +34,7 @@ public class PostWithCommentsDTO {
                 post.getPid(),
                 post.getTitle(),
                 post.getContent(),
+                post.getImageUrl(),
                 UserDTO.from(post.getUser()),
                 post.getComments().stream()
                         .map(CommentDTO::from)

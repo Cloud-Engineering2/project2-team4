@@ -22,21 +22,23 @@ public class PostWithCommentsResponse {
     private Long uid;
     private String title;
     private String content;
+    private String imageURL;
     private String createdBy;
     private LocalDateTime createdAt;
     private Set<CommentResponse> commentResponse;
 
-    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String createdBy, LocalDateTime createdDate, Set<CommentResponse> commentResponse) {
-        return new PostWithCommentsResponse(pid, uid, title, content, createdBy, createdDate, commentResponse);
+    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String imageURL, String createdBy, LocalDateTime createdDate, Set<CommentResponse> commentResponse) {
+        return new PostWithCommentsResponse(pid, uid, title, content, imageURL, createdBy, createdDate, commentResponse);
     }
 
     public static PostWithCommentsResponse from(PostWithCommentsDTO postWithCommentsDTO) {
 
-        return new PostWithCommentsResponse(
+        return PostWithCommentsResponse.of(
                 postWithCommentsDTO.getId(),
                 postWithCommentsDTO.getUserDTO().getId(),
                 postWithCommentsDTO.getTitle(),
                 postWithCommentsDTO.getContent(),
+                postWithCommentsDTO.getImageURL(),
                 postWithCommentsDTO.getUserDTO().getUserId(),
                 postWithCommentsDTO.getCreatedAt(),
                 getCommentResponses(postWithCommentsDTO.getCommentDTOs())
