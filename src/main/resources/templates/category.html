@@ -153,6 +153,7 @@
 
 </head>
 <body>
+	<div th:replace="~{fragments/nav}"></div>
 	<h2 class="category">Category</h2>
     <div class="row">
         <table class="table" id="category-table">
@@ -181,5 +182,6 @@
             <button onclick="addCategory()">카테고리 생성</button>
         </div>
     </div>
+    <div th:replace="~{fragments/footer}"></div>
 </body>
 </html>

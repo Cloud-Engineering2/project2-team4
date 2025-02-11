@@ -17,6 +17,7 @@
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
  * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail (test)
+ * 전익주   2025.02.11    /api/admin/** ADMIN 권한 필요하게 수정
  * ========================================================
  */
 
@@ -65,18 +66,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-	        .csrf(csrf -> csrf.disable())
-	        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	        .authorizeHttpRequests(auth -> auth
-	                .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
-	                .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
-	                .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail", "/board").permitAll()
-	                .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
-	                .requestMatchers("/test").authenticated()
-	                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-	                .anyRequest().authenticated()
-	        ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-	    return http.build();
+            .csrf(csrf -> csrf.disable())
+            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
+                    .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
+                    .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail", "/board").permitAll()
+                    .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
+                    .requestMatchers("/test").authenticated()
+                    .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                    .anyRequest().authenticated()
+            ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }
