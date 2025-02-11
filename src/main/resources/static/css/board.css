@@ -57,14 +57,15 @@ p {
 
 #filterBox select {
 	width: 77px;
-    height: 30px;
+    height: 32px;
     border-radius: 15px;
     text-align: center;
-    background: #e8e8e8;
+    background: #4635B1;
     border: none;
-    color: #919191;
-    font-size: 11px;
+    color: white;
+    font-size: 13px;
     margin-right: 10px;
+    font-weight: bold;
 }
 #filterInput {
     width: 40%;
@@ -75,6 +76,7 @@ p {
     outline: none;
     padding: 0px 10px;
     box-sizing: border-box;
+    opacity: 0.5;
 }
 #btnSearch{
     height: 26px;
