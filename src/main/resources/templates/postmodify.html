@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>파일 업로드</title>
     <link rel="stylesheet" type="text/css" href="/css/postupload.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
     function getUserIdFromToken() {
         let token = localStorage.getItem("token");
@@ -11,17 +12,15 @@
 
         try {
             let payload = JSON.parse(atob(token.split('.')[1])); // Base64 디코딩
-            console.log("📌 디코딩된 JWT Payload:", payload); // 디버깅용 로그
-            return payload.uid || null; // ✅ "uid" 값 가져오기
+            console.log("📌 디코딩된 JWT Payload:", payload);
+            return payload.uid || null;
         } catch (error) {
             console.error("토큰 디코딩 실패:", error);
             return null;
         }
     }
 
-    async function uploadFile() {
-        let formData = new FormData();
-
+    async function uploadFile(postId) {
         // 📌 토큰 가져오기
         let token = localStorage.getItem("token");
         if (!token) {
@@ -29,14 +28,13 @@
             return;
         }
 
-        // 📌 토큰에서 uid 추출
+        // 📌 토큰에서 사용자 ID 추출
         let userId = getUserIdFromToken();
         if (!userId) {
             alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
             return;
         }
 
-        // 입력 필드 가져오기
         let fileInput = document.getElementById("file");
         let titleInput = document.getElementById("title");
         let contentInput = document.getElementById("content");
@@ -47,11 +45,6 @@
         let content = contentInput.value.trim();
         let link = linkInput.value.trim();
 
-        // 필수값 체크
-        if (!file) {
-            alert("📌 파일을 업로드해야 합니다!");
-            return;
-        }
         if (!title) {
             alert("📌 제목을 입력하세요!");
             titleInput.focus();
@@ -63,77 +56,68 @@
             return;
         }
 
-        // ✅ JSON 데이터 생성 (토큰에서 가져온 uid를 user.id로 설정)
         let postData = {
-            user: { id: userId },  // ✅ 로그인한 사용자의 UID 반영
-            category: { id: 3 },
+            id: postId,
+            user: { id: userId },
+            category: { id: 1 },
             title: title,
             content: content,
             link: link
         };
 
-        // FormData에 추가
-        formData.append("file", file);
+        let formData = new FormData();
+        if (file) {
+            formData.append("file", file);
+        }
         formData.append("post", new Blob([JSON.stringify(postData)], { type: "application/json" }));
 
         try {
-            console.log("📌 전송할 데이터:", postData);
-
-            let response = await fetch("/api/post", {
-                method: "POST",
+            let response = await axios.put(`/api/post/${postId}`, formData, {
                 headers: {
-                    "Authorization": `Bearer ${token}`
-                },
-                body: formData
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
             });
 
-            let responseText = await response.text();
-            console.log("📌 서버 응답:", responseText);
-
-            if (!response.ok) {
-                throw new Error("서버 오류: " + response.status);
+            console.log("📌 서버 응답:", response.data);
+            if (response.status === 200) {
+                alert("✅ 게시글이 수정되었습니다.");
+                window.location.href = `/api/post/${postId}`; // 수정 후 해당 게시글 페이지로 리다이렉트
+            } else {
+                alert("⚠ 서버 응답이 예상과 다릅니다.");
             }
-
-            try {
-                let jsonData = JSON.parse(responseText);
-                alert("✅ 업로드 성공! 게시글 ID: " + jsonData.id);
-                window.location.href = "/board";
-            } catch (error) {
-                console.error("📌 JSON 파싱 실패:", error);
-                alert("⚠ 서버 응답이 JSON 형식이 아닙니다. 응답 내용을 확인하세요.");
-            }
-
         } catch (error) {
-            console.error("❌ 업로드 실패:", error);
-            alert("❌ 업로드 실패! 로그인하세요!" + error.message);
-            window.location.href = "/login";
+            console.error("❌ 수정 실패:", error);
+            alert("❌ 수정 실패! " + error.message);
         }
     }
+
 
     </script>
 </head>
 <body>
-	<div th:replace="~{fragments/nav}"></div>
-	<div></div>
+    <div th:replace="~{fragments/nav}"></div>
+
     <div class="container">
-        <h2>자랑하기</h2>
+        <h2>게시글 수정</h2>
 
         <div class="form-group"> 
             <label for="title">제목:</label>
-            <input type="text" id="title"><br>
+            <input type="text" id="title" th:value="${post?.title}" /><br>
 
             <label for="content">내용:</label>
-            <textarea id="content"></textarea><br>
+            <textarea id="content" th:text="${post?.content}"></textarea><br>
 
             <label for="link">링크:</label>
-            <input type="text" id="link"><br>
+            <input type="text" id="link" th:value="${post?.link}" /><br>
 
             <label for="file">파일 업로드:</label>
             <input type="file" id="file"><br>
 
-            <button onclick="uploadFile()">전송</button>
+            <button class="edit-button button" th:onclick="|uploadFile(${post?.pid})|">수정</button>
         </div>
     </div>
+
     <div th:replace="~{fragments/footer}"></div>
     <div th:replace="~{fragments/back}"></div>
 </body>
