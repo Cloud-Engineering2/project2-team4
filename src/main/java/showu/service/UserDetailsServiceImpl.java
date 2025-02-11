@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUserId())
                 .password(user.getUserPw()) // BCrypt 암호화된 비밀번호
-                .authorities(user.getUserRole().name()) // 권한 설정 (ROLE_MEMBER 등)
+                .authorities(user.getUserRole().getUserRole()) // 권한 설정 (ROLE_MEMBER 등)
                 .build();
     }
 }

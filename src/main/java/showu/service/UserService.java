@@ -97,7 +97,7 @@ public class UserService {
             User user = userRepository.findByUserId(userDetails.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userDetails.getUsername()));
 
-            return jwtTokenProvider.createToken(user.getUid()); // ✅ uid로 토큰 생성
+            return jwtTokenProvider.createToken(user.getUid(), user.getUserRole().getUserRole()); // ✅ uid로 토큰 생성
 
         } catch (BadCredentialsException e) {
                 System.err.println("❌ 인증 실패 ㅠㅠ - Service : " + e.getMessage());

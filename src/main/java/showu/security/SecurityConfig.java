@@ -74,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll()
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
                         .requestMatchers("/test").authenticated()
-                        //.requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
             return http.build();

@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 // 토큰 유효
                 Authentication auth = jwtTokenProvider.getAuthentication(token);
+                logger.info("✅ Extracted Authorities from Token: " + auth.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth); // 생성된 Authentication 객체를 SecurityContextHolder 에 설정
             }
         } catch (JWTVerificationException | IllegalArgumentException e) {

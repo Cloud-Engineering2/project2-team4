@@ -24,6 +24,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
@@ -36,16 +37,20 @@ public class JwtTokenProvider {
     private final String secretKey = "your-secret-key-your-secret-key"; // 🔹 256비트 이상 추천
     private final long validityInMilliseconds = 3600000; // 1시간
 
-    public String createToken(Long uid) {
+    public String createToken(Long uid, String role) {
         return JWT.create()
                 .withClaim("uid", uid) 
+                .withClaim("role", role)
                 .withExpiresAt(new Date(System.currentTimeMillis() + validityInMilliseconds))
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
     public Authentication getAuthentication(String token) {
-        String userId = userIdFromToken(token);
-        User userDetails = new User(userId, "", Collections.emptyList());
+    	DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
+        String userId = String.valueOf(decodedJWT.getClaim("uid").asLong());
+        String role = decodedJWT.getClaim("role").asString(); // 🔥 역할 가져오기
+        
+        User userDetails = new User(userId, "", Collections.singleton(new SimpleGrantedAuthority(role)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
