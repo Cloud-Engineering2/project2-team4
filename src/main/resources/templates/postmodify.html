@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>파일 업로드</title>
+    <title>게시글 수정</title>
     <link rel="stylesheet" type="text/css" href="/css/postupload.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
@@ -20,15 +20,51 @@
         }
     }
 
+    async function loadCategories() {
+        try {
+            const response = await axios.get("/api/admin/categories");
+            const categories = response.data;
+
+            const categoryMenu = document.getElementById("categoryMenu");
+            const selectedCategory = document.getElementById("selectedCategory");
+            
+            // 기존 선택된 카테고리 가져오기
+            const selectedCategoryId = document.getElementById("categoryData").dataset.id;
+
+            categoryMenu.innerHTML = ""; // 기존 옵션 초기화
+
+            categories.forEach(category => {
+                const item = document.createElement("div");
+                item.textContent = category.name;
+                item.dataset.id = category.id;
+
+                // 기존 카테고리 선택 상태 반영
+                if (category.id == selectedCategoryId) {
+                    selectedCategory.textContent = category.name;
+                    selectedCategory.dataset.id = category.id;
+                }
+
+                item.addEventListener("click", () => {
+                    selectedCategory.textContent = category.name;
+                    selectedCategory.dataset.id = category.id;
+                    document.querySelector(".dropdown").classList.remove("show");
+                });
+
+                categoryMenu.appendChild(item);
+            });
+        } catch (error) {
+            console.error("❌ 카테고리 불러오기 실패:", error);
+        }
+    }
+
+
     async function uploadFile(postId) {
-        // 📌 토큰 가져오기
         let token = localStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             return;
         }
 
-        // 📌 토큰에서 사용자 ID 추출
         let userId = getUserIdFromToken();
         if (!userId) {
             alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
@@ -39,6 +75,8 @@
         let titleInput = document.getElementById("title");
         let contentInput = document.getElementById("content");
         let linkInput = document.getElementById("link");
+        let selectedCategory = document.getElementById("selectedCategory");
+        let categoryId = selectedCategory.dataset.id;
 
         let file = fileInput.files[0];
         let title = titleInput.value.trim();
@@ -55,11 +93,15 @@
             contentInput.focus();
             return;
         }
+        if (!categoryId) {
+            alert("📌 카테고리를 선택하세요!");
+            return;
+        }
 
         let postData = {
             id: postId,
             user: { id: userId },
-            category: { id: 1 },
+            category: { id: categoryId },
             title: title,
             content: content,
             link: link
@@ -82,7 +124,7 @@
             console.log("📌 서버 응답:", response.data);
             if (response.status === 200) {
                 alert("✅ 게시글이 수정되었습니다.");
-                window.location.href = `/api/post/${postId}`; // 수정 후 해당 게시글 페이지로 리다이렉트
+                window.location.href = `/api/post/${postId}`;
             } else {
                 alert("⚠ 서버 응답이 예상과 다릅니다.");
             }
@@ -91,19 +133,40 @@
             alert("❌ 수정 실패! " + error.message);
         }
     }
+    function toggleDropdown() {
+        document.querySelector(".dropdown-content").classList.toggle("show");
+    }
 
-
+    // 클릭한 영역이 드롭다운이 아닐 경우 닫기
+    window.addEventListener("click", function(event) {
+        if (!event.target.matches(".dropbtn")) {
+            let dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                let openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains("show")) {
+                    openDropdown.classList.remove("show");
+                }
+            }
+        }
+    });
     </script>
 </head>
-<body>
+<body onload="loadCategories()">
+<span id="categoryData" th:data-id="${post?.category?.id}" hidden></span>
     <div th:replace="~{fragments/nav}"></div>
 
     <div class="container">
         <h2>게시글 수정</h2>
 
-        <div class="form-group"> 
+        <div class="form-group">
             <label for="title">제목:</label>
             <input type="text" id="title" th:value="${post?.title}" /><br>
+
+            <label for="category">카테고리:</label>
+			<div class="dropdown">
+			    <button class="dropbtn" id="selectedCategory" onclick="toggleDropdown()">카테고리 선택</button>
+			    <div class="dropdown-content" id="categoryMenu"></div>
+			</div>
 
             <label for="content">내용:</label>
             <textarea id="content" th:text="${post?.content}"></textarea><br>
