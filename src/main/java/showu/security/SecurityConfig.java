@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 로그인, 토근, path permit 관련 config
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.10
+ * 최종 수정 날짜 : 2025.02.11
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -16,6 +16,7 @@
  * 배희창   2025.02.10    id pw 불일치시 401 반환
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
+ * 김예린   2025.02.11    /postdetail 접근 허용 처리 (test)
  * ========================================================
  */
 
@@ -59,21 +60,21 @@ public class SecurityConfig {
         return new ProviderManager(List.of(authProvider));
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
-                    .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
-                    .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput").permitAll()
-                    .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
-                    .requestMatchers("/test").authenticated()
-                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
-            ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
+                        .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll()
+                        .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
+                        .requestMatchers("/test").authenticated()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+            return http.build();
+        }
 }
