@@ -1,187 +1,192 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 목록</title>
     <link rel="stylesheet" type="text/css" href="/css/main.css">
-        <link rel="stylesheet" type="text/css" href="/css/init.css">
+    <link rel="stylesheet" type="text/css" href="/css/init.css">
     <link rel="stylesheet" type="text/css" href="/css/board.css">
-    <script>
-        async function SearchClickEvent(category) {
-            // const posts = await GetFilterPosts(category);
-            const posts = [
-                {
-                    id: 1,
-                    imageUrl: '/icons/RedHeart.png',
-                    title: 'Sample Post Title',
-                    user: { nickname: 'JohnDoe' },
-                    likes: 147
-                }
-            ];
-
-            if (posts) {
-                const mainBox = document.getElementById('postMainBox');
-                mainBox.innerHTML = '';  // 기존 게시글 제거
-                posts.forEach(post => {
-                    const el = createPostElement(post);
-                    mainBox.appendChild(el);
-                });
-            }
-        }
-
-        async function GetFilterPosts(category) {
-            const response = await fetch(`/api/post/like/${category}`, { method: 'PATCH' });
-            return await response.json();
-        }
-
-        function createPostElement(post) {
-            const postDiv = document.createElement('div');
-            postDiv.classList.add('post');
-            postDiv.onclick = (e) => PostClickEvent(e, post.id);
-
-            const form = document.createElement('form');
-            form.setAttribute('action', `/api/post/${post.id}`);
-            form.setAttribute('method', 'get');
-
-            const button = document.createElement('button');
-            button.setAttribute('type', 'submit');
-            button.classList.add('goToDetail');
-            button.textContent = 'goToDetail';
-
-            const imgDiv = document.createElement('div');
-            imgDiv.classList.add('img');
-
-            const img = document.createElement('img');
-            img.setAttribute('src', post.imageUrl);
-            img.style.width = '100%';
-            img.style.height = '100%';
-            imgDiv.appendChild(img);
-
-            const flexDiv = document.createElement('div');
-            flexDiv.classList.add('flex', 'spaceBetween');
-
-            const textDiv = document.createElement('div');
-            const titleP = document.createElement('p');
-            titleP.textContent = post.title;
-            titleP.classList.add('title');
-            const writerP = document.createElement('p');
-            writerP.textContent = post.user.nickname;
-            writerP.classList.add('nickname');
-            textDiv.appendChild(titleP);
-            textDiv.appendChild(writerP);
-
-            const heartDiv = document.createElement('div');
-            heartDiv.classList.add('flex');
-
-            const heartImg = document.createElement('img');
-            heartImg.setAttribute('src', '/icons/RedHeart.png');
-            heartImg.setAttribute('data-pid', post.id);
-            heartImg.classList.add('btnHeart');
-            heartImg.onclick = (e) => HeartClickEvent(e);
-
-            const likesP = document.createElement('p');
-            likesP.classList.add('likes');
-            likesP.textContent = post.likes;
-
-            heartDiv.appendChild(heartImg);
-            heartDiv.appendChild(likesP);
-
-            flexDiv.appendChild(textDiv);
-            flexDiv.appendChild(heartDiv);
-
-            form.appendChild(button);
-            form.appendChild(imgDiv);
-            form.appendChild(flexDiv);
-
-            postDiv.appendChild(form);
-
-            return postDiv;
-        }
-
-        function PostClickEvent(e, postId) {
-			if(e.target.className != 'btnHeart'){
-				window.location.href = `/api/post/${postId}`;	
-			}
-        }
-
-        async function HeartClickEvent(e) {
-            const heartImg = e.target;
-            const likeElement = heartImg.nextElementSibling;
-            const pid = heartImg.dataset.pid;
-
-            const post = await UpdateLikes(pid);
-            likeElement.textContent = post.likes;
-        }
-
-        async function UpdateLikes(pid) {
-            const response = await fetch(`/api/post/like/${pid}`, { method: 'PATCH' });
-            return await response.json();
-        }
-    </script>
 </head>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    // 📌 DOM 요소 가져오기
+    const mainBox = document.querySelector('.main-box');  // 게시글이 추가될 메인 박스
+    const filterBtn = document.querySelector('.filter-btn');  // 필터 버튼
+    const dropdownMenu = document.querySelector('.dropdown-menu');  // 카테고리 드롭다운
+
+    let allPosts = [];  // 전체 게시글 저장
+    let categories = [];  // 카테고리 목록 저장
+
+    // ✅ 초기 데이터 로드
+    try {
+        // 🔥 모든 게시글 불러오기
+        const postsRes = await fetch("/api/post");
+        allPosts = await postsRes.json();
+
+        // 🔥 좋아요 순 정렬 (Top 5)
+        const top5Posts = [...allPosts].sort((a, b) => b.likes - a.likes).slice(0, 5);
+
+        // ✅ 초기 UI 렌더링
+        mainBox.appendChild(createPostContainer("All Post Weekly Top5", top5Posts));
+
+        const allPostBox = createPostContainer("All Post", allPosts);
+        allPostBox.classList.add("all-post");  // 🔥 all-post 클래스 추가
+        mainBox.appendChild(allPostBox);
+
+        // ✅ 카테고리 목록 가져오기
+        loadCategories();
+    } catch (error) {
+        console.error("데이터 불러오기 실패:", error);
+    }
+
+    // ✅ 카테고리 불러오기 & 드롭다운 추가
+    async function loadCategories() {
+        try {
+            const categoriesRes = await fetch("/api/admin/categories");
+            categories = await categoriesRes.json();
+
+            dropdownMenu.innerHTML = ""; // 기존 목록 초기화
+
+            categories.forEach(category => {
+                const item = document.createElement("div");
+                item.classList.add("dropdown-item");
+                item.textContent = category.name;
+                item.addEventListener("click", () => filterByCategory(category.name)); // 클릭 시 필터 적용
+                dropdownMenu.appendChild(item);
+            });
+        } catch (error) {
+            console.error("카테고리 불러오기 실패:", error);
+        }
+    }
+
+    // ✅ 특정 카테고리 게시글 필터링
+    function filterByCategory(categoryName) {
+        console.log(`🔎 선택된 카테고리: ${categoryName}`);
+
+        const filteredPosts = allPosts.filter(post => {
+            console.log(`✅ 게시글 카테고리 값:`, post.category);
+            return post.category && post.category.name === categoryName;
+        });
+
+        console.log("📌 필터된 게시글 목록:", filteredPosts);
+        updateAllPostBox(categoryName, filteredPosts);
+    }
+
+    // ✅ All Post 박스 업데이트
+    function updateAllPostBox(categoryName, posts) {
+        // 🔥 기존의 모든 .all-post 제거
+        document.querySelectorAll(".ct-box.all-post").forEach(box => box.remove());
+
+        const newAllPostBox = createPostContainer(`Category: ${categoryName}`, posts);
+        newAllPostBox.classList.add("all-post");  // 🔥 새 박스도 all-post로 설정
+        mainBox.appendChild(newAllPostBox);
+    }
+
+    // ✅ 게시글 컨테이너 생성 함수
+    function createPostContainer(titleText, postList) {
+        const container = document.createElement("div");
+        container.classList.add("ct-box");
+
+        const title = document.createElement("p");
+        title.classList.add("ct-title");
+        title.textContent = titleText;
+
+        const ptBox = document.createElement("div");
+        ptBox.classList.add("pt-box");
+
+        postList.forEach(post => {
+            const postItem = createPostItem(post);
+            ptBox.appendChild(postItem);
+        });
+
+        container.append(title, ptBox);
+        return container;
+    }
+
+    // ✅ 게시글 아이템 생성 함수
+    function createPostItem(post) {
+        const postItem = document.createElement("div");
+        postItem.classList.add("post-item");
+
+        const img = document.createElement("img");
+        img.src = post.imageUrl;
+        img.alt = "Post Image";
+
+        const iconBox = document.createElement("div");
+        iconBox.classList.add("post-icon-box");
+
+        const likeIcon = document.createElement("img");
+        likeIcon.classList.add("icon", "like");
+        likeIcon.src = "/icons/like.png";
+        likeIcon.alt = "like";
+        likeIcon.dataset.postId = post.id;
+
+        const likeText = document.createElement("span");
+        likeText.classList.add("like-text");
+        likeText.textContent = post.likes;
+
+        const btn = document.createElement("div");
+        btn.classList.add("btn");
+        btn.textContent = "Detail";
+        btn.addEventListener("click", () => {
+            window.location.href = `/api/post/${post.id}`;
+        });
+
+        likeIcon.addEventListener("click", async () => {
+            const postId = likeIcon.dataset.postId;
+            try {
+                const res = await fetch(`/api/post/like/${postId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                if (!res.ok) {
+                    throw new Error("서버 오류");
+                }
+
+                const data = await res.json();
+                likeText.textContent = data.likes;
+            } catch (error) {
+                console.error("좋아요 업데이트 실패:", error);
+            }
+        });
+
+        iconBox.append(likeIcon, likeText, btn);
+        postItem.append(img, iconBox);
+        return postItem;
+    }
+
+    // ✅ 드롭다운 토글 기능
+    filterBtn.addEventListener('click', function () {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // ✅ 드롭다운 외부 클릭 시 닫기
+    document.addEventListener('click', function (event) {
+        if (!filterBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+});
+
+</script>
+
 <body>
     <div th:replace="~{fragments/nav}"></div>
-
-    <div id="wrapBox">
-        <!-- 카테고리 필터와 검색 입력 -->
-        <div id="filterBox" class="flex mb20">
-            <select onchange="SearchClickEvent(this.value)">
-                <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
-            </select>
-            <input id="filterInput" type="text" placeholder="검색" disabled />
-            <!--  클릭 이벤트 사용 시 추가 (onclick="SearchClickEvent(document.querySelector('select').value)") -->
-            <img id="btnSearch" src="/icons/Search.png" />
-        </div>
-
-        <!-- 주간 상위 5개 게시글 -->
-        <div id="weeklyBox" class="mb20">
-            <p id="weeklyBoxTitle">Weekly Top 5</p>
-            <div id="weeklyList" class="flex center">
-				<div th:each="post : ${topFive}" class="post" th:onclick="|PostClickEvent(event, ${post.id})|">
-	                <div class="img">
-	                    <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
-	                </div>
-	                <div class="flex spaceBetween">
-	                    <div>
-	                        <p th:text="${post.title}" class="title">title</p>
-	                        <p th:text="${post.user.nickname}" class="nickname">writer</p>
-	                    </div>
-	                    <div class="flex">
-	                        <img th:data-pid="${post.id}" class="btnHeart" src="/icons/RedHeart.png" onclick="HeartClickEvent(event)" />
-	                        <p class="likes" th:text="${post.likes}">likes</p>
-	                    </div>
-	                </div>
-	            </div>
+    <div class="main-box">
+                <div class="button-box">
+            <div class="filter-btn">Filter</div>
+            <div class="edit-btn">ShowU</div>
+            <div class="dropdown-menu">
+                <div class="dropdown-item">ANIMAL</div>
             </div>
         </div>
-
-        <!-- 게시글 목록 -->
-        <div id="postMainBox" class="mb20">
-            <div th:each="post : ${posts}" class="post" th:onclick="|PostClickEvent(event, ${post.id})|">
-                <div class="img">
-                    <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
-                </div>
-                <div class="flex spaceBetween">
-                    <div>
-                        <p th:text="${post.title}" class="title">title</p>
-                        <p th:text="${post.user.nickname}" class="nickname">writer</p>
-                    </div>
-                    <div class="flex">
-                        <img th:data-pid="${post.id}" class="btnHeart" src="/icons/RedHeart.png" onclick="HeartClickEvent(event)" />
-                        <p class="likes" th:text="${post.likes}">likes</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 글 작성 버튼 -->
-        <form action="/posttest" method="get" style="justify-self: center;">
-            <button type="submit" id="btnPost" class="greenButton">POST</button>
-        </form>
-
-        <div th:replace="~{fragments/footer}"></div>
     </div>
-    <div th:replace="~{fragments/back}"></div>
+    
+    <div th:replace="~{fragments/footer}"></div>
+<div th:replace="~{fragments/back}"></div>
 </body>
+
 </html>
