@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 로그인, 토근, path permit 관련 config
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.10
+ * 최종 수정 날짜 : 2025.02.11
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -16,7 +16,7 @@
  * 배희창   2025.02.10    id pw 불일치시 401 반환
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
- * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail
+ * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail (test)
  * ========================================================
  */
 
@@ -67,14 +67,14 @@ public class SecurityConfig {
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico",  "/postput").permitAll() // 정적 자원 허용
-                        .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll() // 얘는 정적 페이지 로그인 없이 가능하게 함
-                        .requestMatchers("/api/login/**", "/api/signup/**").permitAll() // 얘가 있어야 권한 없이 로그인이랑 회원 가입 가능
-                        .requestMatchers("/api/**").permitAll() // 개발 중이라 전부 열어 놨는데 나중에 무조건 지워야 함. 안 지우면 클나요
-                        .requestMatchers("/test").authenticated() // test 용 - 추후 삭제
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
+                        .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico", "/postput").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/posttest", "/postget", "/postdelete", "/postput", "/postdetail").permitAll()
+                        .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
+                        .requestMatchers("/test").authenticated()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+            return http.build();
     }
 }

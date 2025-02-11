@@ -16,6 +16,7 @@
  * 배희창   2025.02.10    login 부분 401 에러처리 수정
  * 채혜송   2025.02.10    회원가입 return 수정
  * 이홍비   2025.02.10    login() - try-catch 제거 // logout() 구현
+ * 이홍비   2025.02.10    login() - nickname, userRole 추가
  * ========================================================
  */
 package showu.controller;
@@ -83,9 +84,13 @@ public class AuthController {
 
 		System.out.println("✅ 로그인 성공! - Controller : " + token);
 
+		UserDTO userDTO = userService.getUserById(loginRequest.getUserId());
+
 		// 토큰 주입
 		Map<String, String> response = new HashMap<>();
 		response.put("token", token);
+		response.put("nickname", userDTO.getNickname());
+		response.put("role", userDTO.getUserRole().getUserRole());
 
 		return ResponseEntity.ok(response);
 	}
