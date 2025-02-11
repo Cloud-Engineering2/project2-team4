@@ -18,8 +18,8 @@ function logout() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        console.error("토큰이 없습니다.");
-        document.getElementById('responseText').innerText = "로그인된 상태가 아닙니다.";
+        console.error("❌ 토큰이 없습니다.");
+        alert("로그인된 상태가 아닙니다.");
         return;
     }
 
@@ -27,22 +27,43 @@ function logout() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // "Bearer " 접두사 추가
+            "Authorization": `Bearer ${token}`
         }
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error("❌ 로그아웃 중 오류가 발생했습니다 - !response.ok : " + response.statusText);
+                throw new Error("❌ 로그아웃 요청 실패: " + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log(data.message);
-            localStorage.removeItem("token"); // 로컬 스토리지에서 토큰 삭제
-            document.getElementById('responseText').innerText = "로그아웃 되었습니다.";
+            console.log("✔ 로그아웃 성공:", data.message);
+
+            // 로컬 스토리지 데이터 삭제
+            localStorage.removeItem("token");
+            localStorage.removeItem("nickname");
+            localStorage.removeItem("role");
+
+            console.log("✔ 로컬 스토리지 초기화 완료");
+
+            // 🔥 `responseText`가 존재하면 설정
+            let responseTextElement = document.getElementById('responseText');
+            if (responseTextElement) {
+                responseTextElement.innerText = "로그아웃 되었습니다.";
+            }
+
+            // 🚀 즉시 UI 변경 후 redirect
+            showLoggedOutUI();
+            window.location.href = "/";
         })
         .catch(error => {
-            document.getElementById('responseText').innerText = error.message;
-            console.error("❌ 로그아웃 중 오류가 발생했습니다.", error);
+            console.error("❌ 로그아웃 중 오류 발생:", error);
+
+            let responseTextElement = document.getElementById('responseText');
+            if (responseTextElement) {
+                responseTextElement.innerText = error.message;
+            }
+
+            alert("로그아웃 중 오류가 발생했습니다.");
         });
 }
