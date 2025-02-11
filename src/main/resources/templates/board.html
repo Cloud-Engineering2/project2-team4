@@ -128,8 +128,9 @@
             <select onchange="SearchClickEvent(this.value)">
                 <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
             </select>
-            <input id="filterInput" type="text" placeholder="검색" />
-            <img id="btnSearch" src="/icons/Search.png" onclick="SearchClickEvent(document.querySelector('select').value)" />
+            <input id="filterInput" type="text" placeholder="검색" disabled />
+            <!--  클릭 이벤트 사용 시 추가 (onclick="SearchClickEvent(document.querySelector('select').value)") -->
+            <img id="btnSearch" src="/icons/Search.png" />
         </div>
 
         <!-- 주간 상위 5개 게시글 -->
