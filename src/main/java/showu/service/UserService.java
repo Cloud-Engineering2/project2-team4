@@ -16,6 +16,7 @@
  * 이홍비   2025.02.09    login() - 예외 등 처리
  * 배희창   2025.02.10    token에 uid값 들어가게 추가
  * 채혜송   2025.02.10    signup 닉네임 중복 확인 로직 추가
+ * 이홍비   2025.02.10    getUserById() 구현
  * ========================================================
  */
 
@@ -37,6 +38,8 @@ import showu.dto.UserDTO;
 import showu.entity.User;
 import showu.repository.UserRepository;
 import showu.security.JwtTokenProvider;
+
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -101,5 +104,12 @@ public class UserService {
                 throw new BadCredentialsException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 	}
+
+    public UserDTO getUserById(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 회원 정보를 찾을 수 없습니다."));
+
+        return UserDTO.from(user);
+    }
 
 }
