@@ -58,11 +58,11 @@ public class PostWithCommentsResponse {
         return map.values().stream()
                 .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator
                                         .comparing(CommentResponse::getCreatedAt)
-                                        .reversed()
                                         .thenComparingLong(CommentResponse::getCmid)
                                 )
                         )
                 );
+
     }
 
 }
