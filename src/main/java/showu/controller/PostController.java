@@ -12,6 +12,7 @@
  * 배희창   2025.02.08    최초 작성 : PostController 작성
  * 배희창   2025.02.09    게시물 전체 조회, 생성, 삭제 구현
  * 배희창   2025.02.10    게시물 수정 구현
+ * 김예린   2025.02.11    게시물 댓글과 함께 조회 구현
  * ========================================================
  */
 
@@ -22,14 +23,9 @@ import java.util.List;
 import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,22 +33,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import showu.dto.PostDTO;
+import showu.dto.response.PostWithCommentsResponse;
 import showu.entity.Post;
 import showu.service.PostService;
 import showu.service.S3Service;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 @RequestMapping("/api/post")
 public class PostController {
 	private final PostService postService;
 	private final S3Service s3Service;
 
+    @ResponseBody
 	@GetMapping("/test")
 	public String test() {
 		return "post";
 	}
 
+    @ResponseBody
 	@PostMapping("/testdata")
 	public ResponseEntity<Post> createTestData() {
 		Post dummyPost = postService.createDummyPost();
@@ -60,6 +59,7 @@ public class PostController {
 	}
 	
 	// 게시물 업로드
+    @ResponseBody
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> createPost(
 	        @RequestPart("file") MultipartFile file,
@@ -79,6 +79,7 @@ public class PostController {
 	}
 	
 	// 전체 게시물 조회
+    @ResponseBody
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<PostDTO> posts = postService.getAllPosts();
@@ -86,6 +87,7 @@ public class PostController {
     }
     
     // 게시물 삭제
+    @ResponseBody
     @DeleteMapping("/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
@@ -93,12 +95,14 @@ public class PostController {
     }
     
     // 단일 게시물 조회
-    @GetMapping("/{postId}")
+    @ResponseBody
+//    @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
     	PostDTO post = postService.getPostById(postId);
         return ResponseEntity.ok(post);
     }
-    
+
+    @ResponseBody
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDTO> updatePost(
             @PathVariable Long postId,
@@ -118,6 +122,19 @@ public class PostController {
         System.out.println("📌 수정된 PostDTO 데이터: " + updatedPost);
 
         return ResponseEntity.ok(updatedPost);
+    }
+
+    @GetMapping("/{postId}")
+    public String getPostWithComments(
+            @PathVariable Long postId,
+            ModelMap map
+    ) {
+
+        PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(postId));
+        map.addAttribute("post", post);
+        map.addAttribute("comments", post.getCommentResponse());
+
+        return "/postdetail";
     }
     
 }

@@ -16,7 +16,7 @@
  * 배희창   2025.02.10    id pw 불일치시 401 반환
  * 이홍비   2025.02.10    securityFilterChain() - 정적 자원 허용 처리
  * 채혜송   2025.02.10    정적 자원 허용 처리 - /icons
- * 김예린   2025.02.11    /postdetail 접근 허용 처리 (test)
+ * 김예린   2025.02.11    정적 페이지 허용 처리 - /postDetail (test)
  * ========================================================
  */
 
@@ -60,9 +60,9 @@ public class SecurityConfig {
         return new ProviderManager(List.of(authProvider));
     }
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -76,5 +76,5 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
             return http.build();
-        }
+    }
 }
