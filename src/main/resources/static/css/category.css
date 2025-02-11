@@ -1,5 +1,14 @@
 @charset "UTF-8";
 
+.nav {
+    position: fixed;   
+    top: 0;           
+    left: 0;          
+    width: 100%;      
+    background-color: rgb(255, 255, 255); 
+    z-index: 1000;     /* 다른 요소 위에 표시 */
+}
+
 body {
     font-family: "Gothic A1", sans-serif;
     display: flex;
@@ -9,6 +18,7 @@ body {
     height: 100vh;
     background-color: #f9f9f9;
     margin: 0;
+    padding-top: 70px;
 }
 
 h2 {
