@@ -1,8 +1,10 @@
-name: App With Github Actions with ArgoCD - RDS with S3
+name: showu With Github Actions
 
 on:
-  workflow_dispatch
-  #push:
+  #workflow_dispatch
+  push:
+    branches:
+      - develop
   #  paths-ignore:
   #    - 'manifest/**'
       
