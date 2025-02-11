@@ -21,6 +21,10 @@
                 posts.forEach(post => {
                     let row = document.createElement("tr");
 
+                    let commentsHTML = post.comments.map(comment => 
+                        `<p>${comment.userDTO.nickname}: ${comment.content} (${comment.createdAt})</p>`
+                    ).join("");
+
                     row.innerHTML = `
                         <td>${post.id || "-"}</td>
                         <td>${post.user?.nickname || "익명"}</td>
@@ -31,6 +35,7 @@
                         <td>${post.imageUrl ? `<img src="${post.imageUrl}" alt="이미지" width="50" height="50">` : "-"}</td>
                         <td>${post.likes || 0}</td>
                         <td>${post.createdAt || "-"}</td>
+                        <td>${commentsHTML || "댓글 없음"}</td> <!-- 댓글 표시 ✅ -->
                     `;
 
                     tableBody.appendChild(row);
