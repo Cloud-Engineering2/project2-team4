@@ -69,7 +69,7 @@ jobs:
         with:
           repository: Cloud-Engineering2/project2-team4-manifest
           ref: main
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Set timestamp
         id: timestamp
