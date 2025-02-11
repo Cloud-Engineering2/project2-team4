@@ -42,7 +42,7 @@
         <div class="comment-section">
             <div class="username-and-button-section">
                 <h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
-                <div th:if="${userId} == ${post.uid}" class="edit-and-delete-button">
+                <div class="edit-and-delete-button">
                     <button  class="edit-button" onclick="">EDIT</button>
                     <button  class="delete-button" onclick="">DELETE</button>
                 </div>
@@ -76,7 +76,16 @@
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
+	document.addEventListener('DOMContentLoaded', function() {
+	    let uid = "[[${post.uid}]]";  // 문자열로 처리
+	    console.log(userId);
+	    console.log(uid);
+	    if(uid != userId){
+			document.getElementsByClassName('edit-and-delete-button')[0].style.display = 'none';
+		}
+	});
+
     document.getElementById("submitComment").addEventListener("click", function(event) {
         event.preventDefault(); // 기본 동작 방지
 
