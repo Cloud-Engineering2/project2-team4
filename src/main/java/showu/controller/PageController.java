@@ -20,17 +20,14 @@ package showu.controller;
 
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import showu.dto.CategoryDTO;
 import showu.dto.PostDTO;
-import showu.security.JwtTokenProvider;
 import showu.service.CategoryService;
 import showu.service.PostService;
 
@@ -40,7 +37,6 @@ public class PageController {
 
 	private final PostService postService;
 	private final CategoryService categoryService;
-	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/")
 	public String getMainPage() {
@@ -90,10 +86,6 @@ public class PageController {
 	
 	@GetMapping("/board")
 	public String getBoard(Model model, HttpServletRequest request) {
-		
-		String token = jwtTokenProvider.getToken(request);
-		Object object = jwtTokenProvider.userIdFromToken(token);
-		System.out.println(object);
 		
 		List<PostDTO> posts = postService.getAllPosts();	
 		List<CategoryDTO> categories = categoryService.getAllCategory();	
