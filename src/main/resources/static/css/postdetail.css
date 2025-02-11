@@ -52,7 +52,7 @@ h1.logo {
     background-color: #AEEA94;
     color: #4635B1;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: 10px;
 
 }
 
@@ -60,7 +60,7 @@ h1.logo {
     background-color: #AEEA94;
     color: #E50C42;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
 .edit-button:hover {
@@ -81,6 +81,13 @@ h1.logo {
     color: white;
 }
 
+.comment-section h3 {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+
 
 .comments {
     flex-grow: 1;
@@ -91,8 +98,9 @@ h1.logo {
     color: white;
 }
 
-.comment {
-    margin: 10px 0;
+.comment p{
+    margin: 0;
+    padding-bottom: 3px;
 }
 
 .add-comment {
