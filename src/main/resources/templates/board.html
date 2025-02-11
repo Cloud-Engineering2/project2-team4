@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/css/board.css">
+    <script>
+        function HeartClickEvent(e) {
+            var src = e.target.src;
+            if (src.includes('/Heart.png')) {
+                e.target.src = "/icons/RedHeart.png";
+                // likes + 1
+            } else {
+                e.target.src = "/icons/Heart.png";
+                // likes - 1 하기
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="wrapBox">
+        <div id="top">
+            <h2 id="logo">showU</h2>
+            <div id="btnGroup">
+<!--                <form action="/login" method="get">
+                    <button type="submit" id="btnLogin" class="button">Login</button>
+                </form>
+                <form action="/signup" method="get">
+                    <button type="submit" id="btnSignup" class="button">Signup</button>
+                </form>-->
+                <form action="/logout" method="get">
+                    <button type="submit" id="btnLogout" class="button">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 카테고리 필터와 검색 입력 -->
+        <div id="filterBox" class="flex mb20">
+            <select>
+                <option th:each="category : ${categories}" 
+                        th:value="${category.id}" 
+                        th:text="${category.name}"> <!-- 카테고리 값 및 이름 -->
+                </option>
+            </select>
+            <input id="filterInput" type="text" placeholder="검색" />
+        </div>
+
+        <!-- 주간 상위 5개 게시글 -->
+        <div id="weeklyBox" class="mb20">
+            <p id="weeklyBoxTitle">Weekly Top 5</p>
+            <div id="weeklyList" class="flex center">
+				<!-- 백엔드에서 top5만 받아오게 해서 뿌리기 -->
+                <div th:each="post : ${topFive}" class="post">
+                    <div class="img">
+                        <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
+                    </div>
+                    <div class="flex spaceBetween">
+                        <div>
+                            <p th:text="${post.title}">title</p>
+                            <p th:text="${post.user.nickname}">writer</p>
+                        </div>
+                        <div class="flex">
+                            <img class="btnHeart" src="/icons/Heart.png" 
+                                 onclick="HeartClickEvent(event)" />
+                            <p th:text="${post.likes}">147</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게시글 목록 -->
+        <div id="postMainBox" class="mb20">
+            <div th:each="post : ${posts}" class="post">
+		        <!-- 상세 페이지 이동 : /post/{pid} -->
+                <form th:action="@{/post/{id}(id=${post.id})}" method="get">
+                    <div class="img">
+                        <img th:src="@{${post.imageUrl}}" style="width: 100%; height: 100%;" />
+                    </div>
+                    <div class="flex spaceBetween">
+                        <div>
+                            <p th:text="${post.title}">title</p>
+                            <p th:text="${post.user.nickname}">writer</p>
+                        </div>
+                        <div class="flex">
+                            <img class="btnHeart" src="/icons/Heart.png" 
+                                 onclick="HeartClickEvent(event)" />
+                            <p th:text="${post.likes}">likes</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 글 작성 버튼 -->
+        <form action="/posttest" method="get" style="justify-self: center;">
+            <button type="submit" id="btnPost" class="greenButton">POST</button>
+        </form>
+    </div>
+</body>
+</html>

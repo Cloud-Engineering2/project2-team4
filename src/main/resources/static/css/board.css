@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+body{
+    display: flex;
+    justify-content: center;
+}
+p {
+    margin: 0;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+.spaceBetween {
+    justify-content: space-between;
+}
+.center {
+    justify-content:center;
+}
+.mr10 {
+    margin-right: 10px;
+}
+.mb20 {
+    margin-bottom: 21px;
+}
+.button {
+    width: 105px;
+    height: 35px;
+    background-color: #4635B1;
+    border-radius: 20px;
+	border: none;
+    color: white;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+}
+.greenButton {
+    width: 105px;
+    height: 35px;
+    background-color: #AEEA94;
+    border-radius: 20px;
+	border: none;
+    color: #4635B1;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+}
+.button:hover, .grayButton:hover, .greenButton:hover {
+    opacity: 0.7;
+}
+
+#wrapBox{
+    width: 70%;
+    align-content: center;
+}
+#top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#logo {
+    color: #4635B1;
+    font-size: 30px;
+}
+#btnGroup{
+    display: flex;
+}
+#btnLogin {
+    margin-right: 10px;
+}
+
+#filterBox select {
+	width: 77px;
+    height: 30px;
+    border-radius: 15px;
+    text-align: center;
+    background: #e8e8e8;
+    border: none;
+    color: #919191;
+    font-size: 11px;
+    margin-right: 10px;
+}
+#filterInput {
+    width: 40%;
+    height: 29px;
+    background: #e8e8e8;
+    border: 1px solid #c6c5c5;
+    border-radius: 17px;
+    outline: none;
+    padding: 0px 10px;
+    box-sizing: border-box;
+}
+
+#weeklyBox {
+    background-color: #FFFBCA;
+}
+#weeklyBoxTitle{
+    padding: 10px 0px 10px 15px;
+    box-sizing: border-box;
+    font-size: 21px;
+}
+#weeklyList {
+    overflow-x: scroll;
+    padding: 0px 16px;
+    box-sizing: border-box;
+}
+
+#postMainBox{
+    width: 70%;
+    max-height: 430px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-self: center;
+    overflow-y: scroll;
+}
+.post {
+    margin: 10px;
+    cursor: pointer;
+}
+.post:hover {
+    opacity: 0.7
+}
+.post .img{
+    width: 150px;
+    height: 150px;
+    background: white;
+}
+.btnHeart {
+	width: 23px;
+    margin-right: 5px;
+    cursor: pointer;
+}
