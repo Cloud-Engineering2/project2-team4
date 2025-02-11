@@ -32,12 +32,12 @@
 
                 const title = document.createElement("p");
                 title.classList.add("ct-title");
-                title.textContent = category.name;
+                title.textContent = category.name + " Weekly Top5" ;
 
                 const ptBox = document.createElement("div");
                 ptBox.classList.add("pt-box");
 
-                const categoryPosts = posts.filter(post => post.category.id === category.id);
+                const categoryPosts = posts.filter(post => post.category.id === category.id).slice(0, 5);
 
                 categoryPosts.forEach(post => {
                     const postItem = document.createElement("div");
