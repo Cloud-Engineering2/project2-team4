@@ -40,10 +40,10 @@ function logout() {
         .then(data => {
             console.log("✔ 로그아웃 성공:", data.message);
 
-            // 로컬 스토리지 데이터 삭제
-            localStorage.removeItem("token");
-            localStorage.removeItem("nickname");
-            localStorage.removeItem("role");
+            // 세션 스토리지 데이터 삭제
+            sessionStorage.removeItem("token");
+            sessionStorage.removeItem("nickname");
+            sessionStorage.removeItem("role");
 
             console.log("✔ 로컬 스토리지 초기화 완료");
 
