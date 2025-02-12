@@ -1,40 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Sign Up</title>
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <link rel="stylesheet" type="text/css" href="/css/signup.css">
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+<link rel="stylesheet" type="text/css" href="/css/signup.css">
+<link rel="stylesheet" href="/css/init.css">
 </head>
 
 <body>
 	<form action="/login" method="get">
 		<button id="goToLogin">로그인</button>
 	</form>
-    <h2 id="serviceName">showU</h2>
-    <table class="mb_8">
-        <tr>
-            <td>
-                <input id="id" name="id" type="text" placeholder="Id" required>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input id="pw" name="pw" type="password" placeholder="Password" required>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input id="nickname" name="nickname" type="text" placeholder="Nickname" required>
-            </td>
-        </tr>
-    </table>
-    <div id="warning" class="mb_8 disabled">
-		이미 존재하는 사용자 정보입니다.
-	</div>
-    <div id="signUp">SignUp</div>
+	<h2 id="serviceName">showU</h2>
+	<table class="mb_8">
+		<tr>
+			<td><input id="id" name="id" type="text" placeholder="Id"
+				required></td>
+		</tr>
+		<tr>
+			<td><input id="pw" name="pw" type="password"
+				placeholder="Password" required></td>
+		</tr>
+		<tr>
+			<td><input id="nickname" name="nickname" type="text"
+				placeholder="Nickname" required></td>
+		</tr>
+	</table>
+	<div id="warning" class="mb_8 disabled">이미 존재하는 사용자 정보입니다.</div>
+	<div id="signUp">SignUp</div>
 
-    <div th:replace="~{fragments/footer}"></div>
+	<div th:replace="~{fragments/footer}"></div>
 
 </body>
 <script>

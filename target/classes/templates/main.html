@@ -12,17 +12,23 @@
 	<div class="main-box-m" id="main-box-m">
 		<script>
     document.addEventListener("DOMContentLoaded", async () => {
+    	
         const mainBox = document.getElementById("main-box-m");
-
+        const now = new Date();
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(now.getDate() - 7);
         try {
+        	
             const categoriesRes = await fetch("/api/admin/categories");
             const categories = await categoriesRes.json();
             console.log("📌 카테고리 데이터:", categories);
             const postsRes = await fetch("/api/post");
             let posts = await postsRes.json();
             console.log("📌 전체 게시글 데이터:", posts);
-            // ✅ 좋아요 순으로 내림차순 정렬
-            posts.sort((a, b) => b.likes - a.likes);
+            
+            posts = posts
+            .filter(post => new Date(post.createdAt) >= oneWeekAgo)
+            .sort((a, b) => b.likes - a.likes);
 
             categories.forEach(category => {
                 const ctBox = document.createElement("div");
@@ -30,70 +36,95 @@
 
                 const title = document.createElement("p");
                 title.classList.add("ct-title-m");
-                title.textContent = category.name + " Weekly Top5" ;
+                title.textContent = category.name + " Weekly Top5";
 
-                const ptBox = document.createElement("div");
-                ptBox.classList.add("pt-box-m");
-
+                // ✅ categoryPosts를 여기서 선언
                 const categoryPosts = posts.filter(post => post.category.id === category.id).slice(0, 5);
 
-                categoryPosts.forEach(post => {
-                    const postItem = document.createElement("div");
-                    postItem.classList.add("post-item-m");
+                if (categoryPosts.length === 0) {
+                    const emptyDiv = document.createElement("div");
+                    emptyDiv.classList.add("empty");
 
-                    const img = document.createElement("img");
-                    img.src = post.imageUrl;
-                    img.alt = "Post Image";
+                    const editBtn = document.createElement("div");
+                    editBtn.classList.add("edit-btn");
+                    editBtn.textContent = "ShowU에서 자랑하기 ✈︎ ";
 
-                    const iconBox = document.createElement("div");
-                    iconBox.classList.add("post-icon-box-m");
-
-                    const likeIcon = document.createElement("img");
-                    likeIcon.classList.add("icon", "like");
-                    likeIcon.src = "/icons/like.png";
-                    likeIcon.alt = "like";
-                    likeIcon.dataset.postId = post.id;
-
-                    const likeText = document.createElement("span");
-                    likeText.classList.add("like-text-m");
-                    likeText.textContent = post.likes;
-
-                    const btn = document.createElement("div");
-                    btn.classList.add("btn-m");
-                    btn.textContent = "Detail";
-                    btn.addEventListener("click", () => {
-                        window.location.href = `/api/post/${post.id}`;
-                    });
-
-                    // ✅ 좋아요 버튼 클릭 이벤트
-                    likeIcon.addEventListener("click", async () => {
-                        const postId = likeIcon.dataset.postId;
-                        try {
-                            const res = await fetch(`/api/post/like/${postId}`, {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" }
-                            });
-
-                            if (!res.ok) {
-                                throw new Error("서버 오류");
-                            }
-
-                            const data = await res.json();
-                            likeText.textContent = data.likes; // ✅ 좋아요 개수 업데이트
-                            window.location.href = "/";
-                        } catch (error) {
-                            console.error("Error updating likes:", error);
+                    emptyDiv.appendChild(editBtn);
+                    ctBox.append(title, emptyDiv);
+                    editBtn.addEventListener("click", function () {
+                        let token = sessionStorage.getItem("token");
+                        if (!token) {
+                            alert("❌ 로그인 후 이용하세요!");
+                            location.href = '/login';
+                            return;
                         }
+                        location.href = '/postupload';
+                    });
+                } else {
+                    const ptBox = document.createElement("div");
+                    ptBox.classList.add("pt-box-m");
+
+                    categoryPosts.forEach(post => {
+                        const postItem = document.createElement("div");
+                        postItem.classList.add("post-item-m");
+
+                        const img = document.createElement("img");
+                        img.src = post.imageUrl;
+                        img.alt = "Post Image";
+
+                        const iconBox = document.createElement("div");
+                        iconBox.classList.add("post-icon-box-m");
+
+                        const likeIcon = document.createElement("img");
+                        likeIcon.classList.add("icon", "like");
+                        likeIcon.src = "/icons/like.png";
+                        likeIcon.alt = "like";
+                        likeIcon.dataset.postId = post.id;
+
+                        const likeText = document.createElement("span");
+                        likeText.classList.add("like-text-m");
+                        likeText.textContent = post.likes;
+
+                        const btn = document.createElement("div");
+                        btn.classList.add("btn-m");
+                        btn.textContent = "Detail";
+                        btn.addEventListener("click", () => {
+                            window.location.href = `/api/post/${post.id}`;
+                        });
+
+                        likeIcon.addEventListener("click", async () => {
+                            const postId = likeIcon.dataset.postId;
+                            try {
+                                const res = await fetch(`/api/post/like/${postId}`, {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" }
+                                });
+
+                                if (!res.ok) {
+                                    throw new Error("서버 오류");
+                                }
+
+                                const data = await res.json();
+                                likeText.textContent = data.likes;
+                                window.location.href = "/";
+                            } catch (error) {
+                                console.error("Error updating likes:", error);
+                            }
+                        });
+
+                        iconBox.append(likeIcon, likeText, btn);
+                        postItem.append(img, iconBox);
+                        ptBox.appendChild(postItem);
                     });
 
-                    iconBox.append(likeIcon, likeText, btn);
-                    postItem.append(img, iconBox);
-                    ptBox.appendChild(postItem);
-                });
+                    ctBox.append(title, ptBox); // ✅ 게시글이 있을 경우 pt-box-m 추가
+                }
 
-                ctBox.append(title, ptBox);
                 mainBox.appendChild(ctBox);
             });
+
+
+
         } catch (error) {
             console.error("Error fetching data:", error);
         }

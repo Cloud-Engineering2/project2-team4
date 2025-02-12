@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Category</title>
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/nav.css">
-	<link rel="stylesheet" type="text/css" href="/css/category.css">
-	<script th:inline="javascript">
+<meta charset="UTF-8">
+<title>Category</title>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/nav.css">
+<link rel="stylesheet" type="text/css" href="/css/category.css">
+<link rel="stylesheet" href="/css/init.css">
+<script th:inline="javascript">
 		
 		function getUserIdFromToken() {
 	        let token = sessionStorage.getItem("token");
@@ -155,33 +156,34 @@
 <body>
 	<div th:replace="~{fragments/nav}"></div>
 	<h2 class="category">Category</h2>
-    <div class="row">
-        <table class="table" id="category-table">
-            <thead>
-                <tr>
-                    <th class="category col-2"><a>Category name</a></th>
-                    <th class="category col-2"><a>수정</a></th>
-                    <th class="category col-2"><a>삭제</a></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="category : ${categories}">
-                    <td class="name" id="category-cell-${category.id}">
-					    <span th:id="'category-name-' + ${category.id}" th:text="${category.name}">카테고리명</span>
-					</td>
+	<div class="row">
+		<table class="table" id="category-table">
+			<thead>
+				<tr>
+					<th class="category col-2"><a>Category name</a></th>
+					<th class="category col-2"><a>수정</a></th>
+					<th class="category col-2"><a>삭제</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="category : ${categories}">
+					<td class="name" id="category-cell-${category.id}"><span
+						th:id="'category-name-' + ${category.id}"
+						th:text="${category.name}">카테고리명</span></td>
 					<td class="edit">
-					    <button id="edit" th:onclick="|editCategory(${category.id})|">수정</button>
+						<button id="edit" th:onclick="|editCategory(${category.id})|">수정</button>
 					</td>
 					<td class="delete">
-					    <button class="delete-btn" th:onclick="|deleteCategory(${category.id})|">삭제</button>
+						<button class="delete-btn"
+							th:onclick="|deleteCategory(${category.id})|">삭제</button>
 					</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="add-category-btn">
-            <button onclick="addCategory()">카테고리 생성</button>
-        </div>
-    </div>
-    <div th:replace="~{fragments/footer}"></div>
+				</tr>
+			</tbody>
+		</table>
+		<div class="add-category-btn">
+			<button onclick="addCategory()">카테고리 생성</button>
+		</div>
+	</div>
+	<div th:replace="~{fragments/footer}"></div>
 </body>
 </html>

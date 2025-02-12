@@ -57,7 +57,7 @@
     padding: 10px;
     transition: all 0.2s;
     &:hover {
-        border: 2px solid  blueviolet;
+        border: 2px solid  #4635B1;
     }
 }
 

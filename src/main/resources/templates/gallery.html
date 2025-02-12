@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const top5Posts = [...allPosts].sort((a, b) => b.likes - a.likes).slice(0, 5);
 
         // ✅ 초기 UI 렌더링
-        mainBox.appendChild(createPostContainer("All Post Weekly Top5", top5Posts));
+        mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts));
 
         const allPostBox = createPostContainer("All Post", allPosts);
         allPostBox.classList.add("all-post");  // 🔥 all-post 클래스 추가

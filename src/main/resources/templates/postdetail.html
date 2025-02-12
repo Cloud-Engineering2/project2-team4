@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Detail View</title>
-    <link rel="stylesheet" type="text/css" href="/css/postdetail.css">
-    <script src="/js/auth.js"></script>
-    <script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Detail View</title>
+<link rel="stylesheet" type="text/css" href="/css/postdetail.css">
+<link rel="stylesheet" href="/css/init.css">
+<script src="/js/auth.js"></script>
+<script>
         let token = null;
         let userId = null;
         function checkToken() {
@@ -82,74 +83,77 @@
 </head>
 
 <body>
-<th:block th:replace="~{/fragments/nav}"></th:block>
+	<th:block th:replace="~{/fragments/nav}"></th:block>
 
-<div class="container">
-    <div class="content-wrapper">
-        <div class="image-section">
-            <img th:src="${post.imageURL}" alt="Post Image">
-        </div>
-        <div class="comment-section">
-            <div class="username-and-button-section">
-                <h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
-                <div class="edit-and-delete-button">
-                    <button class="edit-button button" th:onclick="|editPost(${post?.pid}, ${post?.uid})|">EDIT</button>
-                    <button class="delete-button button" th:onclick="|deletePost(${post?.pid}, ${post?.uid})|">DELETE</button>
-                </div>
-            </div>
+	<div class="container">
+		<div class="content-wrapper">
+			<div class="image-section">
+				<img th:src="${post.imageURL}" alt="Post Image">
+			</div>
+			<div class="comment-section">
+				<div class="username-and-button-section">
+					<h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
+					<div class="edit-and-delete-button">
+						<button class="edit-button button"
+							th:onclick="|editPost(${post?.pid}, ${post?.uid})|">EDIT</button>
+						<button class="delete-button button"
+							th:onclick="|deletePost(${post?.pid}, ${post?.uid})|">DELETE</button>
+					</div>
+				</div>
 
-            <h3>작성자</h3>
-            <div class="title" th:text="${post?.createdBy}">
-                사진 제목
-            </div>
+				<h3>작성자</h3>
+				<div class="title" th:text="${post?.createdBy}">사진 제목</div>
 
-            <h3>제목</h3>
-            <div class="content" th:text="${post?.content}">
-                사진 내용
-            </div>
+				<h3>제목</h3>
+				<div class="content" th:text="${post?.content}">사진 내용</div>
 
-            <h3>링크</h3>
-            <div class="link" th:text="${post?.link}">
-                참조 링크
-            </div>
+				<h3>링크</h3>
+				<div class="link" th:text="${post?.link}">참조 링크</div>
 
-            <h3>댓글</h3>
-            <div class="comments" id="comments">
-                <div th:class="|comment comment${comment.cmid}|" th:each="comment : ${comments}" th:data-uid="${comment.uid}">
-                    <p th:text="|${comment.createdBy}: ${comment.content}|">댓글1: 멋진 사진이네요!</p>
-                    <div class="commentButtonBox">
-	                    <button  class="edit-button commentButton" onclick="EditComment(event)" th:data-cmid="${comment.cmid}">EDIT</button>
-	                    <button  class="delete-button commentButton" onclick="DeleteComment(event)" th:data-cmid="${comment.cmid}">DELETE</button>
-	                </div>
-                </div>
-            </div>
-
-
-<!--           <h3>좋아요</h3>-->
-           <div class="likes">
-               <div class="like-wrap">
-                   <img th:src="@{/icons/like-removebg-icon.png}" th:data-post-id="${post.pid}" alt="Like Icon" onclick="PostLike(this)">
-                   <p class="like-text" th:text="${post?.plike}">좋아요 수</p>
-               </div>
-           </div>
+				<h3>댓글</h3>
+				<div class="comments" id="comments">
+					<div th:class="|comment comment${comment.cmid}|"
+						th:each="comment : ${comments}" th:data-uid="${comment.uid}">
+						<p th:text="|${comment.createdBy}: ${comment.content}|">댓글1:
+							멋진 사진이네요!</p>
+						<div class="commentButtonBox">
+							<button class="edit-button commentButton"
+								onclick="EditComment(event)" th:data-cmid="${comment.cmid}">EDIT</button>
+							<button class="delete-button commentButton"
+								onclick="DeleteComment(event)" th:data-cmid="${comment.cmid}">DELETE</button>
+						</div>
+					</div>
+				</div>
 
 
-
-            <!-- ✅ postId를 가져오기 위한 hidden input 추가 -->
-            <input type="hidden" id="pid" th:value="${post?.pid}">
-
-            <div class="add-comment">
-                <input type="text" id="commentInput" name="content" placeholder="댓글 추가...">
-                <button id="submitComment" class="button">게시</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<th:block th:replace="~{/fragments/footer :: footerLayout}"></th:block>
+				<!--           <h3>좋아요</h3>-->
+				<div class="likes">
+					<div class="like-wrap">
+						<img th:src="@{/icons/like-removebg-icon.png}"
+							th:data-post-id="${post.pid}" alt="Like Icon"
+							onclick="PostLike(this)">
+						<p class="like-text" th:text="${post?.plike}">좋아요 수</p>
+					</div>
+				</div>
 
 
-<script th:inline="javascript">
+
+				<!-- ✅ postId를 가져오기 위한 hidden input 추가 -->
+				<input type="hidden" id="pid" th:value="${post?.pid}">
+
+				<div class="add-comment">
+					<input type="text" id="commentInput" name="content"
+						placeholder="댓글 추가...">
+					<button id="submitComment" class="button">게시</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<th:block th:replace="~{/fragments/footer :: footerLayout}"></th:block>
+
+
+	<script th:inline="javascript">
 
     // 댓글 작성자일 경우에만, 게시물 작성자일 경우에만 수정/삭제 버튼 보이게 처리
 	document.addEventListener('DOMContentLoaded', function() {
@@ -471,6 +475,6 @@
 
 
 </script>
-    <div th:replace="~{fragments/back}"></div>
+	<div th:replace="~{fragments/back}"></div>
 </body>
 </html>

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>showU - Login</title>
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
-	<link rel="stylesheet" type="text/css" href="/css/signup.css">
-	<link rel="stylesheet" type="text/css" href="/css/login.css">
-	<link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400&display=swap" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<script>
+<meta charset="UTF-8">
+<title>showU - Login</title>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+<link rel="stylesheet" type="text/css" href="/css/signup.css">
+<link rel="stylesheet" type="text/css" href="/css/login.css">
+<link rel="stylesheet" href="/css/init.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
 		function login() {
 			let user_id = document.getElementById("id").value.trim();
 			let user_pw = document.getElementById("pw").value.trim();
@@ -63,26 +63,29 @@
 </head>
 <body>
 
-<h2 id="serviceName" class="showU">showU</h2>
+	<h2 id="serviceName" class="showU">showU</h2>
 
-<table class="mb_8">
-	<tr>
-		<td><input id="id" name="id" type="text" placeholder="Id" required class="gothic-a1-regular"></td>
-	</tr>
-	<tr>
-		<td><input id="pw" name="pw" type="password" placeholder="Password" required class="gothic-a1-regular"></td>
-	</tr>
-</table>
+	<table class="mb_8">
+		<tr>
+			<td><input id="id" name="id" type="text" placeholder="Id"
+				required class="gothic-a1-regular"></td>
+		</tr>
+		<tr>
+			<td><input id="pw" name="pw" type="password"
+				placeholder="Password" required class="gothic-a1-regular"></td>
+		</tr>
+	</table>
 
-<div id="warning" class="mb_8 disabled"></div>
+	<div id="warning" class="mb_8 disabled"></div>
 
-<div class="login gothic-a1-regular" onclick="login()">Login</div>
+	<div class="login gothic-a1-regular" onclick="login()">Login</div>
 
-<p id="goToSignup" class="mt_10">
-	<a href="/signup" style="text-decoration: none; color: #4635B1;" class="joinLetters" >회원 가입</a>
-</p>
+	<p id="goToSignup" class="mt_10">
+		<a href="/signup" style="text-decoration: none; color: #4635B1;"
+			class="joinLetters">회원 가입</a>
+	</p>
 
-<div th:replace="~{fragments/footer}"></div>
+	<div th:replace="~{fragments/footer}"></div>
 
 </body>
 </html>

@@ -2,12 +2,12 @@
 
 .main-box-m {
     width: 100%;
-    min-height: 100vh;
+	height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 10px;
+    padding-top: 70px;
 }
 
 .ct-box-m {
@@ -57,7 +57,7 @@
     padding: 10px;
     transition: all 0.2s;
     &:hover {
-        border: 2px solid  blueviolet;
+        border: 2px solid  #4635B1;
     }
 }
 
@@ -96,7 +96,7 @@
         align-items: center;
         border-radius: 4px;
         justify-content: center;
-        background-color: blueviolet;
+        background-color: #4635B1;
         box-shadow: 0px 0px 4px 1px rgb(0, 0, 0, 0.1);
         transition: all 0.2s;
         color: #fff;
@@ -104,5 +104,31 @@
         &:hover {
             opacity: 0.6;
         }
+    }
+}
+.empty {
+	width: 100%;
+	height: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.edit-btn {
+    width: fit-content;
+    height: fit-content;
+    padding: 4px 12px 4px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 4px;
+    background-color:#4635B1;
+    box-shadow: 0px 0px 8px 2px rgb(0, 0, 0, 0.1);
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+        opacity: 0.7;
     }
 }

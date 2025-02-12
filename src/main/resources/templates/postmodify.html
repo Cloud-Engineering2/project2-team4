@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>게시글 수정</title>
-    <link rel="stylesheet" type="text/css" href="/css/postupload.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
+<meta charset="UTF-8">
+<title>게시글 수정</title>
+<link rel="stylesheet" type="text/css" href="/css/postupload.css">
+<link rel="stylesheet" href="/css/init.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         let token = sessionStorage.getItem("token");
         if (!token) {
@@ -165,36 +166,32 @@
     </script>
 </head>
 <body onload="loadCategories()">
-<span id="categoryData" th:data-id="${post?.category?.id}" hidden></span>
-    <div th:replace="~{fragments/nav}"></div>
+	<span id="categoryData" th:data-id="${post?.category?.id}" hidden></span>
+	<div th:replace="~{fragments/nav}"></div>
 
-    <div class="container">
-        <h2>게시글 수정</h2>
+	<div class="container">
+		<h2>게시글 수정</h2>
 
-        <div class="form-group">
-            <label for="title">제목:</label>
-            <input type="text" id="title" th:value="${post?.title}" />
+		<div class="form-group">
+			<label for="title">제목:</label> <input type="text" id="title"
+				th:value="${post?.title}" />
 
-						<div class="dropdown">
+			<div class="dropdown">
 				<button class="dropbtn" id="selectedCategory">카테고리 선택</button>
 				<div class="dropdown-content" id="categoryMenu"></div>
 			</div>
-			<br>
-			<br/>
-            <label for="content">내용:</label>
-            <textarea id="content" th:text="${post?.content}"></textarea><br>
+			<br> <br /> <label for="content">내용:</label>
+			<textarea id="content" th:text="${post?.content}"></textarea>
+			<br> <label for="link">링크:</label> <input type="text" id="link"
+				th:value="${post?.link}" /><br> <label for="file">파일
+				업로드:</label> <input type="file" id="file"><br>
 
-            <label for="link">링크:</label>
-            <input type="text" id="link" th:value="${post?.link}" /><br>
+			<button class="edit-button button"
+				th:onclick="|uploadFile(${post?.pid})|">수정</button>
+		</div>
+	</div>
 
-            <label for="file">파일 업로드:</label>
-            <input type="file" id="file"><br>
-
-            <button class="edit-button button" th:onclick="|uploadFile(${post?.pid})|">수정</button>
-        </div>
-    </div>
-
-    <div th:replace="~{fragments/footer}"></div>
-    <div th:replace="~{fragments/back}"></div>
+	<div th:replace="~{fragments/footer}"></div>
+	<div th:replace="~{fragments/back}"></div>
 </body>
 </html>
