@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const mainBox = document.querySelector('.main-box');  // 게시글이 추가될 메인 박스
     const filterBtn = document.querySelector('.filter-btn');  // 필터 버튼
     const dropdownMenu = document.querySelector('.dropdown-menu');  // 카테고리 드롭다운
-
+    const editBtn = document.querySelector('.edit-btn'); // 글 작성 버튼
+    
     let allPosts = [];  // 전체 게시글 저장
     let categories = [];  // 카테고리 목록 저장
 
@@ -148,6 +149,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                 const data = await res.json();
                 likeText.textContent = data.likes;
+                window.location.href = "/gallery";
             } catch (error) {
                 console.error("좋아요 업데이트 실패:", error);
             }
@@ -169,6 +171,17 @@ document.addEventListener('DOMContentLoaded', async function () {
             dropdownMenu.style.display = 'none';
         }
     });
+    
+    editBtn.addEventListener("click", function () {
+        let token = localStorage.getItem("token");
+        if (!token) {
+            alert("❌ 로그인 후 이용하세요!");
+            location.href = '/login';
+            return;
+        }
+        location.href = '/postupload';
+    });
+
 });
 
 </script>
@@ -178,7 +191,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     <div class="main-box">
                 <div class="button-box">
             <div class="filter-btn">Filter</div>
-            <div class="edit-btn" onclick="location.href='/postupload'">ShowU</div>
+            <div class="edit-btn">ShowU</div>
             <div class="dropdown-menu">
                 <div class="dropdown-item">ANIMAL</div>
             </div>

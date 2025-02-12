@@ -82,6 +82,7 @@
 
                             const data = await res.json();
                             likeText.textContent = data.likes; // ✅ 좋아요 개수 업데이트
+                            window.location.href = "/";
                         } catch (error) {
                             console.error("Error updating likes:", error);
                         }

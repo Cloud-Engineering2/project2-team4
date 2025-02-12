@@ -6,7 +6,13 @@
 <link rel="stylesheet" type="text/css" href="/css/postupload.css">
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    loadCategories();
+    let token = localStorage.getItem("token");
+    if (!token) {
+        alert("❌ 로그인 후 이용하세요!");
+        location.href = '/login';
+        return;
+    }
+	loadCategories();
 
     // 드롭다운 버튼 클릭 시 열기
     document.getElementById("selectedCategory").addEventListener("click", function() {
