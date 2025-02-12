@@ -62,16 +62,7 @@ public class PageController {
 		return "postupload";
 	}
 
-	@GetMapping("/postdetail")
-	public String getPostDetailPage() {
-		return "postdetail";
-	}
 
-
-	@GetMapping("/postmodify")
-	public String getPostPutPage() {
-		return "postmodify";
-	}
 	
 	@GetMapping("/gallery")
 	public String getBoard(Model model, HttpServletRequest request) {
