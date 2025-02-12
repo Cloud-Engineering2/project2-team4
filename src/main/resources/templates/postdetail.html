@@ -124,6 +124,17 @@
                 </div>
             </div>
 
+
+<!--           <h3>좋아요</h3>-->
+           <div class="likes">
+               <div class="like-wrap">
+                   <img th:src="@{/icons/like-removebg-icon.png}" th:data-post-id="${post.pid}" alt="Like Icon" onclick="PostLike(this)">
+                   <p class="like-text" th:text="${post?.plike}">좋아요 수</p>
+               </div>
+           </div>
+
+
+
             <!-- ✅ postId를 가져오기 위한 hidden input 추가 -->
             <input type="hidden" id="pid" th:value="${post?.pid}">
 
@@ -139,6 +150,8 @@
 
 
 <script th:inline="javascript">
+
+    // 댓글 작성자일 경우에만, 게시물 작성자일 경우에만 수정/삭제 버튼 보이게 처리
 	document.addEventListener('DOMContentLoaded', function() {
 	    let uid = "[[${post.uid}]]";  // 문자열로 처리
 	    if(uid != userId){
@@ -183,7 +196,7 @@
 	});
 
     document.getElementById("submitComment").addEventListener("click", function(event) {
-        event.preventDefault(); // 기본 동작 방지 22
+        event.preventDefault(); // 기본 동작 방지
 
         let postId = document.getElementById("pid").value;
         let commentInput = document.getElementById("commentInput");
@@ -373,6 +386,86 @@
                 console.error("❌ 댓글 수정 실패:", error);
             });
     }
+
+
+    // ✅ 좋아요 버튼 클릭 이벤트
+    async function PostLike(likeIcon)  {
+        // * 이렇게 가져오는 것도 가능
+        // const postId = document.getElementById("pid").value;
+        const postId = likeIcon.dataset.postId;
+
+        console.log(postId);
+
+        try {
+            const res = await fetch(`/api/post/like/${postId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!res.ok) {
+                throw new Error("서버 오류");
+            }
+
+            const data = await res.json();
+
+            // 해당 아이콘과 같은 `.like-wrap` 내의 `.like-text` 찾기
+            const likeText = likeIcon.closest(".like-wrap").querySelector(".like-text");
+
+            if (likeText) {
+                // 현재 좋아요 개수 가져오기 (숫자로 변환)
+                let currentLikes = parseInt(likeText.textContent, 10);
+
+                // ✅ 좋아요 개수 +1 로 업데이트
+                likeText.textContent = currentLikes + 1;
+            }
+
+
+
+
+        } catch (error) {
+            console.error("Error updating likes:", error);
+        }
+    }
+
+    // ✅ 좋아요 취소 클릭 이벤트
+    async function PostDisike(likeIcon)  {
+        // * 이렇게 가져오는 것도 가능
+        // const postId = document.getElementById("pid").value;
+        const postId = likeIcon.dataset.postId;
+
+        console.log(postId);
+
+        try {
+            const res = await fetch(`/api/post/like/${postId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!res.ok) {
+                throw new Error("서버 오류");
+            }
+
+            const data = await res.json();
+
+            // 해당 아이콘과 같은 `.like-wrap` 내의 `.like-text` 찾기
+            const likeText = likeIcon.closest(".like-wrap").querySelector(".like-text");
+
+            if (likeText) {
+                // 현재 좋아요 개수 가져오기 (숫자로 변환)
+                let currentLikes = parseInt(likeText.textContent, 10);
+
+                // ✅ 좋아요 개수 +1 로 업데이트
+                likeText.textContent = currentLikes + 1;
+            }
+
+
+
+
+        } catch (error) {
+            console.error("Error updating likes:", error);
+        }
+    }
+
 
 
 
