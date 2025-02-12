@@ -1,12 +1,12 @@
 name: showu With Github Actions - develop
 
 on:
-  workflow_dispatch
-  # push:
-  #   branches:
-  #     - develop
-  #  paths-ignore:
-  #    - 'manifest/**'
+  # workflow_dispatch
+  push:
+    branches:
+      - develop
+   # paths-ignore:
+   #   - 'manifest/**'
       
 jobs:
   ci:
