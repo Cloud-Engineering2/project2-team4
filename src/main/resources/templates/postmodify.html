@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             location.href = '/login';
@@ -29,7 +29,7 @@
         });
     });
     function getUserIdFromToken() {
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if (!token) return null;
 
         try {
@@ -73,7 +73,7 @@
 
 
     async function uploadFile(postId) {
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             return;

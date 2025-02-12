@@ -75,11 +75,11 @@ public class SecurityConfig {
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/signup", "/postupload", "/postmodify", "/postdetail", "/gallery").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll() // 모든 GET 요청 허용 (맨 위 배치)
                         .requestMatchers(HttpMethod.POST, "/api/post/like/**").permitAll() // 좋아요 경로만 허용
                         .requestMatchers(HttpMethod.PATCH, "/api/post/like/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/icons/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/login", "/signup", "/postupload", "/postmodify/**", "/postdetail/**", "/gallery").permitAll()
                         .requestMatchers("/api/login/**", "/api/signup/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()

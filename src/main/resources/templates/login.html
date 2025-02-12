@@ -28,13 +28,21 @@
 				sessionStorage.removeItem("nickname");
 				sessionStorage.removeItem("role");
 			}
-
+			if ((localStorage.getItem("token") != null) || (localStorage.getItem("role") != null) || (localStorage.getItem("nickname") != null))
+			{
+				localStorage.removeItem("token");
+				localStorage.removeItem("nickname");
+				localStorage.removeItem("role");
+			}
 			axios.post("/api/login", { userId: user_id, userPw: user_pw })
 					.then(response => {
 						console.log("✅ 로그인 성공! 토큰 :", response.data.token);
 						sessionStorage.setItem("token", response.data.token);
 						sessionStorage.setItem("nickname", response.data.nickname);
 						sessionStorage.setItem("role", response.data.role);
+						localStorage.setItem("token", response.data.token);
+						localStorage.setItem("nickname", response.data.nickname);
+						localStorage.setItem("role", response.data.role);
 
 						window.location.href = "/"; // 로그인 성공 후 홈으로 이동
 					})

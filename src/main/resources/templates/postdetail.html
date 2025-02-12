@@ -12,7 +12,7 @@
         let userId = null;
         function checkToken() {
             // 📌 토큰 가져오기
-            token = sessionStorage.getItem("token");
+            token = localStorage.getItem("token");
             if (!token) {
                 return;
             }
@@ -51,7 +51,7 @@
 
             if (userId == postUserId) {
                 if (confirm("⚠️ 정말 삭제하시겠습니까?")) {
-                    const token = sessionStorage.getItem("token");
+                    const token = localStorage.getItem("token");
 
                     fetch(`/api/post/${postId}`, {
                         method: "DELETE",
