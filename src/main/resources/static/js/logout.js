@@ -46,7 +46,7 @@ function logout() {
             sessionStorage.removeItem("nickname");
             sessionStorage.removeItem("role");
 
-            console.log("✔ 로컬 스토리지 초기화 완료");
+            console.log("✔ 세션 스토리지 초기화 완료");
 
             // 🔥 `responseText`가 존재하면 설정
             let responseTextElement = document.getElementById('responseText');
