@@ -146,7 +146,7 @@ public class PostController {
 //        map.addAttribute("uid", userId);
         map.addAttribute("comments", post.getCommentResponse());
 
-        return "/postdetail";
+        return "postdetail";
     }
     
     @GetMapping("/modify/{postId}")
@@ -160,7 +160,7 @@ public class PostController {
     	
         map.addAttribute("post", post);
         
-        return "/postmodify";
+        return "postmodify";
     }
     
 }
