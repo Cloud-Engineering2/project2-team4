@@ -21,11 +21,8 @@
         	
             const categoriesRes = await fetch("/api/admin/categories");
             const categories = await categoriesRes.json();
-            console.log("📌 카테고리 데이터:", categories);
             const postsRes = await fetch("/api/post");
-            let posts = await postsRes.json();
-            console.log("📌 전체 게시글 데이터:", posts);
-            
+            let posts = await postsRes.json();  
             posts = posts
             .filter(post => new Date(post.createdAt) >= oneWeekAgo)
             .sort((a, b) => b.likes - a.likes);

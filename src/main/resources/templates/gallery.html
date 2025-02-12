@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 목록</title>
-    <link rel="stylesheet" th:href="@{/css/init.css}">
-    <link rel="stylesheet" th:href="@{/css/gallery.css}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게시글 목록</title>
+<link rel="stylesheet" th:href="@{/css/init.css}">
+<link rel="stylesheet" th:href="@{/css/gallery.css}">
 </head>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     
     let allPosts = [];  // 전체 게시글 저장
     let categories = [];  // 카테고리 목록 저장
+    let allPostBox; // 🔥 전역 변수로 선언
+    let top5Posts;  // 🔥 전역 변수로 선언
 
     // ✅ 초기 데이터 로드
     try {
@@ -26,13 +28,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         allPosts = await postsRes.json();
 
         // 🔥 좋아요 순 정렬 (Top 5)
-        const top5Posts = [...allPosts].sort((a, b) => b.likes - a.likes).slice(0, 5);
+        top5Posts = [...allPosts].sort((a, b) => b.likes - a.likes).slice(0, 5);
 
         // ✅ 초기 UI 렌더링
         mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts));
 
-        const allPostBox = createPostContainer("All Post", allPosts);
-        allPostBox.classList.add("all-post");  // 🔥 all-post 클래스 추가
+        allPostBox = createPostContainer("All Post", allPosts); // 🔥 전역 변수에 저장
+        allPostBox.classList.add("all-post");
         mainBox.appendChild(allPostBox);
 
         // ✅ 카테고리 목록 가져오기
@@ -49,6 +51,20 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             dropdownMenu.innerHTML = ""; // 기존 목록 초기화
 
+            // 🔥 "All Posts" 추가
+            const ap = document.createElement("div");
+            ap.classList.add("dropdown-item");
+            ap.textContent = "All Posts";
+            ap.addEventListener("click", () => {
+                document.querySelectorAll(".ct-box").forEach(box => box.remove()); // 🔥 게시글 컨테이너만 삭제
+                mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts));
+                const newAllPostBox = createPostContainer("All Post", allPosts);
+                newAllPostBox.classList.add("all-post");
+                mainBox.appendChild(newAllPostBox);
+            });
+            dropdownMenu.appendChild(ap);
+
+            // 🔥 카테고리 추가
             categories.forEach(category => {
                 const item = document.createElement("div");
                 item.classList.add("dropdown-item");
@@ -186,19 +202,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 </script>
 
 <body>
-    <div th:replace="~{fragments/nav}"></div>
-    <div class="main-box">
-                <div class="button-box">
-            <div class="filter-btn">Filter</div>
-            <div class="edit-btn">ShowU</div>
-            <div class="dropdown-menu">
-                <div class="dropdown-item"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div th:replace="~{fragments/footer}"></div>
-<div th:replace="~{fragments/back}"></div>
+	<div th:replace="~{fragments/nav}"></div>
+	<div class="main-box">
+		<div class="button-box">
+			<div class="filter-btn">Filter</div>
+			<div class="edit-btn">ShowU</div>
+			<div class="dropdown-menu">
+				<div class="dropdown-item"></div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="~{fragments/footer}"></div>
+	<div th:replace="~{fragments/back}"></div>
 </body>
 
 </html>
