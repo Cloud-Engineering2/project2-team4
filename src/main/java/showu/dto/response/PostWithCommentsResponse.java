@@ -24,12 +24,13 @@ public class PostWithCommentsResponse {
     private String content;
     private String imageURL;
     private String link;
+    private int plike;
     private String createdBy;
     private LocalDateTime createdAt;
     private Set<CommentResponse> commentResponse;
     private CategoryResponse category;
-    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String imageURL, String link, String createdBy, LocalDateTime createdAt, Set<CommentResponse> commentResponse, CategoryResponse category) {
-        return new PostWithCommentsResponse(pid, uid, title, content, imageURL, link, createdBy, createdAt, commentResponse, category);
+    public static PostWithCommentsResponse of(Long pid, Long uid, String title, String content, String imageURL, String link, int likes, String createdBy, LocalDateTime createdAt, Set<CommentResponse> commentResponse, CategoryResponse category) {
+        return new PostWithCommentsResponse(pid, uid, title, content, imageURL, link, likes, createdBy, createdAt, commentResponse, category);
     }
 
     public static PostWithCommentsResponse from(PostWithCommentsDTO postWithCommentsDTO) {
@@ -40,6 +41,7 @@ public class PostWithCommentsResponse {
             postWithCommentsDTO.getContent(),
             postWithCommentsDTO.getImageURL(),
             postWithCommentsDTO.getLink(),
+                postWithCommentsDTO.getLikes(),
             postWithCommentsDTO.getUserDTO().getUserId(),
             postWithCommentsDTO.getCreatedAt(),
             getCommentResponses(postWithCommentsDTO.getCommentDTOs()),

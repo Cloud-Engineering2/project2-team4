@@ -152,4 +152,15 @@ public class PostService {
 	    }
 	    throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다.");
 	}
+
+	public int decrementLikes(Long pid) {
+		Optional<Post> postOptional = postRepository.findById(pid);
+		if (postOptional.isPresent()) {
+			Post post = postOptional.get();
+			post.setPlike(post.getPlike() - 1);
+			postRepository.save(post);
+			return post.getPlike();
+		}
+		throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다.");
+	}
 }

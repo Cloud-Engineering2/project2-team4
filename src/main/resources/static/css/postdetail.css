@@ -115,6 +115,35 @@ h1.logo {
     margin: 0;
     padding-bottom: 3px;
 }
+
+.likes {
+
+    padding-top: 10px;
+
+}
+.like-wrap {
+    display: flex;
+    width: 20px;
+    height: 20px;
+}
+
+.like-wrap img {
+    transition: all 0.2s;
+    cursor: pointer;
+    width: 20px; /* 부모의 폰트 크기를 기준으로 크기 설정 */
+    height: auto; /* 비율 유지 */
+}
+
+.like-wrap img:hover {
+     opacity: 0.5;
+}
+
+.like-text {
+    font-weight: bold;
+    margin-left: 4px;
+    margin-top: 2px;
+}
+
 .add-comment {
     display: flex;
     gap: 10px;

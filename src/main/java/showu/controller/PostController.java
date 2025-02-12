@@ -60,6 +60,18 @@ public class PostController {
 
 	    return ResponseEntity.ok(response);
 	}
+
+    // 추후 기능 고려
+    @PatchMapping("/dislike/{postId}")
+    public ResponseEntity<Map<String, Object>> dislikePost(@PathVariable Long postId) {
+        int updatedLikes = postService.decrementLikes(postId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "좋아요가 감소되었습니다.");
+        response.put("likes", updatedLikes);
+
+        return ResponseEntity.ok(response);
+    }
 	
 	// 게시물 업로드
     @ResponseBody

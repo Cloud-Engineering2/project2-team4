@@ -19,16 +19,17 @@ public class PostWithCommentsDTO {
     private String content;
     private String imageURL;
     private String link;
+    private int likes;
     private UserDTO userDTO;
     private Set<CommentDTO> commentDTOs;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private CategoryDTO categoryDTO;  // 📌 추가됨
 
-    public static PostWithCommentsDTO of(Long id, String title, String content, String imageURL, String link, 
+    public static PostWithCommentsDTO of(Long id, String title, String content, String imageURL, String link, int likes,
                                          UserDTO userDTO, Set<CommentDTO> commentDTOs, LocalDateTime createdDate, 
                                          LocalDateTime modifiedDate, CategoryDTO categoryDTO) { // 📌 categoryDTO 추가됨
-        return new PostWithCommentsDTO(id, title, content, imageURL, link, userDTO, commentDTOs, createdDate, modifiedDate, categoryDTO);
+        return new PostWithCommentsDTO(id, title, content, imageURL, link, likes, userDTO, commentDTOs, createdDate, modifiedDate, categoryDTO);
     }
 
     public static PostWithCommentsDTO from(Post post) {
@@ -38,6 +39,7 @@ public class PostWithCommentsDTO {
                 post.getContent(),
                 post.getImageUrl(),
                 post.getLink(),
+                post.getPlike(),
                 UserDTO.from(post.getUser()),
                 post.getComments().stream()
                         .map(CommentDTO::from)
