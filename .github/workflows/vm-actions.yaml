@@ -1,10 +1,10 @@
 name: showu With Github Actions - develop
 
 on:
-  # workflow_dispatch
-  push:
-    branches:
-      - develop
+   workflow_dispatch
+  # push:
+  #   branches:
+  #     - develop
   #  paths-ignore:
   #    - 'manifest/**'
       
@@ -71,7 +71,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Cloud-Engineering2/project2-team4-manifest
-          ref: main
+          ref: develop
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Set timestamp
