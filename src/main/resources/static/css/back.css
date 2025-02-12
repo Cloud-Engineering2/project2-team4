@@ -3,7 +3,7 @@
 .back {
     position: fixed;
     bottom: 50px;
-    right: 30px;
+    right: 50px;
     font-size: 40px;
     opacity: 1;
     transition: 0.2s ease;
@@ -15,9 +15,10 @@
     align-items: center;
     justify-content: center;
     border-radius: 4px;
+    padding-bottom: 10px;
     &:hover {
     	opacity: 0.7;
-    	padding: 0px 10px 0px 0px;
+    	padding-right: 10px;
     	background-color: #fff;
     }
 }

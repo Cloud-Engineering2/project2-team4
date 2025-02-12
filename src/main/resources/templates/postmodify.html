@@ -6,6 +6,27 @@
     <link rel="stylesheet" type="text/css" href="/css/postupload.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let token = localStorage.getItem("token");
+        if (!token) {
+            alert("❌ 로그인 후 이용하세요!");
+            location.href = '/login';
+            return;
+        }
+    	loadCategories();
+
+        // 드롭다운 버튼 클릭 시 열기
+        document.getElementById("selectedCategory").addEventListener("click", function() {
+            document.querySelector(".dropdown-content").classList.toggle("show");
+        });
+
+        // 드롭다운 바깥 클릭 시 닫기
+        window.addEventListener("click", function(event) {
+            if (!event.target.matches(".dropbtn")) {
+                document.querySelector(".dropdown-content").classList.remove("show");
+            }
+        });
+    });
     function getUserIdFromToken() {
         let token = localStorage.getItem("token");
         if (!token) return null;
@@ -22,14 +43,11 @@
 
     async function loadCategories() {
         try {
-            const response = await axios.get("/api/admin/categories");
-            const categories = response.data;
+            const response = await fetch("/api/admin/categories");
+            const categories = await response.json();
 
             const categoryMenu = document.getElementById("categoryMenu");
             const selectedCategory = document.getElementById("selectedCategory");
-            
-            // 기존 선택된 카테고리 가져오기
-            const selectedCategoryId = document.getElementById("categoryData").dataset.id;
 
             categoryMenu.innerHTML = ""; // 기존 옵션 초기화
 
@@ -37,17 +55,12 @@
                 const item = document.createElement("div");
                 item.textContent = category.name;
                 item.dataset.id = category.id;
+                item.classList.add("dropdown-item"); // 스타일 적용
 
-                // 기존 카테고리 선택 상태 반영
-                if (category.id == selectedCategoryId) {
-                    selectedCategory.textContent = category.name;
-                    selectedCategory.dataset.id = category.id;
-                }
-
-                item.addEventListener("click", () => {
-                    selectedCategory.textContent = category.name;
-                    selectedCategory.dataset.id = category.id;
-                    document.querySelector(".dropdown").classList.remove("show");
+                item.addEventListener("click", function() {
+                    selectedCategory.textContent = category.name; // 버튼 텍스트 변경
+                    selectedCategory.dataset.id = category.id; // 선택한 ID 저장
+                    categoryMenu.classList.remove("show"); // 드롭다운 닫기
                 });
 
                 categoryMenu.appendChild(item);
@@ -160,14 +173,14 @@
 
         <div class="form-group">
             <label for="title">제목:</label>
-            <input type="text" id="title" th:value="${post?.title}" /><br>
+            <input type="text" id="title" th:value="${post?.title}" />
 
-            <label for="category">카테고리:</label>
-			<div class="dropdown">
-			    <button class="dropbtn" id="selectedCategory" onclick="toggleDropdown()">카테고리 선택</button>
-			    <div class="dropdown-content" id="categoryMenu"></div>
+						<div class="dropdown">
+				<button class="dropbtn" id="selectedCategory">카테고리 선택</button>
+				<div class="dropdown-content" id="categoryMenu"></div>
 			</div>
-
+			<br>
+			<br/>
             <label for="content">내용:</label>
             <textarea id="content" th:text="${post?.content}"></textarea><br>
 
