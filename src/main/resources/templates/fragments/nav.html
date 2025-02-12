@@ -14,9 +14,9 @@
             const navButtons = document.getElementById("nav-buttons");
 
             // 로컬 스토리지에서 정보 가져오기
-            let token = sessionStorage.getItem("token");
-            let role = sessionStorage.getItem("role");
-            let nickname = sessionStorage.getItem("nickname");
+            let token = localStorage.getItem("token");
+            let role = localStorage.getItem("role");
+            let nickname = localStorage.getItem("nickname");
 
             if (!token || !role || !nickname) {
                 showLoggedOutUI();

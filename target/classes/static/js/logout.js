@@ -3,7 +3,7 @@
  * showU Service - 자랑
  * html 에서 공통적으로 사용할 logout() 관련 js 파일
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.10
+ * 최종 수정 날짜 : 2025.02.11
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -12,11 +12,12 @@
  * ========================================================
  * 이홍비   2025.02.10    최초 작성 : logout() 구현
  * 이홍비   2025.02.10    responseText 관련 조건문 추가
+ * 이홍비   2025.02.12    Session Storage 사용
  * ========================================================
  */
 
 function logout() {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     if (!token) {
         console.error("❌ 토큰이 없습니다.");
@@ -41,11 +42,11 @@ function logout() {
             console.log("✔ 로그아웃 성공:", data.message);
 
             // 세션 스토리지 데이터 삭제
-            sessionStorage.removeItem("token");
-            sessionStorage.removeItem("nickname");
-            sessionStorage.removeItem("role");
+            localStorage.removeItem("token");
+            localStorage.removeItem("nickname");
+            localStorage.removeItem("role");
 
-            console.log("✔ 로컬 스토리지 초기화 완료");
+            console.log("✔ 세션 스토리지 초기화 완료");
 
             // 🔥 `responseText`가 존재하면 설정
             let responseTextElement = document.getElementById('responseText');

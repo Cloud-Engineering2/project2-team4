@@ -56,9 +56,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             ap.classList.add("dropdown-item");
             ap.textContent = "All Posts";
             ap.addEventListener("click", () => {
-                document.querySelectorAll(".ct-box").forEach(box => box.remove()); // 🔥 게시글 컨테이너만 삭제
-                mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts));
-                const newAllPostBox = createPostContainer("All Post", allPosts);
+                mainBox.innerHTML = ""; // 기존 콘텐츠 초기화
+                mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts)); // 🔥 Top 5 다시 추가
+                const newAllPostBox = createPostContainer("All Post", allPosts); // 🔥 새로운 요소 생성
                 newAllPostBox.classList.add("all-post");
                 mainBox.appendChild(newAllPostBox);
             });
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     
     editBtn.addEventListener("click", function () {
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             location.href = '/login';

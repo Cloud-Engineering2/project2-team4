@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/css/init.css">
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    let token = sessionStorage.getItem("token");
+    let token = localStorage.getItem("token");
     if (!token) {
         alert("❌ 로그인 후 이용하세요!");
         location.href = '/login';
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
     function getUserIdFromToken() {
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if (!token) return null;
 
         try {
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // 📌 토큰 가져오기
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             return;
