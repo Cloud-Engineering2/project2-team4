@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     
     editBtn.addEventListener("click", function () {
-        let token = localStorage.getItem("token");
+        let token = sessionStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             location.href = '/login';

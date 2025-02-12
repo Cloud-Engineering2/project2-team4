@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
     function getUserIdFromToken() {
-        let token = localStorage.getItem("token");
+        let token = sessionStorage.getItem("token");
         if (!token) return null;
 
         try {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // 📌 토큰 가져오기
-        let token = localStorage.getItem("token");
+        let token = sessionStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
             return;

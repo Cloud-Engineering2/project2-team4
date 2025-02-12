@@ -14,19 +14,27 @@
 			let user_pw = document.getElementById("pw").value.trim();
 			let warning = document.getElementById("warning");
 
-			// 입력값이 비었을 때 경고 메시지 표시
+			// 입력 값이 비었을 때 경고 메시지 표시
 			if (!user_id || !user_pw) {
 				warning.textContent = "아이디와 비밀번호를 입력하세요.";
 				warning.classList.remove("disabled");
 				return;
 			}
 
+			// 만약의 상황을 대비 - 세션 스토리지에 저장하기 전 값이 존재하면 삭제하도록 처리
+			if ((sessionStorage.getItem("token") != null) || (sessionStorage.getItem("role") != null) || (sessionStorage.getItem("nickname") != null))
+			{
+				sessionStorage.removeItem("token");
+				sessionStorage.removeItem("nickname");
+				sessionStorage.removeItem("role");
+			}
+
 			axios.post("/api/login", { userId: user_id, userPw: user_pw })
 					.then(response => {
 						console.log("✅ 로그인 성공! 토큰 :", response.data.token);
-						localStorage.setItem("token", response.data.token);
-						localStorage.setItem("nickname", response.data.nickname);
-						localStorage.setItem("role", response.data.role);
+						sessionStorage.setItem("token", response.data.token);
+						sessionStorage.setItem("nickname", response.data.nickname);
+						sessionStorage.setItem("role", response.data.role);
 
 						window.location.href = "/"; // 로그인 성공 후 홈으로 이동
 					})

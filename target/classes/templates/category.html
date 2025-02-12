@@ -10,7 +10,7 @@
 	<script th:inline="javascript">
 		
 		function getUserIdFromToken() {
-	        let token = localStorage.getItem("token");
+	        let token = sessionStorage.getItem("token");
 	        if (!token) return null;
 	
 	        try {
@@ -27,7 +27,7 @@
 		function editCategory(cid) {
 			
 			// 📌 토큰 가져오기
-	        let token = localStorage.getItem("token");
+	        let token = sessionStorage.getItem("token");
 	        if (!token) {
 	            alert("❌ 로그인 후 이용하세요!");
 	            return;
@@ -75,7 +75,7 @@
         // 카테고리 삭제 함수
         function deleteCategory(cid) {
 			// 📌 토큰 가져오기
-	        let token = localStorage.getItem("token");
+	        let token = sessionStorage.getItem("token");
 	        if (!token) {
 	            alert("❌ 로그인 후 이용하세요!");
 	            return;
@@ -113,7 +113,7 @@
         function addCategory() {
 			
 			// 📌 토큰 가져오기
-	        let token = localStorage.getItem("token");
+	        let token = sessionStorage.getItem("token");
 	        if (!token) {
 	            alert("❌ 로그인 후 이용하세요!");
 	            return;
