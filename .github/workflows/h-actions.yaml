@@ -1,10 +1,10 @@
 name: showu With Github Actions - h
 
 on:
-  workflow_dispatch
-  # push:
-  #   branches:
-  #     - develop
+  # workflow_dispatch
+  push:
+    branches:
+      - develop
   #  paths-ignore:
   #    - 'manifest/**'
       
@@ -45,8 +45,8 @@ jobs:
 
       - name: Configure AWS credentials 
         run: |
-          aws configure set aws_access_key_id ${{ secrets.CHECK_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.CHECK_SECRET_ACCESS_KEY }} 
+          aws configure set aws_access_key_id ${{ secrets.ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.SECRET_ACCESS_KEY }} 
           aws configure set default.region ${{ secrets.REGION }}
           aws configure set output json
           
@@ -58,8 +58,8 @@ jobs:
 
       - name: Build and push
         run: |
-          aws ecr get-login-password --region ${{ secrets.REGION }} | docker login --username AWS --password-stdin ${{ secrets.CHECK_ECRID }}.dkr.ecr.${{ secrets.REGION }}.amazonaws.com
-          docker buildx build --platform linux/amd64 -t ${{ secrets.CHECK_ECRURL }}:${{ github.sha }} --push .
+          aws ecr get-login-password --region ${{ secrets.REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECRID }}.dkr.ecr.${{ secrets.REGION }}.amazonaws.com
+          docker buildx build --platform linux/amd64 -t ${{ secrets.ECRURL }}:${{ github.sha }} --push .
 
 
   cd:
@@ -84,7 +84,7 @@ jobs:
 
       - name: Set up Image
         run: |
-          sed -i 's|image: .*$|image: '"${{ secrets.ECRURL }}:${{ github.sha }}"'|g' ./manifestH/deployment.yaml
+          sed -i 's|image: .*$|image: '"${{ secrets.ECRURL }}:${{ github.sha }}"'|g' ./manifestAWS/aws_deployment.yaml
 
       - name: Commit and push changes
         run: |
