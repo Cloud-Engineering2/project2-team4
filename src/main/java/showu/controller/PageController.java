@@ -61,19 +61,7 @@ public class PageController {
 	public String getTestPage() {
 		return "postupload";
 	}
-	
-	@GetMapping("/postget")
-	public String getPostTestPage() {
-		return "postget";
-	}
-	@GetMapping("/postdelete")
-	public String getPostDeletePage() {
-		return "postdelete";
-	}
-	@GetMapping("/postone")
-	public String getPostOnePage() {
-		return "postone";
-	}
+
 	@GetMapping("/postdetail")
 	public String getPostDetailPage() {
 		return "postdetail";
