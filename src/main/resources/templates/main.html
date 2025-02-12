@@ -1,54 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <link rel="stylesheet" th:href="@{/css/init.css}">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Main Page</title>
+<link rel="stylesheet" th:href="@{/css/init.css}">
+<link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/nav}"></div>
-	<div class="outer">
-		<div id="main-box"></div>
-	</div>
-<script>
+	<div th:replace="~{fragments/nav}"></div>
+	<div class="main-box-m" id="main-box-m">
+		<script>
     document.addEventListener("DOMContentLoaded", async () => {
-        const mainBox = document.getElementById("main-box");
+        const mainBox = document.getElementById("main-box-m");
 
         try {
             const categoriesRes = await fetch("/api/admin/categories");
             const categories = await categoriesRes.json();
-
+            console.log("📌 카테고리 데이터:", categories);
             const postsRes = await fetch("/api/post");
             let posts = await postsRes.json();
-
+            console.log("📌 전체 게시글 데이터:", posts);
             // ✅ 좋아요 순으로 내림차순 정렬
             posts.sort((a, b) => b.likes - a.likes);
 
             categories.forEach(category => {
                 const ctBox = document.createElement("div");
-                ctBox.classList.add("ct-box");
+                ctBox.classList.add("ct-box-m");
 
                 const title = document.createElement("p");
-                title.classList.add("ct-title");
+                title.classList.add("ct-title-m");
                 title.textContent = category.name + " Weekly Top5" ;
 
                 const ptBox = document.createElement("div");
-                ptBox.classList.add("pt-box");
+                ptBox.classList.add("pt-box-m");
 
                 const categoryPosts = posts.filter(post => post.category.id === category.id).slice(0, 5);
 
                 categoryPosts.forEach(post => {
                     const postItem = document.createElement("div");
-                    postItem.classList.add("post-item");
+                    postItem.classList.add("post-item-m");
 
                     const img = document.createElement("img");
                     img.src = post.imageUrl;
                     img.alt = "Post Image";
 
                     const iconBox = document.createElement("div");
-                    iconBox.classList.add("post-icon-box");
+                    iconBox.classList.add("post-icon-box-m");
 
                     const likeIcon = document.createElement("img");
                     likeIcon.classList.add("icon", "like");
@@ -57,11 +55,11 @@
                     likeIcon.dataset.postId = post.id;
 
                     const likeText = document.createElement("span");
-                    likeText.classList.add("like-text");
+                    likeText.classList.add("like-text-m");
                     likeText.textContent = post.likes;
 
                     const btn = document.createElement("div");
-                    btn.classList.add("btn");
+                    btn.classList.add("btn-m");
                     btn.textContent = "Detail";
                     btn.addEventListener("click", () => {
                         window.location.href = `/api/post/${post.id}`;
@@ -82,6 +80,7 @@
 
                             const data = await res.json();
                             likeText.textContent = data.likes; // ✅ 좋아요 개수 업데이트
+                            window.location.href = "/";
                         } catch (error) {
                             console.error("Error updating likes:", error);
                         }
@@ -100,7 +99,10 @@
         }
     });
 </script>
-<div th:replace="~{fragments/footer}"></div>
-<div th:replace="~{fragments/back}"></div>
+		<div th:replace="~{fragments/footer}"></div>
+		<div th:replace="~{fragments/back}"></div>
+	</div>
+
+
 </body>
 </html>

@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.gothic-a1-regular {
+	font-family: "Gothic A1", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.showU {
+	font-family: "Gothic A1", sans-serif;
+	font-weight: 700;
+	font-style: normal;
+	color: #4635B1;
+}
+
+.footerLetters {
+	font-family: "Gothic A1", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 7px;
+	color: #4635B1;
+}
+
+
+.footer {
+	position: fixed;   /* 화면 하단에 고정 */
+	bottom: 0;         /* 화면 하단 */
+	left: 0;           /* 화면 왼쪽 끝 */
+	width: 100%;       /* 화면 전체 너비 */
+	text-align: center;
+	padding: 10px;
+}
+
+
+/* headerLayout.css */
+.header {
+	display: flex;
+	justify-content: space-between; /* 왼쪽과 오른쪽에 콘텐츠 배치 */
+	align-items: center;
+	padding: 10px 20px; /* 상하좌우 여백 */
+	width: 100%;
+}
+
+.left-header .logo {
+	font-family: "Gothic A1", sans-serif;
+	font-weight: 700;
+	font-size: 20px;
+	color: #4635B1;
+	text-decoration: none;
+	margin-left: 20px; /* 로고 왼쪽 마진 */
+}
+
+.right-header {
+	display: flex;
+	align-items: center;
+	margin-right: 20px; /* 오른쪽 끝에 마진 추가 */
+}
+
+.right-header {
+	margin-right: 10px;  /* 별명과 로그아웃 버튼 사이 간격 */
+	font-family: "Gothic A1", sans-serif;
+	font-size: 12px;
+	color: #4635B1;
+}
+
+
+.nickname {
+	margin-right: 15px;  /* 별명과 로그아웃 버튼 사이 간격 */
+	font-family: "Gothic A1", sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	color: #4635B1;
+}

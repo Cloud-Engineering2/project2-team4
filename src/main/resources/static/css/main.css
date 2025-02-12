@@ -1,99 +1,18 @@
 @charset "UTF-8";
 
-body {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-
-#responseText {
-	color: red;
-}
-
-.gothic-a1-regular {
-	font-family: "Gothic A1", sans-serif;
-	font-weight: 400;
-	font-style: normal;
-}
-
-.showU {
-	font-family: "Gothic A1", sans-serif;
-	font-weight: 700;
-	font-style: normal;
-	color: #4635B1;
-}
-
-.footerLetters {
-	font-family: "Gothic A1", sans-serif;
-	font-weight: 400;
-	font-style: normal;
-	font-size: 7px;
-	color: #4635B1;
-}
-
-
-.footer {
-	position: fixed;   /* 화면 하단에 고정 */
-	bottom: 0;         /* 화면 하단 */
-	left: 0;           /* 화면 왼쪽 끝 */
-	width: 100%;       /* 화면 전체 너비 */
-	text-align: center;
-	padding: 10px;
-}
-
-
-/* headerLayout.css */
-.header {
-	display: flex;
-	justify-content: space-between; /* 왼쪽과 오른쪽에 콘텐츠 배치 */
-	align-items: center;
-	padding: 10px 20px; /* 상하좌우 여백 */
-	width: 100%;
-}
-
-.left-header .logo {
-	font-family: "Gothic A1", sans-serif;
-	font-weight: 700;
-	font-size: 20px;
-	color: #4635B1;
-	text-decoration: none;
-	margin-left: 20px; /* 로고 왼쪽 마진 */
-}
-
-.right-header {
-	display: flex;
-	align-items: center;
-	margin-right: 20px; /* 오른쪽 끝에 마진 추가 */
-}
-
-.right-header {
-	margin-right: 10px;  /* 별명과 로그아웃 버튼 사이 간격 */
-	font-family: "Gothic A1", sans-serif;
-	font-size: 12px;
-	color: #4635B1;
-}
-
-
-.nickname {
-	margin-right: 15px;  /* 별명과 로그아웃 버튼 사이 간격 */
-	font-family: "Gothic A1", sans-serif;
-	font-weight: bold;
-	font-size: 14px;
-	color: #4635B1;
-}
-
-.main-box {
+.main-box-m {
     width: 100%;
-    height: fit-content;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding-top: 10px;
 }
 
-.ct-box {
-    width: 100%;
-    max-width: 1400px;
+.ct-box-m {
+	width: 100%;
+    max-width: 1200px;
     height: fit-content;
     background: #fff;
     flex-direction: column;
@@ -104,16 +23,15 @@ body {
     padding-bottom: 30px;
     border-bottom: 1.5px solid #ddd;
 }
-.ct-title {
+.ct-title-m {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
     margin-right: auto;
-    padding-left: 20px;
     color: #555;
 }
 
-.pt-box {
+.pt-box-m {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 15px; /* 간격 추가 */
@@ -122,7 +40,7 @@ body {
     max-width: 1400px; /* 최대 너비 설정 */
 }
 
-.post-item {
+.post-item-m {
     width: 100%;
     background-color: #fff;
     border-radius: 8px;
@@ -143,13 +61,13 @@ body {
     }
 }
 
-.post-item img {
+.post-item-m img {
     width: 200px;
     height: 200px;
     border-radius: 8px;
 }
 
-.post-icon-box {
+.post-icon-box-m {
     width: 100%;
     height: fit-content;
     display: flex;
@@ -164,12 +82,12 @@ body {
             opacity: 0.5;
         }
     }
-    .like-text {
+    .like-text-m {
         font-weight: bold;
         padding-bottom: 1px;
         margin-left: 2px;
     }
-    .btn {
+    .btn-m {
         cursor: pointer;
         width: 80px;
         height: 30px;
@@ -187,11 +105,4 @@ body {
             opacity: 0.6;
         }
     }
-}
-.outer {
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
 }
