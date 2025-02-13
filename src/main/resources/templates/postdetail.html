@@ -35,7 +35,7 @@
             console.log(`🔍 로그인한 userId: ${userId}, 게시글 userId: ${postUserId}`);
 
             if (userId == postUserId) {
-                window.location.href = `/api/post/modify/${postId}`;
+                window.location.href = `/modify/${postId}`;
             } else {
                 alert("❌ 본인이 작성한 게시글만 수정할 수 있습니다!");
             }

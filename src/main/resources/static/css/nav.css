@@ -11,6 +11,13 @@
     background-color: white;
     z-index: 1000;
 }
+
+.gallery {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .menu-box {
     display: flex;
     align-items: center;

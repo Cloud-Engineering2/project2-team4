@@ -2,7 +2,7 @@
  * showU Service - 자랑
  * 게시물 api 처리 컨트롤러
  * 작성자 : lion4 (김예린, 배희창, 이홍비, 전익주, 채혜송)
- * 최종 수정 날짜 : 2025.02.08
+ * 최종 수정 날짜 : 2025.02.13
  *
  * ========================================================
  * 프로그램 수정 / 보완 이력
@@ -15,6 +15,7 @@
  * 김예린   2025.02.11    게시물 댓글과 함께 조회 구현
  * 배희창   2025.02.11    좋아요 구현
  * 배희창   2025.02.11    post modify 작성
+ * 배희창   2025.02.13    modify, detail pagecontroller로 옮김
  * ========================================================
  */
 
@@ -124,35 +125,4 @@ public class PostController {
         return ResponseEntity.ok(updatedPost);
     }
 
-    @GetMapping("/{postId}")
-    public String getPostWithComments(
-            @PathVariable Long postId,
-            HttpServletRequest request,
-            ModelMap map
-    ) {
-
-        PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(postId));
-//        Long userId = (Long) request.getAttribute("userId");
-
-        map.addAttribute("post", post);
-//        map.addAttribute("uid", userId);
-        map.addAttribute("comments", post.getCommentResponse());
-
-        return "postdetail";
-    }
-    
-    @GetMapping("/modify/{postId}")
-    public String getPostForEdit(
-            @PathVariable Long postId,
-            HttpServletRequest request,
-            ModelMap map
-    ) {
-
-    	PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(postId));
-    	
-        map.addAttribute("post", post);
-        
-        return "postmodify";
-    }
-    
 }
