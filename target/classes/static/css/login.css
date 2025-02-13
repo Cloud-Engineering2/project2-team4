@@ -4,41 +4,42 @@
     display: inline-block; /* 블록 성질을 부여하여 margin-bottom 적용 가능 */
     font-family: "Gothic A1", sans-serif;
     font-weight: 700;
-    font-size: 20px;
+
+    font-size: 40px;
     color: #4635B1;
     text-decoration: none;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .login {
-    width : 250px;
-    height: 30px;
-    font-size: 11px;
-    border : none;
+    width: 100%;
+    max-width: 500px;
+    height: 50px;
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 20px; /* 글자 크기 키움 */
+    border: none;
     border-radius: 5px;
     cursor: pointer;
     background-color: #4635B1;
     color: white;
     text-align: center;
-    line-height: 28px;
-}
 
-.login:hover {
-    background-color: rgb(215, 210, 242);
-    color : #4635B1;
+    /* 🔹 상하좌우 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
- .goToSignup a {
-     font-size: 10px; /* 글씨 크기 조정 */
-     text-decoration: none;
-     color: #4635B1;
- }
 
 .joinLetters {
     font-family: "Gothic A1", serif;
-    font-weight: 400;
+    font-weight: 600;
+    text-decoration: none;
     font-style: normal;
-    font-size: 10px;
+    font-size: 17px;
+    text-align: center;
+    color: #4635B1;
 }
 
 

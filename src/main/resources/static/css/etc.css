@@ -20,13 +20,17 @@ body {
 }
 
 .footerLetters {
-	font-family: "Gothic A1", sans-serif;
-	font-weight: 400;
-	font-style: normal;
-	font-size: 7px;
-	color: #4635B1;
-}
+	width: 100%;
+	height: auto; /* 🔹 너무 작으면 내용이 안 보이므로 auto로 설정 */
+	padding: 10px 0; /* 🔹 상하 여백 추가 */
 
+	font-family: "Gothic A1", sans-serif;
+	font-weight: 600;
+	font-style: normal;
+	font-size: 12px;
+	color: #4635B1;
+	text-align: center; /* 🔹 텍스트 중앙 정렬 */
+}
 
 .footer {
 	position: fixed;   /* 화면 하단에 고정 */

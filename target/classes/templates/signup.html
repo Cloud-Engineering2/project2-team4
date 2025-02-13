@@ -12,7 +12,7 @@
 	<form action="/login" method="get">
 		<button id="goToLogin">로그인</button>
 	</form>
-	<h2 id="serviceName">showU</h2>
+	<h2 id="serviceName" class="logo-signup" onclick="location.href='/'">showU</h2>
 	<table class="mb_8">
 		<tr>
 			<td><input id="id" name="id" type="text" placeholder="Id"
@@ -28,7 +28,7 @@
 		</tr>
 	</table>
 	<div id="warning" class="mb_8 disabled">이미 존재하는 사용자 정보입니다.</div>
-	<div id="signUp">SignUp</div>
+	<div id="signUp">회원 가입</div>
 
 	<div th:replace="~{fragments/footer}"></div>
 
@@ -90,21 +90,31 @@
 		if(id == null || id == ''){
 			isAvailable = false;
 			hasEmptyValue = true;
-			message = "아이디를 입력해주세요.";
+			message = "아이디를 입력해 주세요.";
 		} else if(pw == null || pw == ''){
 			isAvailable = false;
 			hasEmptyValue = true;
-			message = "패스워드를 입력해주세요.";
+			message = "비밀번호를 입력해 주세요.";
 		} else if(nickname == null || nickname == ''){
 			isAvailable = false;
 			hasEmptyValue = true;
-			message = "닉네임을 입력해주세요.";
+			message = "닉네임을 입력해 주세요.";
 		}
 		
 		if(!hasEmptyValue){
-			if((id.length < 4 || id.length > 20) || (pw.length < 4 || pw.length > 20) || (nickname.length > 20)){
+			if(id.length < 4 || id.length > 20) {
 				isAvailable = false;
-				message = "아이디, 패스워드는 4자 이상 20자 이하, 닉네임은 최대 20자 까지 가능합니다.";
+				message = "아이디는 4자 이상 20자 이하여야 합니다.";
+			}
+
+			if(pw.length < 4 || pw.length > 20){
+				isAvailable = false;
+				message = "비밀번호는 4자 이상 20자 이하여야 합니다.";
+			}
+
+			if((nickname.length > 20)) {
+				isAvailable = false;
+				message = "닉네임은 최대 20자까지 가능합니다.";
 			}
 		}
 		
