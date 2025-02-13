@@ -2,219 +2,180 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>게시글 목록</title>
-<link rel="stylesheet" th:href="@{/css/init.css}">
-<link rel="stylesheet" th:href="@{/css/gallery.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록</title>
+    <link rel="stylesheet" th:href="@{/css/init.css}">
+    <link rel="stylesheet" th:href="@{/css/gallery.css}">
 </head>
-<script>
-document.addEventListener('DOMContentLoaded', async function () {
-    // 📌 DOM 요소 가져오기
-    const mainBox = document.querySelector('.main-box');  // 게시글이 추가될 메인 박스
-    const filterBtn = document.querySelector('.filter-btn');  // 필터 버튼
-    const dropdownMenu = document.querySelector('.dropdown-menu');  // 카테고리 드롭다운
-    const editBtn = document.querySelector('.edit-btn'); // 글 작성 버튼
-    
-    let allPosts = [];  // 전체 게시글 저장
-    let categories = [];  // 카테고리 목록 저장
-    let allPostBox; // 🔥 전역 변수로 선언
-    let top5Posts;  // 🔥 전역 변수로 선언
-
-    // ✅ 초기 데이터 로드
-    try {
-        // 🔥 모든 게시글 불러오기
-        const postsRes = await fetch("/api/post");
-        allPosts = await postsRes.json();
-
-        // 🔥 좋아요 순 정렬 (Top 5)
-        top5Posts = [...allPosts].sort((a, b) => b.likes - a.likes).slice(0, 5);
-
-        // ✅ 초기 UI 렌더링
-        mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts));
-
-        allPostBox = createPostContainer("All Post", allPosts); // 🔥 전역 변수에 저장
-        allPostBox.classList.add("all-post");
-        mainBox.appendChild(allPostBox);
-
-        // ✅ 카테고리 목록 가져오기
-        loadCategories();
-    } catch (error) {
-        console.error("데이터 불러오기 실패:", error);
-    }
-
-    // ✅ 카테고리 불러오기 & 드롭다운 추가
-    async function loadCategories() {
-        try {
-            const categoriesRes = await fetch("/api/admin/categories");
-            categories = await categoriesRes.json();
-
-            dropdownMenu.innerHTML = ""; // 기존 목록 초기화
-
-            // 🔥 "All Posts" 추가
-            const ap = document.createElement("div");
-            ap.classList.add("dropdown-item");
-            ap.textContent = "All Posts";
-            ap.addEventListener("click", () => {
-                mainBox.innerHTML = ""; // 기존 콘텐츠 초기화
-                mainBox.appendChild(createPostContainer("이번 주 최고의 자랑 Top5", top5Posts)); // 🔥 Top 5 다시 추가
-                const newAllPostBox = createPostContainer("All Post", allPosts); // 🔥 새로운 요소 생성
-                newAllPostBox.classList.add("all-post");
-                mainBox.appendChild(newAllPostBox);
-            });
-            dropdownMenu.appendChild(ap);
-
-            // 🔥 카테고리 추가
-            categories.forEach(category => {
-                const item = document.createElement("div");
-                item.classList.add("dropdown-item");
-                item.textContent = category.name;
-                item.addEventListener("click", () => filterByCategory(category.name)); // 클릭 시 필터 적용
-                dropdownMenu.appendChild(item);
-            });
-        } catch (error) {
-            console.error("카테고리 불러오기 실패:", error);
-        }
-    }
-
-    // ✅ 특정 카테고리 게시글 필터링
-    function filterByCategory(categoryName) {
-        console.log(`🔎 선택된 카테고리: ${categoryName}`);
-
-        const filteredPosts = allPosts.filter(post => {
-            console.log(`✅ 게시글 카테고리 값:`, post.category);
-            return post.category && post.category.name === categoryName;
-        });
-
-        console.log("📌 필터된 게시글 목록:", filteredPosts);
-        updateAllPostBox(categoryName, filteredPosts);
-    }
-
-    // ✅ All Post 박스 업데이트
-    function updateAllPostBox(categoryName, posts) {
-        // 🔥 기존의 모든 .all-post 제거
-        document.querySelectorAll(".ct-box.all-post").forEach(box => box.remove());
-
-        const newAllPostBox = createPostContainer(`Category: ${categoryName}`, posts);
-        newAllPostBox.classList.add("all-post");  // 🔥 새 박스도 all-post로 설정
-        mainBox.appendChild(newAllPostBox);
-    }
-
-    // ✅ 게시글 컨테이너 생성 함수
-    function createPostContainer(titleText, postList) {
-        const container = document.createElement("div");
-        container.classList.add("ct-box");
-
-        const title = document.createElement("p");
-        title.classList.add("ct-title");
-        title.textContent = titleText;
-
-        const ptBox = document.createElement("div");
-        ptBox.classList.add("pt-box");
-
-        postList.forEach(post => {
-            const postItem = createPostItem(post);
-            ptBox.appendChild(postItem);
-        });
-
-        container.append(title, ptBox);
-        return container;
-    }
-
-    // ✅ 게시글 아이템 생성 함수
-    function createPostItem(post) {
-        const postItem = document.createElement("div");
-        postItem.classList.add("post-item");
-
-        const img = document.createElement("img");
-        img.src = post.imageUrl;
-        img.alt = "Post Image";
-
-        const iconBox = document.createElement("div");
-        iconBox.classList.add("post-icon-box");
-
-        const likeIcon = document.createElement("img");
-        likeIcon.classList.add("icon", "like");
-        likeIcon.src = "/icons/like.png";
-        likeIcon.alt = "like";
-        likeIcon.dataset.postId = post.id;
-
-        const likeText = document.createElement("span");
-        likeText.classList.add("like-text");
-        likeText.textContent = post.likes;
-
-        const btn = document.createElement("div");
-        btn.classList.add("btn");
-        btn.textContent = "Detail";
-        btn.addEventListener("click", () => {
-            window.location.href = `/api/post/${post.id}`;
-        });
-
-        likeIcon.addEventListener("click", async () => {
-            const postId = likeIcon.dataset.postId;
-            try {
-                const res = await fetch(`/api/post/like/${postId}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" }
-                });
-
-                if (!res.ok) {
-                    throw new Error("서버 오류");
-                }
-
-                const data = await res.json();
-                likeText.textContent = data.likes;
-                window.location.href = "/gallery";
-            } catch (error) {
-                console.error("좋아요 업데이트 실패:", error);
-            }
-        });
-
-        iconBox.append(likeIcon, likeText, btn);
-        postItem.append(img, iconBox);
-        return postItem;
-    }
-
-    // ✅ 드롭다운 토글 기능
-    filterBtn.addEventListener('click', function () {
-        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // ✅ 드롭다운 외부 클릭 시 닫기
-    document.addEventListener('click', function (event) {
-        if (!filterBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.style.display = 'none';
-        }
-    });
-    
-    editBtn.addEventListener("click", function () {
-        let token = localStorage.getItem("token");
-        if (!token) {
-            alert("❌ 로그인 후 이용하세요!");
-            location.href = '/login';
-            return;
-        }
-        location.href = '/postupload';
-    });
-
-});
-
-</script>
 
 <body>
-	<div th:replace="~{fragments/nav}"></div>
-	<div class="main-box">
-		<div class="button-box">
-			<div class="filter-btn">Filter</div>
-			<div class="edit-btn">ShowU</div>
-			<div class="dropdown-menu">
-				<div class="dropdown-item"></div>
-			</div>
-		</div>
-	</div>
+    <div th:replace="~{fragments/nav}"></div>
 
-	<div th:replace="~{fragments/footer}"></div>
-	<div th:replace="~{fragments/back}"></div>
+    <div class="main-box">
+        <div class="button-box">
+            <div class="filter-btn">Filter</div>
+            <div class="edit-btn">ShowU</div>
+            <div class="dropdown-menu"></div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer}"></div>
+    <div th:replace="~{fragments/back}"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const mainBox = document.querySelector('.main-box');
+            const filterBtn = document.querySelector('.filter-btn');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            const editBtn = document.querySelector('.edit-btn');
+
+            let allPosts = [];
+            let top5Posts = [];
+
+            // ✅ 초기 데이터 로드
+            try {
+                const postsRes = await fetch("/api/post");
+                allPosts = await postsRes.json();
+                top5Posts = [...allPosts].sort((a, b) => b.likes - a.likes).slice(0, 5);
+
+                renderPosts("이번 주 최고의 자랑 Top5", top5Posts);
+                renderPosts("All Post", allPosts, true);
+                
+                loadCategories();
+            } catch (error) {
+                console.error("데이터 불러오기 실패:", error);
+            }
+
+            // ✅ 게시글 목록 렌더링
+            function renderPosts(title, posts, isAllPost = false) {
+                const container = document.createElement("div");
+                container.classList.add("ct-box");
+                if (isAllPost) container.classList.add("all-post");
+
+                const titleElem = document.createElement("p");
+                titleElem.classList.add("ct-title");
+                titleElem.textContent = title;
+
+                const postBox = document.createElement("div");
+                postBox.classList.add("pt-box");
+
+                posts.forEach(post => postBox.appendChild(createPostItem(post)));
+
+                container.append(titleElem, postBox);
+                mainBox.appendChild(container);
+            }
+
+            // ✅ 게시글 아이템 생성
+            function createPostItem(post) {
+                const postItem = document.createElement("div");
+                postItem.classList.add("post-item");
+
+                const img = document.createElement("img");
+                img.src = post.imageUrl;
+                img.alt = "Post Image";
+
+                const iconBox = document.createElement("div");
+                iconBox.classList.add("post-icon-box");
+
+                const likeIcon = document.createElement("img");
+                likeIcon.classList.add("icon", "like");
+                likeIcon.src = "/icons/like.png";
+                likeIcon.alt = "like";
+                likeIcon.dataset.postId = post.id;
+
+                const likeText = document.createElement("span");
+                likeText.classList.add("like-text");
+                likeText.textContent = post.likes;
+
+                const detailBtn = document.createElement("div");
+                detailBtn.classList.add("btn");
+                detailBtn.textContent = "Detail";
+                detailBtn.addEventListener("click", () => window.location.href = `/api/post/${post.id}`);
+
+                likeIcon.addEventListener("click", async () => {
+                    try {
+                        const res = await fetch(`/api/post/like/${post.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" } });
+                        if (!res.ok) throw new Error("서버 오류");
+
+                        const data = await res.json();
+                        likeText.textContent = data.likes;
+                        window.location.reload();
+                    } catch (error) {
+                        console.error("좋아요 업데이트 실패:", error);
+                    }
+                });
+
+                iconBox.append(likeIcon, likeText, detailBtn);
+                postItem.append(img, iconBox);
+                return postItem;
+            }
+
+            // ✅ 카테고리 목록 가져오기 & 드롭다운 추가
+            async function loadCategories() {
+                try {
+                    const categoriesRes = await fetch("/api/admin/categories");
+                    const categories = await categoriesRes.json();
+
+                    dropdownMenu.innerHTML = ""; // 기존 목록 초기화
+
+                    // "All Posts" 필터 추가
+                    addCategoryFilter("All Posts", allPosts);
+
+                    categories.forEach(category => addCategoryFilter(category.name, allPosts.filter(post => post.category?.name === category.name)));
+                } catch (error) {
+                    console.error("카테고리 불러오기 실패:", error);
+                }
+            }
+
+            // ✅ 필터 버튼 추가
+            function addCategoryFilter(categoryName, posts) {
+                const item = document.createElement("div");
+                item.classList.add("dropdown-item");
+                item.textContent = categoryName;
+                dropdownMenu.appendChild(item);
+            }
+
+            // ✅ 필터링 이벤트 (이벤트 위임 사용)
+            dropdownMenu.addEventListener("click", (event) => {
+			    if (event.target.classList.contains("dropdown-item")) {
+			        const categoryName = event.target.textContent;
+			        
+			        // 🔥 기존 내용을 유지하면서 게시글 목록만 갱신
+			        const postContainers = document.querySelectorAll(".ct-box");
+			        postContainers.forEach(box => box.remove()); // 기존 게시글만 삭제
+			
+			        renderPosts("이번 주 최고의 자랑 Top5", top5Posts);
+			        renderPosts(`Category: ${categoryName}`, categoryName === "All Posts" ? allPosts : allPosts.filter(post => post.category?.name === categoryName), true);
+			
+			        dropdownMenu.style.display = "none";
+			    }
+			});
+
+            // ✅ 드롭다운 토글
+            filterBtn.addEventListener("click", () => {
+                dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+            });
+
+            // ✅ 드롭다운 외부 클릭 시 닫기
+            document.addEventListener("click", (event) => {
+                if (!filterBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.style.display = "none";
+                }
+            });
+
+            // ✅ 글 작성 버튼 클릭 시
+            editBtn.addEventListener("click", () => {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    alert("❌ 로그인 후 이용하세요!");
+                    location.href = "/login";
+                } else {
+                    location.href = "/postupload";
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
