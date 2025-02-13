@@ -18,8 +18,14 @@
 		let warning = document.getElementById("warning");
 
 		// 입력 값이 비었을 때 경고 메시지 표시
-		if (!user_id || !user_pw) {
-			warning.textContent = "아이디와 비밀번호를 입력하세요.";
+		if (!user_id) {
+			warning.textContent = "아이디를 입력해 주세요.";
+			warning.classList.remove("disabled");
+			return;
+		}
+
+		if (!user_pw) {
+			warning.textContent = "비밀번호를 입력해 주세요.";
 			warning.classList.remove("disabled");
 			return;
 		}
@@ -66,11 +72,13 @@
 </head>
 <body>
 
-<!--<h2 id="serviceName" class="showU"><a href="/">showU</a></h2>-->
+	<h2 id="serviceName" class="logo-login" onclick="location.href='/'">showU</h2>
+<!--	<span id="serviceName" class="logo-login" onclick="location.href='/'">showU</span>-->
 
-	<div>
-		<a href="/" class="logo-login">showU</a>
-	</div>
+<!--	<div>-->
+<!--		<a href="/" class="logo-login">showU</a>-->
+<!--	</div>-->
+
 
 	<table class="mb_8">
 		<tr>
@@ -85,11 +93,10 @@
 
 	<div id="warning" class="mb_8 disabled"></div>
 
-	<div class="login gothic-a1-regular" onclick="login()">Login</div>
+	<div class="login gothic-a1-regular" onclick="login()">로그인</div>
 
 	<p id="goToSignup" class="mt_10">
-		<a href="/signup" style="text-decoration: none; color: #4635B1;"
-			class="joinLetters">회원 가입</a>
+		<a href="/signup" style="text-decoration: none; color: #4635B1;" class="joinLetters">회원 가입</a>
 	</p>
 
 	<div th:replace="~{fragments/footer}"></div>
