@@ -111,20 +111,12 @@ public class PostController {
     
     // 게시물 업데이트
     @ResponseBody
-    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/{postId}")
     public ResponseEntity<PostDTO> updatePost(
             @PathVariable Long postId,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart("post") PostDTO postDTO) {
+            @RequestBody PostDTO postDTO) {
 
         System.out.println("📌 받은 PostDTO 데이터: " + postDTO);
-        System.out.println("📌 받은 파일: " + (file != null ? file.getOriginalFilename() : "파일 없음"));
-
-        // 파일이 있으면 업로드 후 URL 설정
-        if (file != null && !file.isEmpty()) {
-            String imageUrl = s3Service.uploadS3File(file);
-            postDTO.setImageUrl(imageUrl);
-        }
 
         PostDTO updatedPost = postService.updatePost(postId, postDTO);
         System.out.println("📌 수정된 PostDTO 데이터: " + updatedPost);
