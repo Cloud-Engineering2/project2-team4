@@ -88,6 +88,11 @@ h1.logo {
     justify-content: space-between;
     align-items: center;
 }
+
+.commentButtonBox {
+    display: inline-flex; /* 내부 요소 크기에 맞게 조정 */
+}
+
 .commentButton {
     background: none;
     color: #4635B1;
