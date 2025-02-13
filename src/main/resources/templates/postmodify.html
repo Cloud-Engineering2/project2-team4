@@ -72,7 +72,7 @@
     }
 
 
-    async function uploadFile(postId) {
+    async function updatePost(postId) {
         let token = localStorage.getItem("token");
         if (!token) {
             alert("❌ 로그인 후 이용하세요!");
@@ -85,26 +85,17 @@
             return;
         }
 
-        let fileInput = document.getElementById("file");
-        let titleInput = document.getElementById("title");
-        let contentInput = document.getElementById("content");
-        let linkInput = document.getElementById("link");
-        let selectedCategory = document.getElementById("selectedCategory");
-        let categoryId = selectedCategory.dataset.id;
-
-        let file = fileInput.files[0];
-        let title = titleInput.value.trim();
-        let content = contentInput.value.trim();
-        let link = linkInput.value.trim();
+        let title = document.getElementById("title").value.trim();
+        let content = document.getElementById("content").value.trim();
+        let link = document.getElementById("link").value.trim();
+        let categoryId = document.getElementById("selectedCategory").dataset.id;
 
         if (!title) {
             alert("📌 제목을 입력하세요!");
-            titleInput.focus();
             return;
         }
         if (!content) {
             alert("📌 내용을 입력하세요!");
-            contentInput.focus();
             return;
         }
         if (!categoryId) {
@@ -121,17 +112,11 @@
             link: link
         };
 
-        let formData = new FormData();
-        if (file) {
-            formData.append("file", file);
-        }
-        formData.append("post", new Blob([JSON.stringify(postData)], { type: "application/json" }));
-
         try {
-            let response = await axios.put(`/api/post/${postId}`, formData, {
+            let response = await axios.put(`/api/post/${postId}`, postData, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
+                    "Content-Type": "application/json"
                 }
             });
 
@@ -166,32 +151,32 @@
     </script>
 </head>
 <body onload="loadCategories()">
-	<span id="categoryData" th:data-id="${post?.category?.id}" hidden></span>
-	<div th:replace="~{fragments/nav}"></div>
+    <span id="categoryData" th:data-id="${post?.category?.id}" hidden></span>
+    <div th:replace="~{fragments/nav}"></div>
 
-	<div class="container">
-		<h2>게시글 수정</h2>
+    <div class="container">
+        <h2>게시글 수정</h2>
 
-		<div class="form-group">
-			<label for="title">제목:</label> <input type="text" id="title"
-				th:value="${post?.title}" />
+        <div class="form-group">
+            <label for="title">제목:</label>
+            <input type="text" id="title" th:value="${post?.title}" />
+            <div class="dropdown">
+                <button class="dropbtn" id="selectedCategory">카테고리 선택</button>
+                <div class="dropdown-content" id="categoryMenu"></div>
+            </div>
+            <br>
+            <br>
+            <label for="content">내용:</label>
+            <textarea id="content" th:text="${post?.content}"></textarea>
+            <br>
+            <label for="link">링크:</label>
+            <input type="text" id="link" th:value="${post?.link}" />
+            <br>
+            <button class="edit-button button" th:onclick="|updatePost(${post?.pid})|">수정</button>
+        </div>
+    </div>
 
-			<div class="dropdown">
-				<button class="dropbtn" id="selectedCategory">카테고리 선택</button>
-				<div class="dropdown-content" id="categoryMenu"></div>
-			</div>
-			<br> <br /> <label for="content">내용:</label>
-			<textarea id="content" th:text="${post?.content}"></textarea>
-			<br> <label for="link">링크:</label> <input type="text" id="link"
-				th:value="${post?.link}" /><br> <label for="file">파일
-				업로드:</label> <input type="file" id="file"><br>
-
-			<button class="edit-button button"
-				th:onclick="|uploadFile(${post?.pid})|">수정</button>
-		</div>
-	</div>
-
-	<div th:replace="~{fragments/footer}"></div>
-	<div th:replace="~{fragments/back}"></div>
+    <div th:replace="~{fragments/footer}"></div>
+    <div th:replace="~{fragments/back}"></div>
 </body>
 </html>
