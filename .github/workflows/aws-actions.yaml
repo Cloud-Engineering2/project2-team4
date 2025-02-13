@@ -93,3 +93,4 @@ jobs:
           git add .
           git commit -m "Update image version to ${{ env.date }} - ${{ github.sha }}"
           git push
+
