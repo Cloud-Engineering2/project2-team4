@@ -80,6 +80,13 @@ public class PageController {
 		
 		return "gallery";
 	}
+
+	@GetMapping("/admin/category")
+	public String getCategories(ModelMap map) {
+		List<CategoryDTO> categories = categoryService.getAllCategory();
+		map.addAttribute("categories", categories);
+		return "category";
+	}
 	
     @GetMapping("/detail/{postId}")
     public String getPostWithComments(
