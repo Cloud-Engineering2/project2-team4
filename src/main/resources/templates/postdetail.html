@@ -159,13 +159,14 @@
 
     // 댓글 작성자일 경우에만, 게시물 작성자일 경우에만 수정/삭제 버튼 보이게 처리
 	document.addEventListener('DOMContentLoaded', function() {
+		// ✅ 게시물 작성자일 경우에만 수정/삭제 버튼 보이게 처리
 	    let uid = "[[${post.uid}]]";  // 문자열로 처리
 	    if(uid != userId){
 			document.getElementsByClassName('edit-and-delete-button')[0].style.display = 'none';
 		}
 
+		// ✅ 댓글 작성자일 경우에만 수정/삭제 버튼 보이게 처리
         let commentElements = document.querySelectorAll('.comment'); // 모든 댓글 요소 선택
-
         commentElements.forEach(function(commentDiv) {
             let commentUid = commentDiv.getAttribute('data-uid'); // 각 댓글의 UID 값을 가져옴
 
