@@ -42,14 +42,6 @@ import showu.service.CategoryService;
 public class CategoryController {
 	private final CategoryService categoryService;
 	
-	// 모든 카테고리 조회
-	@GetMapping("/category")
-	public String getCategories(ModelMap map) {
-		List<CategoryDTO> categories = categoryService.getAllCategory();
-		map.addAttribute("categories", categories);
-		return "category";
-	}
-	
 	// json category 받기용 추가
 	@GetMapping("/categories")
 	@ResponseBody

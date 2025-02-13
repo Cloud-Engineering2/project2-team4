@@ -33,7 +33,7 @@
             // 사용자 역할에 따라 UI 변경
             let userInfo = `<span class="nickname">안녕하세요, ${nickname} 님!</span>`;
             if (role === "ROLE_ADMIN") {
-                userInfo = `<div class="l-button" onclick="window.location.href='/api/admin/category'">관리자</div>`;
+                userInfo = `<div class="l-button" onclick="window.location.href='/admin/category'">관리자</div>`;
             }
 
             // 로그아웃 버튼 추가 (JS로 직접 추가)
