@@ -14,13 +14,14 @@ p {
     margin: 0;
 }
 table {
-    width : 250px;
+    width: 100%;
+    max-width: 500px;
     border : 1px solid #e8e8e8;
     border-spacing : initial;
     border-radius: 5px;
 }
 table tr {
-	height: 35px;
+	height: 50px;
 }
 table td {
     padding: 0 10px;
@@ -58,16 +59,32 @@ input {
 	display: none;
 }
 
-#goToLogin {
-    font-size: 12px;
+.logo-signup {
+    display: inline-block; /* 블록 성질을 부여하여 margin-bottom 적용 가능 */
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 40px;
     color: #4635B1;
+    text-decoration: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+
+#goToLogin {
     position: absolute;
-    right: 23px;
-    top: 17px;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: "Gothic A1", sans-serif;
+    color: #4635B1;
+
+    right: 30px;
+    top: 30px;
     cursor: pointer;
     border: none;
 	background: none;
 }
+
 #goToLogin:hover {
     opacity: 0.7;
 }
@@ -75,9 +92,11 @@ input {
     color: #4635B1;
 }
 #signUp {
-    width : 250px;
-    height: 30px;
-    font-size: 11px;
+    width: 100%;
+    max-width: 500px;
+    height: 50px;
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
     border : none;
     border-radius: 5px;
     cursor: pointer;
@@ -85,17 +104,25 @@ input {
     color: white;
     text-align: center;
 	line-height: 28px;
+
+    /* 🔹 상하좌우 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #signUp:hover {
     background-color: rgb(215, 210, 242);
     color : black;
 }
 #warning {
-	font-size: 6px;
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 13px;
 	color: red;
-	align-items: center;
+    align-items: center;
 }
 #warningIcon {
-	margin-right: 5px;
-	height: 10px;
+    margin-right: 5px;
+    height: 13px; /* 🔹 기존 10px → 14px로 키움 */
+    width: auto; /* 🔹 비율 유지하면서 크기 조절 */
 }
