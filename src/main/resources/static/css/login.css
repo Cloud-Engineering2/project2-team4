@@ -1,5 +1,15 @@
 /* login.css */
 
+.logo-login {
+    display: inline-block; /* 블록 성질을 부여하여 margin-bottom 적용 가능 */
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #4635B1;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
 .login {
     width : 250px;
     height: 30px;
