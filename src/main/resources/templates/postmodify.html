@@ -123,7 +123,7 @@
             console.log("📌 서버 응답:", response.data);
             if (response.status === 200) {
                 alert("✅ 게시글이 수정되었습니다.");
-                window.location.href = `/api/post/${postId}`;
+                window.location.href = `/detail/${postId}`;
             } else {
                 alert("⚠ 서버 응답이 예상과 다릅니다.");
             }

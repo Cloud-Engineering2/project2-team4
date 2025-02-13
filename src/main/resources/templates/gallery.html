@@ -91,7 +91,7 @@
                 const detailBtn = document.createElement("div");
                 detailBtn.classList.add("btn");
                 detailBtn.textContent = "Detail";
-                detailBtn.addEventListener("click", () => window.location.href = `/api/post/${post.id}`);
+                detailBtn.addEventListener("click", () => window.location.href = `/detail/${post.id}`);
 
                 likeIcon.addEventListener("click", async () => {
                     try {
