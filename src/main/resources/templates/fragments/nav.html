@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation</title>
+<link rel="stylesheet" href="/css/etc.css">
+<link rel="stylesheet" href="/css/init.css">
+<link rel="stylesheet" href="/css/nav.css">
+<script src="/js/logout.js"></script>
+<!-- logout.js 파일 로드 -->
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const navButtons = document.getElementById("nav-buttons");
+
+            // 로컬 스토리지에서 정보 가져오기
+            let token = localStorage.getItem("token");
+            let role = localStorage.getItem("role");
+            let nickname = localStorage.getItem("nickname");
+
+            if (!token || !role || !nickname) {
+                showLoggedOutUI();
+                return;
+            }
+
+            showLoggedInUI(nickname, role);
+        });
+
+        // 로그인된 UI 설정
+        function showLoggedInUI(nickname, role) {
+            const navButtons = document.getElementById("nav-buttons");
+
+            // 사용자 역할에 따라 UI 변경
+            let userInfo = `<span class="nickname">안녕하세요, ${nickname} 님!</span>`;
+            if (role === "ROLE_ADMIN") {
+                userInfo = `<div class="l-button" onclick="window.location.href='/admin/category'">관리자</div>`;
+            }
+
+            // 로그아웃 버튼 추가 (JS로 직접 추가)
+            navButtons.innerHTML = `
+        ${userInfo}
+        <div class="lo-button" onclick="logout()">로그아웃</div>
+    `;
+        }
+
+        // 로그인되지 않은 UI 설정
+        function showLoggedOutUI() {
+            const navButtons = document.getElementById("nav-buttons");
+            navButtons.innerHTML = `
+        <div class="l-button" onclick="window.location.href='/login'">로그인</div>
+        <div class="j-button" onclick="window.location.href='/signup'">회원 가입</div>
+    `;
+        }
+    </script>
+</head>
+<body>
+	<div class="nav">
+		<div class="nav-inner">
+			<!-- 왼쪽 로고 -->
+			<div class="left-header">
+				<a href="/" class="logo">showU</a>
+			</div>
+			<span class="gallery" onclick="window.location.href='/gallery'">Gallery</span>
+			<!-- 오른쪽 버튼 -->
+			<div class="login-box" id="nav-buttons">
+				<!-- JavaScript에서 동적으로 내용 변경 -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

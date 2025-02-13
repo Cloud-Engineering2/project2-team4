@@ -1,0 +1,78 @@
+/* login.css */
+
+.logo-login {
+    display: inline-block; /* 블록 성질을 부여하여 margin-bottom 적용 가능 */
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+
+    font-size: 40px;
+    color: #4635B1;
+    text-decoration: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.login {
+    width: 100%;
+    max-width: 500px;
+    height: 50px;
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 20px; /* 글자 크기 키움 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4635B1;
+    color: white;
+    text-align: center;
+
+    /* 🔹 상하좌우 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.joinLetters {
+    font-family: "Gothic A1", serif;
+    font-weight: 600;
+    text-decoration: none;
+    font-style: normal;
+    font-size: 17px;
+    text-align: center;
+    color: #4635B1;
+}
+
+
+/* logoutButton.css */
+.logout {
+    width: auto;  /* width를 auto로 설정하여 내용에 맞게 자동으로 크기 조정 */
+    height: 25px;
+    padding: 0 10px;  /* 좌우 여백 추가 */
+    font-family: "Gothic A1", serif;
+    font-style: normal;
+    font-size: 11px;  /* 폰트 크기 조정 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4635B1;  /* 버튼 배경 색상 */
+    color: white;
+    text-align: center;
+    line-height: 30px;  /* 텍스트가 버튼 가운데 오도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout:hover {
+    background-color: rgb(215, 210, 242);
+    color: #4635B1;
+}
+
+.logoutLetters {
+    font-family: "Gothic A1", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;  /* 폰트 크기 일관성 있게 수정 */
+}
+
+

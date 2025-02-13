@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Category</title>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/nav.css">
+<link rel="stylesheet" type="text/css" href="/css/category.css">
+<link rel="stylesheet" href="/css/init.css">
+<script th:inline="javascript">
+		
+		function getUserIdFromToken() {
+	        let token = localStorage.getItem("token");
+	        if (!token) return null;
+	
+	        try {
+	            let payload = JSON.parse(atob(token.split('.')[1])); // Base64 디코딩
+	            console.log("📌 디코딩된 JWT Payload:", payload); // 디버깅용 로그
+	            return payload.uid || null; // ✅ "uid" 값 가져오기
+	        } catch (error) {
+	            console.error("토큰 디코딩 실패:", error);
+	            return null;
+	        }
+	    }
+	    
+		// 카테고리 수정 함수
+		function editCategory(cid) {
+			
+			// 📌 토큰 가져오기
+	        let token = localStorage.getItem("token");
+	        if (!token) {
+	            alert("❌ 로그인 후 이용하세요!");
+	            return;
+	        }
+	
+	        // 📌 토큰에서 uid 추출
+	        let userId = getUserIdFromToken();
+	        if (!userId) {
+	            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+	            return;
+	        }
+			// 기존 카테고리명
+            const currentName = document.querySelector(`#category-name-${cid}`).textContent;
+		    // 수정할 카테고리명 입력 받기
+		    const newName = prompt("새 카테고리명을 입력하세요:", currentName);
+		
+			// 사용자가 취소
+		    if (newName === null) {
+		        return;  
+		    }
+		
+		    // 빈 값으로 확인을 눌렀을 경우
+		    if (newName.trim() === "") {
+		        alert("카테고리명은 빈 칸일 수 없습니다.");
+		        return;
+		    }
+		
+		    // PUT 요청으로 데이터 전송
+		    axios.put(`/api/admin/category/${cid}`, `cname=${newName}`, {
+		            headers: {
+		                "Authorization": `Bearer ${token}`,  // Authorization 헤더에 JWT 토큰 추가
+		                'Content-Type': 'application/x-www-form-urlencoded'
+		            }
+		        })
+		        .then(function(response) {
+		            alert("카테고리가 수정되었습니다.");
+		            location.reload(); // 수정 후 새로고침
+		        })
+		        .catch(function(error) {
+		            console.error("수정 실패:", error);
+		            alert("카테고리 수정에 실패했습니다.");
+		        });
+        }
+
+        // 카테고리 삭제 함수
+        function deleteCategory(cid) {
+			// 📌 토큰 가져오기
+	        let token = localStorage.getItem("token");
+	        if (!token) {
+	            alert("❌ 로그인 후 이용하세요!");
+	            return;
+	        }
+	
+	        // 📌 토큰에서 uid 추출
+	        let userId = getUserIdFromToken();
+	        if (!userId) {
+	            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+	            return;
+	        }
+			
+			
+            if (!confirm("정말 삭제하시겠습니까?")) {
+                return;
+            }
+            
+            // DELETE 요청으로 데이터 전송
+            axios.delete(`/api/admin/category/${cid}`, {
+	            headers: {
+	                "Authorization": `Bearer ${token}`  // Authorization 헤더에 JWT 토큰 추가
+	            }
+	        })
+            .then(function(response) {
+                alert("카테고리가 삭제되었습니다.");
+                location.reload(); // 새로고침
+            })
+            .catch(function(error) {
+                console.error("삭제 실패:", error);
+                alert("카테고리 삭제에 실패했습니다.");
+            });
+        }
+
+        // 카테고리 추가 함수
+        function addCategory() {
+			
+			// 📌 토큰 가져오기
+	        let token = localStorage.getItem("token");
+	        if (!token) {
+	            alert("❌ 로그인 후 이용하세요!");
+	            return;
+	        }
+	
+	        // 📌 토큰에서 uid 추출
+	        let userId = getUserIdFromToken();
+	        if (!userId) {
+	            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+	            return;
+	        }
+			
+            const newCategory = prompt("새 카테고리명을 입력하세요:");
+
+		    if (newCategory.trim() === "") {
+		        alert("카테고리명은 필수입니다.");
+		        return;
+		    }
+		
+		    // POST 요청으로 데이터 전송
+		    axios.post("/api/admin/category", `cname=${newCategory}`, {
+		            headers: {
+		                "Authorization": `Bearer ${token}`,  // Authorization 헤더에 JWT 토큰 추가
+		                'Content-Type': 'application/x-www-form-urlencoded'
+		            }
+		        })
+		        .then(function(response) {
+		            alert("새 카테고리가 추가되었습니다.");
+		            location.reload(); // 새로고침
+		        })
+		        .catch(function(error) {
+		            console.error("추가 실패:", error);
+		            alert("카테고리 추가에 실패했습니다.");
+		        });
+        }
+    </script>
+
+</head>
+<body>
+	<div th:replace="~{fragments/nav}"></div>
+	<h2 class="category">Category</h2>
+	<div class="row">
+		<table class="table" id="category-table">
+			<thead>
+				<tr>
+					<th class="category col-2"><a>Category name</a></th>
+					<th class="category col-2"><a>수정</a></th>
+					<th class="category col-2"><a>삭제</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="category : ${categories}">
+					<td class="name" id="category-cell-${category.id}"><span
+						th:id="'category-name-' + ${category.id}"
+						th:text="${category.name}">카테고리명</span></td>
+					<td class="edit">
+						<button id="edit" th:onclick="|editCategory(${category.id})|">수정</button>
+					</td>
+					<td class="delete">
+						<button class="delete-btn"
+							th:onclick="|deleteCategory(${category.id})|">삭제</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="add-category-btn">
+			<button onclick="addCategory()">카테고리 생성</button>
+		</div>
+	</div>
+	<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

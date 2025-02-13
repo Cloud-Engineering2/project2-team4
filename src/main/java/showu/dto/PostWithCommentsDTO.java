@@ -1,0 +1,52 @@
+package showu.dto;
+
+import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+import showu.entity.Post;
+
+@ToString
+@Getter
+@AllArgsConstructor
+public class PostWithCommentsDTO {
+    private Long id;
+    private String title;
+    private String content;
+    private String imageURL;
+    private String link;
+    private int likes;
+    private UserDTO userDTO;
+    private Set<CommentDTO> commentDTOs;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+    private CategoryDTO categoryDTO;  // 📌 추가됨
+
+    public static PostWithCommentsDTO of(Long id, String title, String content, String imageURL, String link, int likes,
+                                         UserDTO userDTO, Set<CommentDTO> commentDTOs, LocalDateTime createdDate, 
+                                         LocalDateTime modifiedDate, CategoryDTO categoryDTO) { // 📌 categoryDTO 추가됨
+        return new PostWithCommentsDTO(id, title, content, imageURL, link, likes, userDTO, commentDTOs, createdDate, modifiedDate, categoryDTO);
+    }
+
+    public static PostWithCommentsDTO from(Post post) {
+        return new PostWithCommentsDTO(
+                post.getPid(),
+                post.getTitle(),
+                post.getContent(),
+                post.getImageUrl(),
+                post.getLink(),
+                post.getPlike(),
+                UserDTO.from(post.getUser()),
+                post.getComments().stream()
+                        .map(CommentDTO::from)
+                        .collect(Collectors.toCollection(LinkedHashSet::new)),
+                post.getCreatedDate(),
+                post.getModifiedDate(),
+                post.getCategory() != null ? CategoryDTO.from(post.getCategory()) : null // 📌 Category 추가됨
+        );
+    }
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Header</title>
+<link rel="stylesheet" type="text/css" href="/css/etc.css">
+<link rel="stylesheet" href="/css/init.css">
+</head>
+<body>
+	<th:block th:fragment="headerLayout">
+		<header class="header">
+			<!-- 왼쪽 로고 -->
+			<div class="left-header">
+				<a href="/" class="logo">showU</a>
+			</div>
+
+			<!-- 오른쪽 별명과 로그아웃 버튼 -->
+			<div class="right-header">
+				<div class="nickname">안녕하세요, {nickname} 님!</div>
+				<div th:replace="~{fragments/logout}"></div>
+			</div>
+		</header>
+	</th:block>
+</body>
+</html>

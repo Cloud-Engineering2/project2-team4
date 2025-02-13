@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시글 수정</title>
+<link rel="stylesheet" type="text/css" href="/css/postmodify.css">
+<link rel="stylesheet" href="/css/init.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let token = localStorage.getItem("token");
+        if (!token) {
+            alert("❌ 로그인 후 이용하세요!");
+            location.href = '/login';
+            return;
+        }
+    	loadCategories();
+
+        // 드롭다운 버튼 클릭 시 열기
+        document.getElementById("selectedCategory").addEventListener("click", function() {
+            document.querySelector(".dropdown-content").classList.toggle("show");
+        });
+
+        // 드롭다운 바깥 클릭 시 닫기
+        window.addEventListener("click", function(event) {
+            if (!event.target.matches(".dropbtn")) {
+                document.querySelector(".dropdown-content").classList.remove("show");
+            }
+        });
+    });
+    function getUserIdFromToken() {
+        let token = localStorage.getItem("token");
+        if (!token) return null;
+
+        try {
+            let payload = JSON.parse(atob(token.split('.')[1])); // Base64 디코딩
+            console.log("📌 디코딩된 JWT Payload:", payload);
+            return payload.uid || null;
+        } catch (error) {
+            console.error("토큰 디코딩 실패:", error);
+            return null;
+        }
+    }
+
+    async function loadCategories() {
+        try {
+            const response = await fetch("/api/admin/categories");
+            const categories = await response.json();
+
+            const categoryMenu = document.getElementById("categoryMenu");
+            const selectedCategory = document.getElementById("selectedCategory");
+
+            categoryMenu.innerHTML = ""; // 기존 옵션 초기화
+
+            categories.forEach(category => {
+                const item = document.createElement("div");
+                item.textContent = category.name;
+                item.dataset.id = category.id;
+                item.classList.add("dropdown-item"); // 스타일 적용
+
+                item.addEventListener("click", function() {
+                    selectedCategory.textContent = category.name; // 버튼 텍스트 변경
+                    selectedCategory.dataset.id = category.id; // 선택한 ID 저장
+                    categoryMenu.classList.remove("show"); // 드롭다운 닫기
+                });
+
+                categoryMenu.appendChild(item);
+            });
+        } catch (error) {
+            console.error("❌ 카테고리 불러오기 실패:", error);
+        }
+    }
+
+
+    async function updatePost(postId) {
+        let token = localStorage.getItem("token");
+        if (!token) {
+            alert("❌ 로그인 후 이용하세요!");
+            return;
+        }
+
+        let userId = getUserIdFromToken();
+        if (!userId) {
+            alert("❌ 사용자 정보를 가져올 수 없습니다. 다시 로그인하세요!");
+            return;
+        }
+
+        let title = document.getElementById("title").value.trim();
+        let content = document.getElementById("content").value.trim();
+        let link = document.getElementById("link").value.trim();
+        let categoryId = document.getElementById("selectedCategory").dataset.id;
+
+        if (!title) {
+            alert("📌 제목을 입력하세요!");
+            return;
+        }
+        if (!content) {
+            alert("📌 내용을 입력하세요!");
+            return;
+        }
+        if (!categoryId) {
+            alert("📌 카테고리를 선택하세요!");
+            return;
+        }
+
+        let postData = {
+            id: postId,
+            user: { id: userId },
+            category: { id: categoryId },
+            title: title,
+            content: content,
+            link: link
+        };
+
+        try {
+            let response = await axios.put(`/api/post/${postId}`, postData, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            console.log("📌 서버 응답:", response.data);
+            if (response.status === 200) {
+                alert("✅ 게시글이 수정되었습니다.");
+                window.location.href = `/detail/${postId}`;
+            } else {
+                alert("⚠ 서버 응답이 예상과 다릅니다.");
+            }
+        } catch (error) {
+            console.error("❌ 수정 실패:", error);
+            alert("❌ 수정 실패! " + error.message);
+        }
+    }
+    function toggleDropdown() {
+        document.querySelector(".dropdown-content").classList.toggle("show");
+    }
+
+    // 클릭한 영역이 드롭다운이 아닐 경우 닫기
+    window.addEventListener("click", function(event) {
+        if (!event.target.matches(".dropbtn")) {
+            let dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                let openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains("show")) {
+                    openDropdown.classList.remove("show");
+                }
+            }
+        }
+    });
+    </script>
+</head>
+<body onload="loadCategories()">
+    <span id="categoryData" th:data-id="${post?.category?.id}" hidden></span>
+    <div th:replace="~{fragments/nav}"></div>
+
+    <div class="container">
+        <h2>게시글 수정</h2>
+
+        <div class="form-group">
+            <label for="title">제목:</label>
+            <input type="text" id="title" th:value="${post?.title}" />
+            <div class="dropdown">
+                <button class="dropbtn" id="selectedCategory">카테고리 선택</button>
+                <div class="dropdown-content" id="categoryMenu"></div>
+            </div>
+            <br>
+            <br>
+            <label for="content">내용:</label>
+            <textarea id="content" th:text="${post?.content}"></textarea>
+            <br>
+            <label for="link">링크:</label>
+            <input type="text" id="link" th:value="${post?.link}" />
+            <br>
+            <button class="edit-button button" th:onclick="|updatePost(${post?.pid})|">수정</button>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer}"></div>
+    <div th:replace="~{fragments/back}"></div>
+</body>
+</html>

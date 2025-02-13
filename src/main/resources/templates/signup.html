@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+<link rel="stylesheet" type="text/css" href="/css/signup.css">
+<link rel="stylesheet" href="/css/init.css">
+</head>
+
+<body>
+	<form action="/login" method="get">
+		<button id="goToLogin">로그인</button>
+	</form>
+	<h2 id="serviceName" class="logo-signup" onclick="location.href='/'">showU</h2>
+	<table class="mb_8">
+		<tr>
+			<td><input id="id" name="id" type="text" placeholder="Id"
+				required></td>
+		</tr>
+		<tr>
+			<td><input id="pw" name="pw" type="password"
+				placeholder="Password" required></td>
+		</tr>
+		<tr>
+			<td><input id="nickname" name="nickname" type="text"
+				placeholder="Nickname" required></td>
+		</tr>
+	</table>
+	<div id="warning" class="mb_8 disabled">이미 존재하는 사용자 정보입니다.</div>
+	<div id="signUp">회원 가입</div>
+
+	<div th:replace="~{fragments/footer}"></div>
+
+</body>
+<script>
+	document.getElementById('signUp').addEventListener('click', function(event) {
+		var isAvailable = checkAvailableUserInfo().isAvailable;
+		var message = checkAvailableUserInfo().message;
+		var responseStatus = false;
+
+		if(isAvailable){
+		    event.preventDefault();
+		    
+		    fetch('/api/signup', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify({
+		            "userId": document.getElementById('id').value,
+		            "userPw": document.getElementById('pw').value,
+		            "nickname": document.getElementById('nickname').value
+		        })
+		    })
+			.then(async response => {
+				const message = await response.text();
+				return {
+					status : response.ok,
+					message : message
+				}
+			})
+		    .then(data => {
+		        if (data.status) {
+		            window.location.href = '/login';
+		        } else {
+		            document.getElementById('warning').style.display = 'block';
+		            document.getElementById('warning').innerHTML = data.message;
+		        }
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		    });
+		} else {
+			document.getElementById('warning').style.display = 'flex';
+			document.getElementById('warning').innerHTML = '<img id="warningIcon" src="/icons/Warning.png"/>' + message;
+		}
+
+	});
+	
+	function checkAvailableUserInfo (){
+		var isAvailable = true;
+		var message = "성공적으로 가입 가능합니다.";
+		var hasEmptyValue = false;
+		
+		var id = document.getElementById('id').value;
+		var pw = document.getElementById('pw').value;
+		var nickname = document.getElementById('nickname').value;
+		
+		if(id == null || id == ''){
+			isAvailable = false;
+			hasEmptyValue = true;
+			message = "아이디를 입력해 주세요.";
+		} else if(pw == null || pw == ''){
+			isAvailable = false;
+			hasEmptyValue = true;
+			message = "비밀번호를 입력해 주세요.";
+		} else if(nickname == null || nickname == ''){
+			isAvailable = false;
+			hasEmptyValue = true;
+			message = "닉네임을 입력해 주세요.";
+		}
+		
+		if(!hasEmptyValue){
+			if(id.length < 4 || id.length > 20) {
+				isAvailable = false;
+				message = "아이디는 4자 이상 20자 이하여야 합니다.";
+			}
+
+			if(pw.length < 4 || pw.length > 20){
+				isAvailable = false;
+				message = "비밀번호는 4자 이상 20자 이하여야 합니다.";
+			}
+
+			if((nickname.length > 20)) {
+				isAvailable = false;
+				message = "닉네임은 최대 20자까지 가능합니다.";
+			}
+		}
+		
+		return {
+			isAvailable : isAvailable,
+			message : message
+		}
+	}
+</script>
+</html>

@@ -1,0 +1,189 @@
+@charset "UTF-8";
+
+* {
+	box-sizing: border-box;
+}
+
+h1.logo {
+    color: #4635B1;
+    font-size: 30px; /* 적당한 크기로 조절 */
+    font-weight: bold;
+    margin-left: 20px; /* 왼쪽 여백 추가 */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 화면 높이를 꽉 채우도록 */
+    max-width: 100vw;
+    background-color: black;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    /*align-items: center;*/
+    width: fit-content;
+    height: fit-content;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 1px 1px 20px 10px rgba(255, 255, 255, 0.8);
+}
+
+.image-section {
+    width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+}
+
+.image-section img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.username-and-button-section{
+    display: flex;
+    justify-content: space-between; /* 좌우 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    background-color: black; /* 배경색 */
+    border-bottom: 1px solid #dbdbdb; /* 하단 테두리 */
+    padding-bottom: 20px;
+}
+
+.button {
+    background-color: #4635B1;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold
+}
+.button:hover {
+    opacity: 0.7;
+}
+
+.comment-section {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: black;
+    color: white;
+}
+
+.comment-section h3 {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.comments {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 400px;
+    border-bottom: 1px solid #dbdbdb;
+    padding-bottom: 10px;
+    color: white;
+}
+.comment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.commentButtonBox {
+    display: inline-flex; /* 내부 요소 크기에 맞게 조정 */
+}
+
+.commentButton {
+    background: none;
+    color: #65558F;
+    padding: 6px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+}
+
+.cancel-button {
+    background: black;
+    color: #E50C42;
+    border: none;
+}
+
+.save-button {
+    background: black;
+    color: #AEEA94;
+    border: none;
+}
+.commentButton:hover {
+    color: white;
+}
+.comment p{
+    margin: 0;
+    padding-bottom: 3px;
+}
+
+.likes {
+
+    padding-top: 10px;
+
+}
+.like-wrap {
+    display: flex;
+    width: 20px;
+    height: 20px;
+}
+
+.like-wrap img {
+    transition: all 0.2s;
+    cursor: pointer;
+    width: 20px; /* 부모의 폰트 크기를 기준으로 크기 설정 */
+    height: auto; /* 비율 유지 */
+}
+
+.like-wrap img:hover {
+     opacity: 0.5;
+}
+
+.like-text {
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.add-comment {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.add-comment input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    justify-content: space-between;
+}
+.link {
+    text-decoration: none;
+    color: #FFFBCA;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #fff;
+}
+
+.link:visited, 
+.link:active, 
+.link:hover {
+    color: #FFFBCA;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.content {
+	padding-bottom: 6px;
+    border-bottom: 1px solid #fff;
+}

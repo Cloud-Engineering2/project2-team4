@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Detail View</title>
+<link rel="stylesheet" type="text/css" href="/css/postdetail.css">
+<link rel="stylesheet" href="/css/init.css">
+<script src="/js/auth.js"></script>
+<script>
+        let token = null;
+        let userId = null;
+        function checkToken() {
+            // 📌 토큰 가져오기
+            token = localStorage.getItem("token");
+            if (!token) {
+                return;
+            }
+
+            // 📌 토큰에서 uid 추출
+            userId = getUserIdFromToken(token);
+            if (!userId) {
+                return;
+            }
+        }
+        
+        checkToken();
+        
+        function editPost(postId, postUserId) {
+            if (!userId) {
+                alert("❌ 로그인 후 이용하세요!");
+                return;
+            }
+
+            console.log(`🔍 로그인한 userId: ${userId}, 게시글 userId: ${postUserId}`);
+
+            if (userId == postUserId) {
+                window.location.href = `/modify/${postId}`;
+            } else {
+                alert("❌ 본인이 작성한 게시글만 수정할 수 있습니다!");
+            }
+        }
+        
+        function deletePost(postId, postUserId) {
+            if (!userId) {
+                alert("❌ 로그인 후 이용하세요!");
+                return;
+            }
+
+            console.log(`🔍 로그인한 userId: ${userId}, 게시글 userId: ${postUserId}`);
+
+            if (userId == postUserId) {
+                if (confirm("⚠️ 정말 삭제하시겠습니까?")) {
+                    const token = localStorage.getItem("token");
+
+                    fetch(`/api/post/${postId}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        console.log("✅ 응답 상태 코드:", response.status);
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log("✅ 삭제 성공 응답:", data);
+                        alert("📌 게시글이 삭제되었습니다.");
+                        
+                        window.location.href = "/gallery";
+                    })
+                    .catch(error => {
+                        console.error("❌ 게시글 삭제 실패:", error);
+                    });
+                }
+            } else {
+                alert("❌ 본인이 작성한 게시글만 삭제할 수 있습니다!");
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+	<th:block th:replace="~{fragments/nav}"></th:block>
+
+	<div class="container">
+
+
+		<div class="content-wrapper">
+			<div class="image-section">
+				<img th:src="${post.imageURL}" alt="Post Image">
+			</div>
+			<div class="comment-section">
+				<div class="username-and-button-section">
+					<h2 id="created-by">
+						<span th:text="'by '"></span><span th:text="${post?.createdBy}"></span>
+					</h2>
+					<div class="edit-and-delete-button">
+						<button class="edit-button button"
+							th:onclick="|editPost(${post?.pid}, ${post?.uid})|">EDIT</button>
+						<button class="delete-button button"
+							th:onclick="|deletePost(${post?.pid}, ${post?.uid})|">DELETE</button>
+					</div>
+				</div>
+
+				<h3>제목</h3>
+				<div class="content" th:text="${post?.content}">사진 내용</div>
+
+				<h3>링크</h3>
+				<a class="link" th:href="${post?.link}" target="_blank"
+					th:text="${post?.link}">참조 링크</a>
+
+				<h3>댓글</h3>
+				<div class="comments" id="comments">
+					<div th:class="|comment comment${comment.cmid}|"
+						th:each="comment : ${comments}" th:data-uid="${comment.uid}">
+						<p th:text="|${comment.createdBy}: ${comment.content}|">댓글1:
+							멋진 사진이네요!</p>
+						<div class="commentButtonBox">
+							<button class="edit-button commentButton"
+								onclick="EditComment(event)" th:data-cmid="${comment.cmid}">EDIT</button>
+							<button class="delete-button commentButton"
+								onclick="DeleteComment(event)" th:data-cmid="${comment.cmid}">DELETE</button>
+						</div>
+					</div>
+				</div>
+
+
+				<!--           <h3>좋아요</h3>-->
+				<div class="likes">
+					<div class="like-wrap">
+						<img th:src="@{/icons/like-removebg-icon.png}"
+							th:data-post-id="${post.pid}" alt="Like Icon"
+							onclick="PostLike(this)">
+						<p class="like-text" th:text="${post?.plike}">좋아요 수</p>
+					</div>
+				</div>
+
+
+
+				<!-- ✅ postId를 가져오기 위한 hidden input 추가 -->
+				<input type="hidden" id="pid" th:value="${post?.pid}">
+
+				<div class="add-comment">
+					<input type="text" id="commentInput" name="content"
+						placeholder="댓글 추가...">
+					<button id="submitComment" class="button">게시</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<th:block th:replace="~{fragments/footer :: footerLayout}"></th:block>
+
+
+	<script th:inline="javascript">
+
+    // 댓글 작성자일 경우에만, 게시물 작성자일 경우에만 수정/삭제 버튼 보이게 처리
+	document.addEventListener('DOMContentLoaded', function() {
+		// ✅ 게시물 작성자일 경우에만 수정/삭제 버튼 보이게 처리
+	    let uid = "[[${post.uid}]]";  // 문자열로 처리
+	    if(uid != userId){
+			document.getElementsByClassName('edit-and-delete-button')[0].style.display = 'none';
+		}
+
+		// ✅ 댓글 작성자일 경우에만 수정/삭제 버튼 보이게 처리
+        let commentElements = document.querySelectorAll('.comment'); // 모든 댓글 요소 선택
+        commentElements.forEach(function(commentDiv) {
+            let commentUid = commentDiv.getAttribute('data-uid'); // 각 댓글의 UID 값을 가져옴
+
+            // comment.uid와 userId가 일치하지 않으면 버튼 숨기기
+            if (commentUid != userId) {
+                let buttonBox = commentDiv.querySelector('.commentButtonBox');
+                if (buttonBox) {
+                    buttonBox.style.display = 'none'; // 버튼 박스를 숨김
+                }
+            }
+        });
+
+        // ✅ userId가 없을 경우 댓글 작성 버튼 비활성화
+        if (!userId) {
+            let commentInput = document.getElementById("commentInput");
+            let submitButton = document.getElementById("submitComment");
+
+            // console.log("submitButton: ", submitButton);
+
+            // 입력 필드 비활성화
+            commentInput.disabled = true;
+            commentInput.readOnly = true;  // 입력 못 하게
+            commentInput.value = "로그인 후 댓글을 작성할 수 있습니다."; // 안내 메시지
+            commentInput.style.color = "red";
+            commentInput.style.opacity = "0.8";
+
+            // 버튼 비활성화
+            submitButton.disabled = true;
+            submitButton.style.opacity = "0.5";
+            submitButton.style.cursor = "not-allowed";
+        }
+
+
+	});
+
+    document.getElementById("submitComment").addEventListener("click", function(event) {
+        event.preventDefault(); // 기본 동작 방지
+
+        let postId = document.getElementById("pid").value;
+        let commentInput = document.getElementById("commentInput");
+        let commentText = commentInput.value.trim();
+
+        if (!commentText) return; // 빈 댓글 방지
+
+        // ✅ JSON 형식으로 POST 요청
+        fetch("/api/comments", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ pid: postId, uid: userId, content: commentText })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("✅ 댓글 추가 성공:", data);
+
+                // ✅ 새로운 댓글을 동적으로 추가
+                addComment(data);
+                commentInput.value = ""; // 입력 필드 초기화
+            })
+            .catch(error => {
+                console.error("❌ 댓글 추가 실패:", error);
+            });
+    });
+    
+    function addComment(comment) {
+	    // 1. 댓글을 추가할 부모 요소 선택
+	    const commentSection = document.getElementById('comments');
+	
+	    // 2. 새로운 div 요소 생성
+	    const commentDiv = document.createElement('div');
+	    commentDiv.classList.add('comment', `comment${comment.cmid}`);
+	
+	    // 3. 댓글 내용 추가
+	    const commentText = document.createElement('p');
+	    commentText.textContent = `${comment.createdBy}: ${comment.content}`;
+	    commentDiv.appendChild(commentText);
+	
+	    // 4. 버튼 박스 생성
+	    const buttonBox = document.createElement('div');
+	    buttonBox.classList.add('commentButtonBox');
+	
+	    // 5. EDIT 버튼 생성
+	    const editButton = document.createElement('button');
+	    editButton.classList.add('edit-button', 'commentButton');
+	    editButton.textContent = 'EDIT';
+        editButton.setAttribute('data-cmid', comment.cmid);
+	    editButton.onclick = (event) => EditComment(event);  // 수정 이벤트 연결
+	
+	    // 6. DELETE 버튼 생성
+	    const deleteButton = document.createElement('button');
+	    deleteButton.classList.add('delete-button', 'commentButton');
+	    deleteButton.textContent = 'DELETE';
+	    deleteButton.setAttribute('data-cmid', comment.cmid);
+	    deleteButton.onclick = (event) => DeleteComment(event);  // 삭제 이벤트 연결
+	
+	    // 7. 버튼 박스에 버튼 추가
+	    buttonBox.appendChild(editButton);
+	    buttonBox.appendChild(deleteButton);
+	
+	    // 8. 댓글 div에 버튼 박스 추가
+	    commentDiv.appendChild(buttonBox);
+	
+	    // 9. 최종적으로 댓글 섹션에 댓글 추가
+	    commentSection.appendChild(commentDiv);
+	}
+
+    function DeleteComment (e){
+        const cmid = e.target.dataset.cmid;
+
+        fetch(`/api/comments/${cmid}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: userId })
+        })
+            .then(response => console.log(response.json()))
+            .catch(error => {
+                    console.error("❌ 댓글 삭제 실패:", error);
+                });
+
+        document.querySelector(`.comment${cmid}`).remove();
+    }
+
+
+    function EditComment(e) {
+        // 클릭된 버튼에서 cmid 추출
+        const cmid = e.target.dataset.cmid;
+
+        // cmid가 제대로 추출되었는지 확인
+        console.log("cmid:", cmid);
+
+        // cmid가 undefined일 경우 오류 처리
+        if (!cmid) {
+            console.error("❌ cmid 값이 없습니다.");
+            return;
+        }
+
+        // data-cmid 속성을 이용해 해당 댓글 div 요소 찾기
+        const commentDiv = e.target.closest(".comment"); // 현재 댓글 요소 찾기
+
+        // 기존 댓글 내용과 버튼들 숨기기
+        const commentText = commentDiv.querySelector("p");
+        const originalContent = commentText.textContent.split(": ")[1];
+        const editButton = commentDiv.querySelector(".edit-button");
+        const deleteButton = commentDiv.querySelector(".delete-button");
+
+        commentText.style.display = "none";
+        editButton.style.display = "none";
+        deleteButton.style.display = "none";
+
+        // 댓글 수정 입력 필드와 저장/삭제 버튼 만들기
+        const inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.value = originalContent;  // 기존 댓글 내용 기본값으로 설정
+        inputField.classList.add("comment-edit-input");
+
+        const cancelButton = document.createElement("button");
+        cancelButton.textContent = "CANCEL";
+        cancelButton.classList.add("cancel-button");
+        cancelButton.onclick = function () {
+            // 입력 필드와 버튼들 제거
+            commentDiv.querySelector(".comment-edit-input").remove();
+            commentDiv.querySelector(".cancel-button").remove();
+            commentDiv.querySelector(".save-button").remove();
+
+            // 기존 내용과 editButton과 deleteButton 다시 보이게
+            commentText.style.display = "block";
+            editButton.style.display = "inline-block";
+            deleteButton.style.display = "inline-block";
+
+        };
+
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "SAVE";
+        saveButton.classList.add("save-button");
+        saveButton.onclick = function () {
+            SaveEditedComment(cmid, commentDiv, inputField.value, editButton, deleteButton);
+        };
+
+        // 수정할 입력 필드와 버튼들을 댓글 div에 추가
+        commentDiv.appendChild(inputField);
+        commentDiv.appendChild(cancelButton);
+        commentDiv.appendChild(saveButton);
+    }
+
+
+    function SaveEditedComment(cmid, commentDiv, newContent, editButton, deleteButton) {
+
+        fetch(`/api/comments/${cmid}`, {
+            method: "PUT", // 수정 요청
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                {
+                    uid: userId,
+                    content: newContent
+                })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("✅ 댓글 수정 성공:", data);
+
+                // 입력 필드와 버튼 제거
+                commentDiv.querySelector(".comment-edit-input").remove();
+                commentDiv.querySelector(".cancel-button").remove();
+                commentDiv.querySelector(".save-button").remove();
+
+                // 수정된 댓글 내용 업데이트 후 표시
+                const commentText = commentDiv.querySelector("p");
+                commentText.textContent = `${data.createdBy}: ${data.content}`;
+                commentText.style.display = "block";
+
+                // editButton과 deleteButton 다시 보이게
+                editButton.style.display = "inline-block";
+                deleteButton.style.display = "inline-block";
+            })
+            .catch(error => {
+                console.error("❌ 댓글 수정 실패:", error);
+            });
+    }
+
+
+    // ✅ 좋아요 버튼 클릭 이벤트
+    async function PostLike(likeIcon)  {
+        // * 이렇게 가져오는 것도 가능
+        // const postId = document.getElementById("pid").value;
+        const postId = likeIcon.dataset.postId;
+
+        console.log(postId);
+
+        try {
+            const res = await fetch(`/api/post/like/${postId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!res.ok) {
+                throw new Error("서버 오류");
+            }
+
+            const data = await res.json();
+
+            // 해당 아이콘과 같은 `.like-wrap` 내의 `.like-text` 찾기
+            const likeText = likeIcon.closest(".like-wrap").querySelector(".like-text");
+
+            if (likeText) {
+                // 현재 좋아요 개수 가져오기 (숫자로 변환)
+                let currentLikes = parseInt(likeText.textContent, 10);
+
+                // ✅ 좋아요 개수 +1 로 업데이트
+                likeText.textContent = currentLikes + 1;
+            }
+
+
+
+
+        } catch (error) {
+            console.error("Error updating likes:", error);
+        }
+    }
+
+    // ✅ 좋아요 취소 클릭 이벤트
+    async function PostDisike(likeIcon)  {
+        // * 이렇게 가져오는 것도 가능
+        // const postId = document.getElementById("pid").value;
+        const postId = likeIcon.dataset.postId;
+
+        console.log(postId);
+
+        try {
+            const res = await fetch(`/api/post/like/${postId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!res.ok) {
+                throw new Error("서버 오류");
+            }
+
+            const data = await res.json();
+
+            // 해당 아이콘과 같은 `.like-wrap` 내의 `.like-text` 찾기
+            const likeText = likeIcon.closest(".like-wrap").querySelector(".like-text");
+
+            if (likeText) {
+                // 현재 좋아요 개수 가져오기 (숫자로 변환)
+                let currentLikes = parseInt(likeText.textContent, 10);
+
+                // ✅ 좋아요 개수 +1 로 업데이트
+                likeText.textContent = currentLikes + 1;
+            }
+
+
+
+
+        } catch (error) {
+            console.error("Error updating likes:", error);
+        }
+    }
+
+
+
+
+
+</script>
+	<div th:replace="~{fragments/back}"></div>
+</body>
+</html>

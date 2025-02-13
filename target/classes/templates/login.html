@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>showU - Login</title>
+<link rel="stylesheet" type="text/css" href="/css/main.css">
+<link rel="stylesheet" type="text/css" href="/css/signup.css">
+<link rel="stylesheet" type="text/css" href="/css/login.css">
+<link rel="stylesheet" href="/css/init.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+	document.getElementById("serviceName").addEventListener("click", (e) => console.log(e));
+
+	function login() {
+		let user_id = document.getElementById("id").value.trim();
+		let user_pw = document.getElementById("pw").value.trim();
+		let warning = document.getElementById("warning");
+
+		// 입력 값이 비었을 때 경고 메시지 표시
+		if (!user_id) {
+			warning.textContent = "아이디를 입력해 주세요.";
+			warning.classList.remove("disabled");
+			return;
+		}
+
+		if (!user_pw) {
+			warning.textContent = "비밀번호를 입력해 주세요.";
+			warning.classList.remove("disabled");
+			return;
+		}
+
+		// 만약의 상황을 대비 - 세션 스토리지에 저장하기 전 값이 존재하면 삭제하도록 처리
+		if ((localStorage.getItem("token") != null) || (localStorage.getItem("role") != null) || (localStorage.getItem("nickname") != null))
+		{
+			localStorage.removeItem("token");
+			localStorage.removeItem("nickname");
+			localStorage.removeItem("role");
+		}
+
+		axios.post("/api/login", { userId: user_id, userPw: user_pw })
+				.then(response => {
+					console.log("✅ 로그인 성공! 토큰 :", response.data.token);
+					localStorage.setItem("token", response.data.token);
+					localStorage.setItem("nickname", response.data.nickname);
+					localStorage.setItem("role", response.data.role);
+
+					window.location.href = "/"; // 로그인 성공 후 홈으로 이동
+				})
+				.catch(error => {
+					console.error("❌ 로그인 실패 : ", error);
+					warning.classList.remove("disabled");
+
+					// 서버에서 응답이 온 경우 (에러 메시지 표시)
+					if (error.response) {
+						let status = error.response.status; // HTTP 상태 코드
+						let msg = error.response.data?.message || "로그인 중 오류가 발생했습니다.";
+
+						if (status === 401) {
+							msg = "아이디 또는 비밀번호가 올바르지 않습니다.";
+						} else if (status === 403) {
+							msg = "접근이 제한된 계정입니다.";
+						}
+
+						warning.textContent = msg;
+					} else {
+						warning.textContent = "서버와 연결이 원활하지 않습니다.";
+					}
+				});
+	}
+	</script>
+</head>
+<body>
+
+	<h2 id="serviceName" class="logo-login" onclick="location.href='/'">showU</h2>
+<!--	<span id="serviceName" class="logo-login" onclick="location.href='/'">showU</span>-->
+
+<!--	<div>-->
+<!--		<a href="/" class="logo-login">showU</a>-->
+<!--	</div>-->
+
+
+	<table class="mb_8">
+		<tr>
+			<td><input id="id" name="id" type="text" placeholder="Id"
+				required class="gothic-a1-regular"></td>
+		</tr>
+		<tr>
+			<td><input id="pw" name="pw" type="password"
+				placeholder="Password" required class="gothic-a1-regular"></td>
+		</tr>
+	</table>
+
+	<div id="warning" class="mb_8 disabled"></div>
+
+	<div class="login gothic-a1-regular" onclick="login()">로그인</div>
+
+	<p id="goToSignup" class="mt_10">
+		<a href="/signup" style="text-decoration: none; color: #4635B1;" class="joinLetters">회원 가입</a>
+	</p>
+
+	<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>

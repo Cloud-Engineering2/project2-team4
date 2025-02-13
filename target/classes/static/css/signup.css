@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+body {
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+}
+p {
+    padding: 0;
+    margin: 0;
+}
+table {
+    width: 100%;
+    max-width: 500px;
+    border : 1px solid #e8e8e8;
+    border-spacing : initial;
+    border-radius: 5px;
+}
+table tr {
+	height: 50px;
+}
+table td {
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+table tr:not(:last-child) td {
+    border-bottom: 1px solid #e8e8e8;
+}
+input {
+    width : 96%;
+    border : none;
+    outline: none;
+    font-size: 11px;
+}
+
+.w_per_50 {
+    width: 50%;
+}
+.h_per_100 {
+    height: 100%; 
+}
+.mt_10 {
+    margin-top: 10px;
+}
+.mb_5 {
+    margin-bottom: 5px;
+}
+.mr_5 {
+    margin-right: 5px;
+}    
+.mb_8 {
+    margin-bottom: 8px;
+}
+.disabled {
+	display: none;
+}
+
+.logo-signup {
+    display: inline-block; /* 블록 성질을 부여하여 margin-bottom 적용 가능 */
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: #4635B1;
+    text-decoration: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+
+#goToLogin {
+    position: absolute;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: "Gothic A1", sans-serif;
+    color: #4635B1;
+
+    right: 30px;
+    top: 30px;
+    cursor: pointer;
+    border: none;
+	background: none;
+}
+
+#goToLogin:hover {
+    opacity: 0.7;
+}
+#serviceName{
+    color: #4635B1;
+}
+#signUp {
+    width: 100%;
+    max-width: 500px;
+    height: 50px;
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    border : none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4635B1;
+    color: white;
+    text-align: center;
+	line-height: 28px;
+
+    /* 🔹 상하좌우 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#signUp:hover {
+    background-color: rgb(215, 210, 242);
+    color : black;
+}
+#warning {
+    font-family: "Gothic A1", sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+	color: red;
+    align-items: center;
+}
+#warningIcon {
+    margin-right: 5px;
+    height: 13px; /* 🔹 기존 10px → 14px로 키움 */
+    width: auto; /* 🔹 비율 유지하면서 크기 조절 */
+}
