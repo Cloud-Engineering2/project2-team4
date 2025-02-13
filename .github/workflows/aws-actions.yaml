@@ -1,10 +1,10 @@
 name: showu With Github Actions - develop
 
 on:
-  workflow_dispatch
-  # push:
-  #   branches:
-  #     - develop
+  #workflow_dispatch
+  push:
+    branches:
+      - develop
   #  paths-ignore:
   #    - 'manifest/**'
       
@@ -45,11 +45,8 @@ jobs:
 
       - name: Configure AWS credentials 
         run: |
-          echo ${{ secrets.ACCESS_KEY_ID }}
-          echo ${{ secrets.SECRET_ACCESS_KEY }} 
-          echo ${{ secrets.REGION }}
-          aws configure set aws_access_key_id ${{ secrets.ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.SECRET_ACCESS_KEY }} 
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
           aws configure set default.region ${{ secrets.REGION }}
           aws configure set output json
           
