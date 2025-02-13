@@ -87,14 +87,16 @@
 
 	<div class="container">
 
-	
+
 		<div class="content-wrapper">
 			<div class="image-section">
 				<img th:src="${post.imageURL}" alt="Post Image">
 			</div>
 			<div class="comment-section">
 				<div class="username-and-button-section">
-					<h2 id="created-by" th:text="${post?.createdBy}">유저 이름</h2>
+					<h2 id="created-by">
+						<span th:text="'by '"></span><span th:text="${post?.createdBy}"></span>
+					</h2>
 					<div class="edit-and-delete-button">
 						<button class="edit-button button"
 							th:onclick="|editPost(${post?.pid}, ${post?.uid})|">EDIT</button>
@@ -103,14 +105,12 @@
 					</div>
 				</div>
 
-				<h3>작성자</h3>
-				<div class="title" th:text="${post?.createdBy}">사진 제목</div>
-
 				<h3>제목</h3>
 				<div class="content" th:text="${post?.content}">사진 내용</div>
 
 				<h3>링크</h3>
-				<div class="link" th:text="${post?.link}">참조 링크</div>
+				<a class="link" th:href="${post?.link}" target="_blank"
+					th:text="${post?.link}">참조 링크</a>
 
 				<h3>댓글</h3>
 				<div class="comments" id="comments">
