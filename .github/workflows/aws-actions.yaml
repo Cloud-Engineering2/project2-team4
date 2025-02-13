@@ -60,6 +60,12 @@ jobs:
         run: |
           aws ecr get-login-password --region ${{ secrets.REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECRID }}.dkr.ecr.${{ secrets.REGION }}.amazonaws.com
           docker buildx build --platform linux/amd64 -t ${{ secrets.ECRURL }}:${{ github.sha }} --push .
+      
+      - name: Cache Docker Layers
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.docker
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}-${{ github.run_id }}
 
 
   cd:
