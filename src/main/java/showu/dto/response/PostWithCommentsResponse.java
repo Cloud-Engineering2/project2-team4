@@ -42,7 +42,7 @@ public class PostWithCommentsResponse {
             postWithCommentsDTO.getImageURL(),
             postWithCommentsDTO.getLink(),
             postWithCommentsDTO.getLikes(),
-            postWithCommentsDTO.getUserDTO().getUserId(),
+            postWithCommentsDTO.getUserDTO().getNickname(),
             postWithCommentsDTO.getCreatedAt(),
             getCommentResponses(postWithCommentsDTO.getCommentDTOs()),
             postWithCommentsDTO.getCategoryDTO() != null ? CategoryResponse.from(postWithCommentsDTO.getCategoryDTO()) : null // 📌 추가
