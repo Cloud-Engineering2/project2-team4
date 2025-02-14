@@ -8,18 +8,28 @@
     opacity: 1;
     transition: 0.2s ease;
     cursor: pointer;
-    background-color: rgb(0, 0, 0, 0.1);
+    background-color: lightgrey;
     width: 50px;
     height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center; /* 수직 + 수평 정렬 한 번에 */
     border-radius: 4px;
-    padding-bottom: 10px;
-    &:hover {
-    	opacity: 0.7;
-    	padding-right: 10px;
-    	background-color: #fff;
-    }
+    line-height: 1;
+
 }
+
+.back p {
+    font-size: 40px;
+    margin: 0;  /* 기본 margin 제거 */
+    line-height: 1;  /* 폰트 높이를 조정 */
+    padding-top: 3px;
+}
+
+.back:hover {
+    opacity: 0.7;
+    padding-right: 10px;
+    background-color: #fff;
+}
+
+
 

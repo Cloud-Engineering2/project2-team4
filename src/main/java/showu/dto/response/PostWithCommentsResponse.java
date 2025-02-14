@@ -41,7 +41,7 @@ public class PostWithCommentsResponse {
             postWithCommentsDTO.getContent(),
             postWithCommentsDTO.getImageURL(),
             postWithCommentsDTO.getLink(),
-                postWithCommentsDTO.getLikes(),
+            postWithCommentsDTO.getLikes(),
             postWithCommentsDTO.getUserDTO().getUserId(),
             postWithCommentsDTO.getCreatedAt(),
             getCommentResponses(postWithCommentsDTO.getCommentDTOs()),
