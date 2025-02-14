@@ -1,8 +1,8 @@
 name: showu With Github Actions - develop
 
 on:
-  # workflow_dispatch
-  push:
+  workflow_dispatch
+  #push:
     # branches:
     #   - develop
   #  paths-ignore:
