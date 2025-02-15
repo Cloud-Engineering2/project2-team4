@@ -133,3 +133,34 @@
     justify-content: space-between;
     padding: 8px 0px 8px 0px;
 }
+
+
+/* 반응형 설정 */
+/* 반응형 설정: 화면 크기에 맞게 요소들만 축소 */
+@media screen and (max-width: 768px) {
+    .nav {
+        padding: 5px 0px; /* 패딩을 조금 줄여서 nav 바가 더 컴팩트해지도록 */
+    }
+
+    .nav-inner {
+        padding: 5px 0px; /* 내부 패딩도 줄여서 요소들이 더 축소되도록 */
+    }
+
+    .gallery {
+        font-size: 14px; /* 작은 화면에서 글자 크기 줄이기 */
+    }
+
+    .menu-box .menu-button {
+        font-size: 12px; /* 메뉴 버튼 글자 크기 축소 */
+        padding: 5px 10px; /* 버튼 크기 축소 */
+    }
+
+    .login-box .l-button,
+    .login-box .j-button,
+    .login-box .lo-button {
+        width: 80px; /* 버튼 너비 축소 */
+        height: 35px; /* 버튼 높이 축소 */
+        font-size: 12px; /* 버튼 글자 크기 축소 */
+        margin-right: 5px; /* 버튼 간 간격 줄이기 */
+    }
+}
