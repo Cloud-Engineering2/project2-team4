@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>app</groupId>
-	<artifactId>lion-app-with-argocd</artifactId>
+	<artifactId>showu</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>lion-app-with-argocd</name>
-	<description>lion-app-with-argocd</description>
+	<name>showu</name>
+	<description>showu</description>
 	<url />
 	<licenses>
 		<license />
