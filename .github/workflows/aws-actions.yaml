@@ -1,4 +1,4 @@
-name: showu With Github Actions - develop
+name: showu With Github Actions
 
 on:
   # workflow_dispatch
