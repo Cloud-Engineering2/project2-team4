@@ -6,8 +6,7 @@
 
 ## 📌 프로젝트 개요
 > 회원이 자신의 일상을 담은 사진을 자랑하며, 다양한 사람과 소통하고 트렌디한 콘텐츠를 공유하는 웹 애플리케이션입니다.
-
-**[📄 발표 자료](https://github.com/Cloud-Engineering2/project2-team4/blob/main/2%EC%B0%A8%204%ED%8C%80%20%EB%B0%9C%ED%91%9C%20%EC%9E%90%EB%A3%8C.pdf)
+> [📄 발표 자료](https://github.com/Cloud-Engineering2/project2-team4/blob/main/2%EC%B0%A8%204%ED%8C%80%20%EB%B0%9C%ED%91%9C%20%EC%9E%90%EB%A3%8C.pdf)
 
 <br>
 
